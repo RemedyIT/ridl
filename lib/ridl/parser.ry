@@ -1,0 +1,933 @@
+#--------------------------------------------------------------------
+# parser.ry - source for RACC generated IDL parser
+#
+# Author: Martin Corino
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the RIDL LICENSE which is
+# included with this program.
+#
+# Copyright (c) Remedy IT Expertise BV
+# Chamber of commerce Rotterdam nr.276339, The Netherlands
+#--------------------------------------------------------------------
+
+class Parser
+  options no_result_var
+  start specification
+
+rule
+  specification : definition
+                | specification definition
+
+  definition    : type_dcl ";"
+                | const_dcl ";"
+                | except_dcl ";"
+                | interface ";"
+                | porttype ";"
+                | component ";"
+                | connector ";"
+                | home ";"
+                | module ";"
+                | template_module ";"
+                | template_module_inst ";"
+                | value ";"
+                | event ";"
+                | typeid ";"
+                | typeprefix ";"
+                |
+
+  module        : module_header "{" _definition_1 "}"
+                      { @d.end_module(val[0]) }
+
+  module_header : "module" identifier
+                  { @d.define_module(val[1]) }
+
+  _definition_1 : definition
+                | _definition_1 definition
+
+  template_module : template_module_header "<" template_module_parameters ">" "{" template_module_body "}"
+                    { @d.end_template_module(val[0]) }
+
+  template_module_header : "module" scoped_name_0
+                           { @d.register_template_module_name(val[1]) }
+
+  template_module_parameters : template_module_parameter
+                             | template_module_parameters "," template_module_parameter
+
+  template_module_parameter : "typename" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Any.new) }
+                            | "interface" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Interface.new(nil)) }
+                            | "valuetype" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Valuetype.new(nil)) }
+                            | "eventtype" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Eventtype.new(nil)) }
+                            | "struct" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Struct.new(nil)) }
+                            | "union" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Union.new(nil)) }
+                            | "exception" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Exception.new(nil)) }
+                            | "enum" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Enum.new(nil)) }
+                            | "sequence" identifier
+                              { @d.define_template_parameter(val[1], IDL::Type::Sequence.new(IDL::Type::Void.new, nil)) }
+                            | "const" const_type identifier
+                              { @d.define_template_parameter(val[2], IDL::Type::Const.new(val[1])) }
+                            | sequence_type identifier
+                              { @d.define_template_parameter(val[1], val[0]) }
+
+  template_module_body : template_module_definition
+                       | template_module_body template_module_definition
+
+  template_module_definition : type_dcl ";"
+                             | const_dcl ";"
+                             | except_dcl ";"
+                             | interface ";"
+                             | porttype ";"
+                             | component ";"
+                             | connector ";"
+                             | home ";"
+                             | fixed_module ";"
+                             | template_module_reference ";"
+                             | value ";"
+                             | event ";"
+                             | typeid ";"
+                             | typeprefix ";"
+
+  fixed_module : module_header "{" fixed_module_body "}"
+                 { @d.end_module(val[0]) }
+
+  fixed_module_body : fixed_module_definition
+                    | fixed_module_body fixed_module_definition
+
+  fixed_module_definition    : type_dcl ";"
+                             | const_dcl ";"
+                             | except_dcl ";"
+                             | interface ";"
+                             | porttype ";"
+                             | component ";"
+                             | connector ";"
+                             | home ";"
+                             | fixed_module ";"
+                             | value ";"
+                             | event ";"
+                             | typeid ";"
+                             | typeprefix ";"
+
+  template_module_inst : template_module_header "<" template_module_inst_parameters ">" identifier
+                         { @d.instantiate_template_module(val[4], val[2]) }
+
+  template_module_inst_parameters : template_module_inst_parameter
+                                    { [val[0]] }
+                                  | template_module_inst_parameters "," template_module_inst_parameter
+                                    { val[0] << val[2]; val[0] }
+
+  template_module_inst_parameter : base_type_spec
+                                   { val[0] }
+                                 | template_type_spec
+                                   { val[0] }
+                                 | const_exp
+                                   { val[0] }
+
+  template_module_reference : "alias" scoped_name "<" _scoped_name_list ">" identifier
+                              { @d.declare_template_reference(val[5], val[1], val[3]) }
+
+  interface     : interface_dcl
+                | forward_dcl
+
+
+  forward_dcl   : local_interface_ identifier
+                     { @d.declare_interface(val[1], val[0]) }
+                | abstract_interface_ identifier
+                     { @d.declare_interface(val[1], val[0]) }
+                | regular_interface_ identifier
+                     { @d.declare_interface(val[1], val[0]) }
+
+  interface_dcl : interface_header "{" interface_body "}"
+                    { @d.end_interface(val[0]) }
+                | pseudo_interface_header "{" "}"
+                    { @d.end_interface(val[0]) }
+
+  interface_header : local_interface_ identifier interface_inheritance_spec
+                       { @d.define_interface(val[1], val[0], val[2]) }
+                   | local_interface_ identifier
+                       { @d.define_interface(val[1], val[0]) }
+                   | abstract_interface_ identifier interface_inheritance_spec
+                       { @d.define_interface(val[1], val[0], val[2]) }
+                   | abstract_interface_ identifier
+                       { @d.define_interface(val[1], val[0]) }
+                   | regular_interface_ identifier interface_inheritance_spec
+                       { @d.define_interface(val[1], val[0], val[2]) }
+                   | regular_interface_ identifier
+                       { @d.define_interface(val[1], val[0]) }
+
+  local_interface_ : "local" "interface" { :local }
+
+  abstract_interface_ : "abstract" "interface" { :abstract }
+
+  pseudo_interface_header : pseudo_interface_ identifier
+                              { @d.define_interface(val[1], val[0]) }
+
+  pseudo_interface_ : "pseudo" "interface" { :pseudo }
+
+  regular_interface_ : "interface" { :none }
+
+  interface_body : export
+                 | interface_body export
+
+  export         : type_dcl ";"
+                 | const_dcl ";"
+                 | except_dcl ";"
+                 | attr_dcl ";"
+                 | op_dcl  ";"
+                 | typeid ";"
+                 | typeprefix ";"
+                 |
+
+  interface_inheritance_spec: ":" _interface_name_list { val[1] }
+  _interface_name_list : interface_name { [val[0]] }
+                       | _interface_name_list "," interface_name
+                          { val[0] << val[2]; val[0] }
+
+  interface_name : scoped_name
+
+  home : home_header "{" home_body "}"
+         { @d.end_home(val[0]) }
+
+  home_header : "home" identifier ":" home_inheritance_spec "supports" home_supports_spec "manages" scoped_name "primarykey" home_primarykey_spec
+                { @d.define_home(val[1], val[3], val[7], val[9], val[5]) }
+              | "home" identifier ":" home_inheritance_spec "supports" home_supports_spec "manages" scoped_name
+                { @d.define_home(val[1], val[3], val[7], nil, val[5]) }
+              | "home" identifier ":" home_inheritance_spec "manages" scoped_name "primarykey" home_primarykey_spec
+                { @d.define_home(val[1], val[3], val[5], val[7], nil) }
+              | "home" identifier "supports" home_supports_spec "manages" scoped_name "primarykey" home_primarykey_spec
+                { @d.define_home(val[1], nil, val[5], val[7], val[3]) }
+              | "home" identifier "supports" home_supports_spec "manages" scoped_name
+                { @d.define_home(val[1], nil, val[5], nil, val[3]) }
+              | "home" identifier ":" home_inheritance_spec "manages" scoped_name
+                { @d.define_home(val[1], val[3], val[5], nil, nil) }
+              | "home" identifier "manages" scoped_name "primarykey" home_primarykey_spec
+                { @d.define_home(val[1], nil, val[3], val[5], nil) }
+              | "home" identifier "manages" scoped_name
+                { @d.define_home(val[1], nil, val[3], nil, nil) }
+
+  home_inheritance_spec : scoped_name
+
+  home_supports_spec : _interface_name_list
+
+  home_primarykey_spec : scoped_name
+
+  home_body : home_export
+            | home_body home_export
+
+  home_export : export
+              | init_dcl ";"
+              | finder_dcl ";"
+
+  porttype : porttype_header "{" porttype_body "}"
+             { @d.end_porttype(val[0]) }
+
+  porttype_header : "porttype" identifier
+                    { @d.define_porttype(val[1]) }
+
+  porttype_body : porttype_export
+                | porttype_body porttype_export
+
+  porttype_export : provides_dcl ";"
+                  | uses_dcl ";"
+                  | attr_dcl ";"
+
+  component : component_dcl
+            | component_forward_dcl
+
+  component_forward_dcl : "component" identifier
+                          { @d.declare_component(val[1]) }
+
+  component_dcl : component_header "{" component_body "}"
+                { @d.end_component(val[0]) }
+
+  component_header : "component" identifier ":" component_inheritance_spec "supports" component_supports_spec
+                     { @d.define_component(val[1], val[3], val[5]) }
+                   | "component" identifier ":" component_inheritance_spec
+                     { @d.define_component(val[1], val[3], nil) }
+                   | "component" identifier "supports" component_supports_spec
+                     { @d.define_component(val[1], nil, val[3]) }
+                   | "component" identifier
+                     { @d.define_component(val[1], nil, nil) }
+
+  component_inheritance_spec : scoped_name
+
+  component_supports_spec : _interface_name_list
+
+  component_body : component_export
+                 | component_body component_export
+
+  component_export : provides_dcl ";"
+                   | uses_dcl ";"
+                   | emits_dcl ";"
+                   | publishes_dcl ";"
+                   | consumes_dcl ";"
+                   | port_dcl ";"
+                   | attr_dcl ";"
+                   |
+
+  connector : connector_header "{" connector_body "}"
+              { @d.end_connector(val[0]) }
+
+  connector_header : "connector" identifier ":" scoped_name
+                     { @d.define_connector(val[1], val[3]) }
+                   | "connector" identifier
+                     { @d.define_connector(val[1], nil) }
+
+  connector_body : connector_export
+                 | connector_body connector_export
+
+  connector_export : provides_dcl ";"
+                   | uses_dcl ";"
+                   | port_dcl ";"
+                   | attr_dcl ";"
+                   |
+
+  provides_dcl : "provides" interface_type identifier
+                 { @d.declare_port(val[2], :facet, val[1]) }
+
+  uses_dcl : "uses" "multiple" interface_type identifier
+             { @d.declare_port(val[3], :receptacle, val[2], true) }
+           | "uses" interface_type identifier
+             { @d.declare_port(val[2], :receptacle, val[1], false) }
+
+  publishes_dcl : "publishes" scoped_name identifier
+                  { @d.declare_port(val[2], :publisher, val[1]) }
+
+  emits_dcl : "emits" scoped_name identifier
+              { @d.declare_port(val[2], :emitter, val[1]) }
+
+  consumes_dcl : "consumes" scoped_name identifier
+                 { @d.declare_port(val[2], :consumer, val[1]) }
+
+  port_dcl : "port" scoped_name identifier
+             { @d.declare_port(val[2], :port, val[1]) }
+           | "mirrorport" scoped_name identifier
+             { @d.declare_port(val[2], :mirrorport, val[1]) }
+
+  interface_type : scoped_name
+                 | object_type
+
+  scoped_name    : scoped_name_0               { @d.parse_scopedname(*val[0]) }
+
+  scoped_name_0  : identifier                  { [false, [val[0]]] }
+                 | "::"  identifier            { [true,  [val[1]]] }
+                 | scoped_name_0 "::" identifier
+                     { val[0][1] << val[2]; val[0] }
+
+  event          : event_dcl
+                 | event_forward_dcl
+
+  event_forward_dcl : "abstract" "eventtype" identifier
+                     { @d.declare_eventtype(val[2], :abstract) }
+                    |            "eventtype" identifier
+                     { @d.declare_eventtype(val[1], :none) }
+
+  event_dcl : eventtype_header "{" value_body "}"
+              { @d.end_eventtype(val[0]) }
+
+  eventtype_header : "abstract" "eventtype" identifier value_inheritance_spec
+                       { @d.define_eventtype(val[2], :abstract, val[3]) }
+                   | "abstract" "eventtype" identifier
+                       { @d.define_eventtype(val[2], :abstract) }
+                   | "custom"   "eventtype" identifier value_inheritance_spec
+                       { @d.define_eventtype(val[2], :custom, val[3]) }
+                   | "custom"   "eventtype" identifier
+                       { @d.define_eventtype(val[2], :custom) }
+                   |            "eventtype" identifier value_inheritance_spec
+                       { @d.define_eventtype(val[1], :none, val[2]) }
+                   |            "eventtype" identifier
+                       { @d.define_eventtype(val[1], :none) }
+
+  value          : value_dcl
+                 | value_box_dcl
+                 | value_forward_dcl
+
+  value_forward_dcl : "abstract" "valuetype" identifier
+                     { @d.declare_valuetype(val[2], :abstract) }
+                    |            "valuetype" identifier
+                     { @d.declare_valuetype(val[1], :none) }
+
+  value_box_dcl : "valuetype" identifier type_spec
+                      { @d.define_valuebox(val[1], val[2]) }
+
+  value_dcl : valuetype_header "{" value_body "}"
+              { @d.end_valuetype(val[0]) }
+
+  valuetype_header : "abstract" "valuetype" identifier value_inheritance_spec
+                       { @d.define_valuetype(val[2], :abstract, val[3]) }
+                   | "abstract" "valuetype" identifier
+                       { @d.define_valuetype(val[2], :abstract) }
+                   | "custom"   "valuetype" identifier value_inheritance_spec
+                       { @d.define_valuetype(val[2], :custom, val[3]) }
+                   | "custom"   "valuetype" identifier
+                       { @d.define_valuetype(val[2], :custom) }
+                   |            "valuetype" identifier value_inheritance_spec
+                       { @d.define_valuetype(val[1], :none, val[2]) }
+                   |            "valuetype" identifier
+                       { @d.define_valuetype(val[1], :none) }
+
+  value_body : value_element
+             | value_body value_element
+
+  value_inheritance_spec : value_basevalue_list value_interface_support_list
+                            { Hash[ :base => val[0], :supports => val[1] ] }
+                         | value_basevalue_list
+                            { Hash[ :base => val[0] ] }
+                         | value_interface_support_list
+                            { Hash[ :supports => val[0] ] }
+
+  value_basevalue_list : ":" "truncatable" _value_name_list
+                          { Hash[ :truncatable => true, :list => val[2] ] }
+                       | ":"               _value_name_list
+                          { Hash[ :truncatable => false, :list => val[1] ] }
+
+  value_interface_support_list : "supports" _interface_name_list
+                                  { val[1] }
+
+  _value_name_list : value_name { val }
+                   | _value_name_list "," value_name { val[0] << val[2]; val[0] }
+
+  value_name : scoped_name
+
+  value_element : export
+                | state_member ";"
+                | init_dcl ";"
+
+  state_member : "public"  type_spec declarators
+                 {
+                    dcls = parse_type_declarator(val[1], val[2])
+                    dcls.each { |d| @d.declare_state_member(d[0], d[1], true) }
+                 }
+               | "private" type_spec declarators
+                 {
+                    dcls = parse_type_declarator(val[1], val[2])
+                    dcls.each { |d| @d.declare_state_member(d[0], d[1], false) }
+                 }
+
+  init_dcl : "factory" identifier "(" ")"
+             {  @d.declare_initializer(val[1], [], []) }
+           | "factory" identifier "(" init_param_decls ")"
+             {  @d.declare_initializer(val[1], val[3], []) }
+           | "factory" identifier "(" ")" raises_expr
+             {  @d.declare_initializer(val[1], [], val[4]) }
+           | "factory" identifier "(" init_param_decls ")" raises_expr
+             {  @d.declare_initializer(val[1], val[3], val[5]) }
+
+  finder_dcl : "finder" identifier "(" ")"
+               {  @d.declare_finder(val[1], [], []) }
+             | "finder" identifier "(" init_param_decls ")"
+               {  @d.declare_finder(val[1], val[3], []) }
+             | "finder" identifier "(" ")" raises_expr
+               {  @d.declare_finder(val[1], [], val[4]) }
+             | "finder" identifier "(" init_param_decls ")" raises_expr
+               {  @d.declare_finder(val[1], val[3], val[5]) }
+
+  init_param_decls : init_param_decl { val }
+                   | init_param_decls "," init_param_decl { val[0] << val[2]; val[0] }
+
+  init_param_decl : init_param_attribute param_type_spec simple_declarator
+                    { [val[1], val[2]] }
+
+  init_param_attribute : "in"
+
+  typeprefix : "typeprefix" scoped_name string_literal
+                 { @d.define_typeprefix(val[1], val[2]) }
+
+  typeid : "typeid" scoped_name string_literal
+                 { @d.define_typeid(val[1], val[2]) }
+
+  const_dcl : "const" const_type identifier "=" const_exp
+                 { @d.define_const(val[1], val[2], val[4]) }
+
+  const_type : integer_type
+             | char_type
+             | wide_char_type
+             | boolean_type
+             | floating_pt_type
+             | string_type
+             | wide_string_type
+             | fixed_pt_const_type
+             | scoped_name
+             | octet_type
+
+  const_exp : or_expr
+
+  or_expr : xor_expr
+	  | or_expr "|" xor_expr
+              { Expression::Operation::Or.new(val[0], val[2]) }
+
+  xor_expr : and_expr
+           | xor_expr "^" and_expr
+              { Expression::Operation::Xor.new(val[0], val[2]) }
+
+  and_expr : shift_expr
+           | and_expr "&" shift_expr
+              { Expression::Operation::And.new(val[0], val[2]) }
+
+  shift_expr : add_expr
+             | shift_expr ">>" add_expr
+               { Expression::Operation::RShift.new(val[0], val[2]) }
+             | shift_expr "<<" add_expr
+               { Expression::Operation::LShift.new(val[0], val[2]) }
+
+  add_expr : mult_expr
+           | add_expr "+" mult_expr
+               { Expression::Operation::Add.new(val[0], val[2]) }
+           | add_expr "-" mult_expr
+               { Expression::Operation::Minus.new(val[0], val[2]) }
+
+  mult_expr : unary_expr
+            | mult_expr "*" unary_expr
+               { Expression::Operation::Mult.new(val[0], val[2]) }
+            | mult_expr "/" unary_expr
+               { Expression::Operation::Div.new(val[0], val[2]) }
+            | mult_expr "%" unary_expr
+               { Expression::Operation::Mod.new(val[0], val[2]) }
+
+  unary_expr : unary_operator primary_expr { val[0].new(val[1]) }
+             | primary_expr
+
+  unary_operator : "-" { Expression::Operation::UnaryMinus }
+                 | "+" { Expression::Operation::UnaryPlus }
+                 | "~" { Expression::Operation::UnaryNot }
+
+
+  primary_expr : scoped_name
+               | literal
+               | "(" const_exp ")" { val[1] }
+
+  literal : integer_literal        { @d.parse_literal(:integer, val[0]) }
+          | string_literal         { @d.parse_literal(:string,  val[0]) }
+          | wide_string_literal    { @d.parse_literal(:wstring, val[0]) }
+          | character_literal      { @d.parse_literal(:char,    val[0]) }
+          | wide_character_literal { @d.parse_literal(:wchar,   val[0]) }
+          | fixed_pt_literal       { @d.parse_literal(:fixed,   val[0]) }
+          | floating_pt_literal    { @d.parse_literal(:float,   val[0]) }
+          | boolean_literal        { @d.parse_literal(:boolean, val[0]) }
+
+  boolean_literal : "TRUE"  { true }
+                  | "FALSE" { false }
+
+  positive_int_const : const_exp { @d.parse_positive_int(val[0]) }
+
+  type_dcl : "typedef" type_declarator
+           | struct_type
+           | struct_forward_dcl
+           | union_type
+           | union_forward_dcl
+           | enum_type
+           | "native" native_declarator
+
+  type_declarator : type_spec declarators
+                    {
+                      dcls = parse_type_declarator(val[0], val[1])
+                      dcls.each do |d|
+                        @d.declare_typedef(d[0], d[1])
+                      end
+                    }
+
+  type_spec : simple_type_spec
+            | constr_type_spec
+
+  simple_type_spec : base_type_spec
+                   | template_type_spec
+                   | scoped_name
+
+  base_type_spec : floating_pt_type
+                 | integer_type
+                 | char_type
+                 | wide_char_type
+                 | boolean_type
+                 | octet_type
+                 | any_type
+                 | object_type
+                 | value_base_type
+
+  template_type_spec : sequence_type
+                     | string_type
+                     | wide_string_type
+                     | fixed_pt_type
+
+  constr_type_spec : struct_type
+                   | union_type
+                   | enum_type
+
+  declarators : declarator { [val[0]] }
+              | declarators "," declarator { val[0] << val[2] }
+
+  declarator : simple_declarator
+             | complex_declarator
+
+  native_declarator : identifier { @d.declare_typedef(::IDL::Type::Native.new, val[0]) }
+
+  simple_declarator : identifier
+
+  complex_declarator : array_declarator
+
+  floating_pt_type : "float"         { ::IDL::Type::Float.new }
+                   | "double"        { ::IDL::Type::Double.new }
+                   | "long" "double" { ::IDL::Type::LongDouble.new }
+
+  integer_type : signed_int
+               | unsigned_int
+
+  signed_int : signed_short_int
+             | signed_long_int
+             | signed_longlong_int
+
+  signed_short_int : "short" { ::IDL::Type::Short.new }
+
+  signed_long_int : "long"   { ::IDL::Type::Long.new }
+
+  signed_longlong_int : "long" "long" { ::IDL::Type::LongLong.new }
+
+  unsigned_int : unsigned_short_int
+               | unsigned_long_int
+               | unsigned_longlong_int
+
+  unsigned_short_int : "unsigned" "short" { ::IDL::Type::UShort.new }
+
+  unsigned_long_int : "unsigned" "long" { ::IDL::Type::ULong.new }
+
+  unsigned_longlong_int : "unsigned" "long" "long"
+                             { ::IDL::Type::ULongLong.new }
+
+  char_type : "char" { ::IDL::Type::Char.new }
+
+  wide_char_type : "wchar" { ::IDL::Type::WChar.new }
+
+  boolean_type : "boolean" { ::IDL::Type::Boolean.new }
+
+  octet_type : "octet" { ::IDL::Type::Octet.new }
+
+  any_type : "any" { ::IDL::Type::Any.new }
+
+  object_type : "Object" { ::IDL::Type::Object.new }
+
+  struct_forward_dcl : struct_def identifier { @d.declare_struct(val[1]) }
+
+  struct_type : struct_header "{" member_list "}"
+                { @d.end_struct(val[0]) }
+
+  struct_header : struct_def identifier  { @d.define_struct(val[1]) }
+
+  struct_def : "struct" { nil }
+
+
+  member_list : member
+              | member_list member
+
+  member : type_spec declarators ";"
+           {
+             dcls = parse_type_declarator(val[0], val[1])
+             dcls.each do |d|
+               @d.declare_member(d[0], d[1])
+             end
+           }
+
+  union_forward_dcl : union_def identifier
+                     { @d.declare_union(val[1]) }
+
+  union_type : union_header "{" union_body "}"
+               { @d.end_union(val[0]) }
+
+  union_header : union_dcl union_switch_spec
+                 { @d.define_union_switchtype(val[0], val[1]) }
+
+  union_dcl : union_def identifier
+              { @d.define_union(val[1]) }
+
+  union_def : "union" { nil }
+
+  union_switch_spec : "switch" "(" switch_type_spec ")"
+                      { val[2] }
+
+  switch_type_spec : integer_type
+                   | char_type
+                   | boolean_type
+                   | enum_type
+                   | scoped_name
+
+  union_body : union_case
+             | union_body union_case
+
+  union_case : _case_label_1 element_spec ";"
+               {
+                 dcls = parse_type_declarator(val[1][0], [val[1][1]])
+                 dcls.each do |d|
+                   @d.define_case(val[0], d[0], d[1])
+                 end
+               }
+
+  _case_label_1 : case_label { [val[0]] }
+                | _case_label_1 case_label { val[0] << val[1] }
+
+  case_label    : "case" const_exp ":" { val[1] }
+                | "default" ":" { :default }
+
+  element_spec : type_spec declarator
+                 { val }
+
+  enum_type : _enum_header _enum_body
+                  { @d.end_enum(val[0]) }
+
+  _enum_header : "enum" identifier { @d.define_enum(val[1]) }
+  _enum_body   : "{" _enumerator_list "}"
+
+  _enumerator_list : enumerator
+                   | _enumerator_list ","  enumerator
+
+  enumerator : identifier
+               {
+                 @d.declare_enumerator(val[0])
+               }
+
+  sequence_type : "sequence" "<" simple_type_spec "," positive_int_const ">"
+                    { ::IDL::Type::Sequence.new(val[2], val[4]) }
+                | "sequence" "<" simple_type_spec ">"
+                    { ::IDL::Type::Sequence.new(val[2], nil) }
+
+  string_type   : "string" "<" positive_int_const ">"
+                    { ::IDL::Type::String.new(val[2]) }
+                | "string"
+                    { ::IDL::Type::String.new() }
+
+  wide_string_type : "wstring" "<" positive_int_const ">"
+                    { ::IDL::Type::WString.new(val[2]) }
+                   | "wstring"
+                    { ::IDL::Type::WString.new() }
+
+  array_declarator : identifier _fixed_array_size_1 { val }
+
+  _fixed_array_size_1 : fixed_array_size { [val[0]] }
+                      | _fixed_array_size_1 fixed_array_size {val[0] << val[1]}
+
+  fixed_array_size : "[" positive_int_const "]" { val[1] }
+
+  attr_dcl         : "readonly" "attribute" param_type_spec readonly_attr_declarator
+                     {  dcls = parse_type_declarator(val[2], val[3][0])
+                        dcls.each do |d|
+                          @d.declare_attribute(d[0], d[1], true).get_raises = val[3][1]
+                        end
+                     }
+                   | "attribute" param_type_spec simple_declarator attr_raises_expr
+                     {  att = @d.declare_attribute(val[1], val[2])
+                        att.get_raises = val[3][0] unless val[3][0].empty?
+                        att.set_raises = val[3][1] unless val[3][1].empty?
+                     }
+                   | "attribute" param_type_spec attr_declarator_list
+                     {  dcls = parse_type_declarator(val[1], val[2])
+                        dcls.each do |d|
+                          att = @d.declare_attribute(d[0], d[1])
+                        end
+                     }
+
+  attr_raises_expr : attr_both_raises_expr1
+                   | attr_both_raises_expr2
+                   | attr_get_raises_expr
+                   | attr_set_raises_expr
+                   | attr_no_raises_expr
+
+  attr_both_raises_expr1 : get_raises_expr set_raises_expr { [val[0], val[1]] }
+
+  attr_both_raises_expr2 : set_raises_expr get_raises_expr { [val[1], val[0]] }
+
+  attr_get_raises_expr : get_raises_expr { [val[0], []] }
+
+  attr_set_raises_expr : set_raises_expr { [[], val[0]] }
+
+  attr_no_raises_expr : { [[], []] }
+
+  attr_declarator_list : simple_declarator "," _simple_declarator_list
+                         { [val[0]].concat(val[2]) }
+
+  readonly_attr_declarator : simple_declarator raises_expr
+                             {  [[val[0]], val[1]] }
+                           | _simple_declarator_list { [val[0], []] }
+
+  _simple_declarator_list : simple_declarator { [val[0]] }
+                          | _simple_declarator_list "," simple_declarator { val[0] << val[2] }
+
+  except_dcl : _except_header _except_body
+                  { @d.end_exception(val[0]) }
+
+  _except_header : "exception" identifier  { @d.define_exception(val[1]) }
+  _except_body   : "{" _member_list0 "}"
+
+  _member_list0 :
+                | _member_list0 member
+
+  op_dcl : _op_dcl_header _op_dcl_parameter _op_dcl_footer
+
+  _op_dcl_header : op_attribute op_type_spec identifier
+                     { @d.declare_op_header(val[0], val[1], val[2]) }
+                 |              op_type_spec identifier
+                     { @d.declare_op_header(nil, val[0], val[1]) }
+
+  _op_dcl_parameter : parameter_dcls
+
+  _op_dcl_footer : raises_expr context_expr
+                     { @d.declare_op_footer(val[0], val[1]) }
+                 | raises_expr
+                     { @d.declare_op_footer(val[0], nil) }
+                 |             context_expr
+                     { @d.declare_op_footer(nil, val[0]) }
+                 |
+                     { @d.declare_op_footer(nil,nil) }
+
+  op_attribute : "oneway" { :oneway }
+
+  op_type_spec : param_type_spec { val[0] }
+               | "void" { ::IDL::Type::Void.new }
+
+  parameter_dcls : "(" ")"
+                 | "(" _param_dcl_list ")"
+
+  _param_dcl_list: param_dcl
+                 | _param_dcl_list "," param_dcl
+
+  param_dcl : param_attribute param_type_spec simple_declarator
+                { @d.declare_op_parameter(val[0], val[1], val[2]) }
+
+  param_attribute : "in"    { :in }
+                  | "out"   { :out }
+                  | "inout" { :inout }
+
+  raises_expr : "raises" "(" _scoped_name_list ")"  { val[2] }
+
+  get_raises_expr : "getraises" "(" _scoped_name_list ")"  { val[2] }
+
+  set_raises_expr : "setraises" "(" _scoped_name_list ")"  { val[2] }
+
+  _scoped_name_list: scoped_name { val }
+                   | _scoped_name_list "," scoped_name { val[0] << val[2] }
+
+  context_expr : "context" "(" _string_literal_list ")" { val[2] }
+
+  _string_literal_list: string_literal { val }
+                      | _string_literal_list "," string_literal { val[0] << val[2] }
+
+  param_type_spec : base_type_spec   { val[0] }
+                  | string_type      { val[0] }
+                  | wide_string_type { val[0] }
+                  | scoped_name      { val[0] }
+
+  fixed_pt_type : "fixed" "<" positive_int_const ","
+                       positive_int_const ">"
+                  { IDL::Type::Fixed.new(val[2], val[4]) }
+
+  fixed_pt_const_type : "fixed" { ::IDL::Type::Fixed.new }
+
+  value_base_type : "ValueBase" { ::IDL::Type::ValueBase.new }
+
+end
+
+---- inner
+
+def parse_type_declarator(type_spec, declarators)
+  ret = Array.new
+  t = type_spec
+  declarators.each do |d|
+    case d
+    when ::String, IDL::Scanner::Identifier
+      ret << [t, d]
+    when ::Array # array_declarator -> [identifier, size]
+      ret << [IDL::Type::Array.new(t, d[1]), d[0]]
+    else
+      raise RuntimeError, "unknown declarator: #{d.inspect}"
+    end
+  end
+  ret
+end
+
+#attr_accessor :default_namespace, :output
+attr_accessor :yydebug
+def initialize(params = {})
+  @d = ::IDL::Delegator.new(params)
+  @params = params
+end
+
+alias on_error0 on_error
+def on_error(err_tok, err_val, _value)
+  begin
+    on_error0(err_tok, err_val, _value)
+  rescue IDL::ParseError
+    raise
+  rescue
+    raise IDL::ParseError.new($!.message, @scanner.positions)
+  end
+end
+
+def parse(src)
+  @scanner = Scanner.new(src, self, @params)
+  @d.pre_parse
+  begin
+    do_parse
+  rescue IDL::ParseError
+    raise
+  rescue
+    STDERR.puts "#{$!}\n#{$!.backtrace.join("\n")}" if IDL.verbose_level>0
+    raise IDL::ParseError.new($!.message, @scanner.positions)
+  end
+  @d.post_parse
+end
+
+def visit_nodes(walker)
+  @d.visit_nodes(walker)
+end
+
+def pragma_prefix(s)
+  @d.pragma_prefix(s)
+end
+
+def pragma_version(id, major, minor)
+  @d.pragma_version(id, major, minor)
+end
+
+def pragma_id(id, repo_id)
+  @d.pragma_id(id, repo_id)
+end
+
+def handle_pragma(s)
+  @d.handle_pragma(s)
+end
+
+def is_included?(s)
+  @d.is_included?(s)
+end
+
+def enter_include(s, fp)
+  @d.enter_include(s, fp)
+end
+
+def leave_include()
+  @d.leave_include
+end
+
+def declare_include(s)
+  @d.declare_include(s)
+end
+
+def define_annotation(*args)
+  @d.define_annotation(*args)
+end
+
+def next_token
+  ret = @scanner.next_token
+end
+
+---- header
+require 'ridl/delegate'
+
+module IDL
+
+---- footer
+
+end #of module IDL

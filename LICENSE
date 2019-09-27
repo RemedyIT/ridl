@@ -1,0 +1,49 @@
+RIDL LICENSE
+
+RIDL (Licensed Product) is protected by copyright, and is distributed
+under the following terms.
+
+RIDL (Ruby IDL compiler) is an open source tool, developed by Remedy IT and
+written in Ruby. It is designed to provide a flexible parser/compiler
+frontend for OMG standard IDL.
+RIDL provides a generic parser component for OMG IDL and a flexible framework
+for plugging in (code) generation backends.
+
+Since RIDL is open source and free of licensing fees, you are free to use,
+modify, and distribute the source code, as long as you include this
+copyright statement.
+
+In particular, you can use RIDL to build proprietary software and are
+under no obligation to redistribute any of your source code that is built
+using RIDL. Note, however, that you may not do anything to the RIDL
+code, such as copyrighting it yourself or claiming authorship of the RIDL
+code, that will prevent RIDL from being distributed freely using an open
+source development model.
+
+Warranty
+
+LICENSED PRODUCT IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING
+THE WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE, NON-INFRINGEMENT, OR ARISING FROM A COURSE OF DEALING, USAGE OR
+TRADE PRACTICE.
+
+Support
+
+LICENSED PRODUCT IS PROVIDED WITH NO SUPPORT AND WITHOUT ANY OBLIGATION ON
+THE PART OF REMEDY IT OR ANY OF ITS SUBSIDIARIES OR AFFILIATES TO ASSIST IN
+ITS USE, CORRECTION, MODIFICATION OR ENHANCEMENT.
+
+Remedy IT provides support to users who have agreed on the terms of a support
+contract.
+
+Liability
+
+REMEDY IT OR ANY OF ITS SUBSIDIARIES OR AFFILIATES SHALL HAVE NO LIABILITY
+WITH RESPECT TO THE INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS
+BY LICENSED PRODUCT OR ANY PART THEREOF.
+
+IN NO EVENT WILL REMEDY IT OR ANY OF ITS SUBSIDIARIES OR AFFILIATES BE LIABLE
+FOR ANY LOST REVENUE OR PROFITS OR OTHER SPECIAL, INDIRECT AND CONSEQUENTIAL
+DAMAGES, EVEN IF REMEDY IT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+RIDL is Copyright Remedy IT Expertise BV. Duiven, The Netherlands, 2006-2019.

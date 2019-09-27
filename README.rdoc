@@ -1,0 +1,43 @@
+{<img src="https://badge.fury.io/rb/ridl.svg" alt="Gem Version" />}[https://badge.fury.io/rb/ridl]
+
+= RIDL Compiler
+
+== Description
+
+{RIDL}[https://www.remedy.nl/products/ridl.html] is a Ruby library implementing an OMG \IDL parser/compiler frontend with support for pluggable (and stackable) backends.
+
+== Synopsis
+
+RIDL provides a framework for implementing compiler/generators for OMG standard \IDL definitions. The framework includes:
+* a RACC based parser supplemented with a custom scanner/tokenizer
+* a complete AST class hierarchy for representing parsed IDL specifications
+* a complete Type class hierarchy
+* \IDL constants expression support
+* a builtin \IDL preprocessor expression parser/evaluator
+* a flexible framework for pluggable (and stackable) backends
+* basic support for backend code re-generation
+* compliant with the latest OMG \IDL standard.
+
+Remedy IT has developed multiple backends for RIDL. These include one for {R2CORBA}[https://www.remedy.nl/products/r2corba.html] (generating Ruby code) which is 100% open source,  {TAOX11}[https://taox11.remedy.nl] (generating C++11 code), and {AXCIOMA}[https://www.axcioma.com] (generating C++11 code). When you want to know more about how Remedy IT can assist you with developing your own backend for RIDL contact sales@remedy.nl.
+
+== Bugs
+
+If you find a bug, please report it as {RIDL issue}[https://github.com/RemedyIT/ridl/issues].
+
+== License
+
+RIDL is Copyright (c) 2007-2019 Remedy IT Expertise BV, The Netherlands.
+
+It is free software, and may be redistributed under the terms specified in the link:LICENSE file.
+
+== Warranty
+
+This software is provided "as is" and without any express or implied warranties, including, without limitation, the implied warranties of merchantibility and fitness for a particular purpose.
+
+== Installing RIDL
+
+RIDL is distributed as a Ruby Gem. You can download and install RIDL as a Ruby Gem from the common {Rubygems.org}[https://www.rubygems.org/gems/ridl] repository by executing the following command:
+
+ $ gem install ridl
+
+The RIDL Gem is a Ruby-only Gem without any dependencies.

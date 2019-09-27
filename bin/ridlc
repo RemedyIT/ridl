@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+$: << File.join(File.dirname(__FILE__), '..')
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
+
+ARGV.insert(0, ':test')
+
+require 'ridl/ridl'
+
+if __FILE__ == $0
+
+  IDL.run
+
+end

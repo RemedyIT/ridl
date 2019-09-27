@@ -1,0 +1,42 @@
+diff --git a/lib/ridl/parser.rb b/lib/ridl/parser.rb
+index 0cc4f7f..a1a44ec 100644
+--- a/lib/ridl/parser.rb
++++ b/lib/ridl/parser.rb
+@@ -40,15 +40,15 @@ module Racc
+ 
+   class Parser
+ 
+-    Racc_Runtime_Version = '1.4.6'
+-    Racc_Runtime_Revision = '$Id$'
++    Racc_Runtime_Version = '1.4.6' unless defined?(Racc_Runtime_Version)
++    Racc_Runtime_Revision = '$Id$' unless defined?(Racc_Runtime_Revision)
+ 
+-    Racc_Runtime_Core_Version_R = '1.4.6'
+-    Racc_Runtime_Core_Revision_R = '$Id$'.split[1]
++    Racc_Runtime_Core_Version_R = '1.4.6' unless defined?(Racc_Runtime_Core_Version_R)
++    Racc_Runtime_Core_Revision_R = '$Id$'.split[1] unless defined?(Racc_Runtime_Core_Revision_R)
+     begin
+       require 'racc/cparse'
+     # Racc_Runtime_Core_Version_C  = (defined in extention)
+-      Racc_Runtime_Core_Revision_C = Racc_Runtime_Core_Id_C.split[2]
++      Racc_Runtime_Core_Revision_C = Racc_Runtime_Core_Id_C.split[2] unless defined?(Racc_Runtime_Core_Revision_C)
+       unless new.respond_to?(:_racc_do_parse_c, true)
+         raise LoadError, 'old cparse.so'
+       end
+@@ -56,11 +56,11 @@ module Racc
+         raise LoadError, 'selecting ruby version of racc runtime core'
+       end
+ 
+-      Racc_Main_Parsing_Routine    = :_racc_do_parse_c
+-      Racc_YY_Parse_Method         = :_racc_yyparse_c
+-      Racc_Runtime_Core_Version    = Racc_Runtime_Core_Version_C
+-      Racc_Runtime_Core_Revision   = Racc_Runtime_Core_Revision_C
+-      Racc_Runtime_Type            = 'c'
++      Racc_Main_Parsing_Routine    = :_racc_do_parse_c unless defined?(Racc_Main_Parsing_Routine)
++      Racc_YY_Parse_Method         = :_racc_yyparse_c unless defined?(Racc_YY_Parse_Method)
++      Racc_Runtime_Core_Version    = Racc_Runtime_Core_Version_C unless defined?(Racc_Runtime_Core_Version)
++      Racc_Runtime_Core_Revision   = Racc_Runtime_Core_Revision_C unless defined?(Racc_Runtime_Core_Revision)
++      Racc_Runtime_Type            = 'c' unless defined?(Racc_Runtime_Type)
+     rescue LoadError
+       Racc_Main_Parsing_Routine    = :_racc_do_parse_rb
+       Racc_YY_Parse_Method         = :_racc_yyparse_rb
