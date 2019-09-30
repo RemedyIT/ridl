@@ -9,7 +9,7 @@
 == Synopsis
 
 RIDL provides a framework for implementing compiler/generators for OMG standard \IDL definitions. The framework includes:
-* a RACC based parser supplemented with a custom scanner/tokenizer
+* a {RACC}[https://github.com/ruby/racc] based parser supplemented with a custom scanner/tokenizer
 * a complete AST class hierarchy for representing parsed IDL specifications
 * a complete Type class hierarchy
 * \IDL constants expression support
@@ -18,7 +18,12 @@ RIDL provides a framework for implementing compiler/generators for OMG standard 
 * basic support for backend code re-generation
 * compliant with the {OMG IDL \3.5}[https://www.omg.org/spec/IDL/3.5] standard.
 
-Remedy IT has developed multiple backends for RIDL. These include one for {R2CORBA}[https://www.remedy.nl/products/r2corba.html] (generating Ruby code) which is 100% open source,  {TAOX11}[https://taox11.remedy.nl] (generating C++11 code), and {AXCIOMA}[https://www.axcioma.com] (generating C++11 code). When you want to know more about how Remedy IT can assist you with developing your own backend for RIDL contact {sales@remedy.nl}[mailto:sales@remedy.nl].
+Remedy IT has developed multiple backends for RIDL. These include:
+* {R2CORBA}[https://www.remedy.nl/products/r2corba.html] generating Ruby code which is 100% open source
+* {TAOX11}[https://taox11.remedy.nl] generating C++11 code
+* {AXCIOMA}[https://www.axcioma.com] generating C++11 code
+
+When you want to know more about how Remedy IT can assist you with developing your own backend for RIDL contact {sales@remedy.nl}[mailto:sales@remedy.nl].
 
 == Bugs
 
