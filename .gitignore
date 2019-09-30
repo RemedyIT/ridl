@@ -1,6 +1,3 @@
-lib/ridl/orb.pidlc
-lib/ridl/ridlc.rb
-lib/ridl/jridlc.rb
 pkg
 .*
 *~
