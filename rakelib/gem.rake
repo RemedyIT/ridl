@@ -60,7 +60,7 @@ task :gem do
     gem.extra_rdoc_files = %w{LICENSE README.rdoc}
     gem.rdoc_options << '--main' << 'README.rdoc' << '--exclude' << '\.(idl|pidl|diff|ry)'
     gem.executables = []
-    gem.license = Gem::Licenses::NONSTANDARD
+    gem.license = Gem::Licenses::MIT
   end
   RIDL.build_gem(gemspec)
 end
