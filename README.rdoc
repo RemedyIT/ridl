@@ -4,7 +4,7 @@
 
 == Description
 
-{RIDL}[https://www.remedy.nl/products/ridl.html] is a Ruby library implementing an OMG \IDL parser/compiler frontend with support for pluggable (and stackable) backends created by {Remedy IT}[https://www.remedy.nl].
+{RIDL}[https://www.remedy.nl/opensource/ridl.html] is a Ruby library implementing an OMG \IDL parser/compiler frontend with support for pluggable (and stackable) backends created by {Remedy IT}[https://www.remedy.nl].
 
 == Synopsis
 
@@ -19,9 +19,9 @@ RIDL provides a framework for implementing compiler/generators for OMG standard 
 * compliant with the {OMG IDL \3.5}[https://www.omg.org/spec/IDL/3.5] standard.
 
 Remedy IT has developed multiple backends for RIDL. These include:
-* {R2CORBA}[https://www.remedy.nl/products/r2corba.html] generating Ruby code which is 100% open source
-* {TAOX11}[https://taox11.remedy.nl] generating C++11 code
-* {AXCIOMA}[https://www.axcioma.com] generating C++11 code
+* {R2CORBA}[https://www.remedy.nl/opensource/r2corba.html] generating Ruby code which is 100% open source
+* {TAOX11}[https://www.taox11.org] generating C++11 code
+* {AXCIOMA}[https://www.axcioma.org] generating C++11 code
 
 When you want to know more about how Remedy IT can assist you with developing your own backend for RIDL contact {sales@remedy.nl}[mailto:sales@remedy.nl].
 

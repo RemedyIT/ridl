@@ -8,7 +8,6 @@
 # included with this program.
 #
 # Copyright (c) Remedy IT Expertise BV
-# Chamber of commerce Rotterdam nr.276339, The Netherlands
 #--------------------------------------------------------------------
 
 (Dir.glob(File.join(File.dirname(__FILE__), '*.rb')) - [__FILE__]).each do |f|

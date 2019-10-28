@@ -8,7 +8,6 @@
 # included with this program.
 #
 # Copyright (c) Remedy IT Expertise BV
-# Chamber of commerce Rotterdam nr.276339, The Netherlands
 #--------------------------------------------------------------------
 require 'rubygems'
 begin
@@ -54,14 +53,14 @@ task :gem do
     gem.summary = %Q{Ruby OMG IDL compiler}
     gem.description = %Q{OMG v3.3 compliant native Ruby IDL compiler frontend with support for pluggable (and stackable) backends.}
     gem.email = 'mcorino@remedy.nl'
-    gem.homepage = "https://www.remedy.nl/products/ridl.html"
+    gem.homepage = "https://www.remedy.nl/opensource/ridl.html"
     gem.authors = ['Martin Corino', 'Johnny Willemsen']
     gem.files = %w{LICENSE README.rdoc}.concat(Dir.glob('lib/**/*').select {|fnm| File.basename(fnm) != 'orb.pidlc'})
     gem.extensions = []
     gem.extra_rdoc_files = %w{LICENSE README.rdoc}
     gem.rdoc_options << '--main' << 'README.rdoc' << '--exclude' << '\.(idl|pidl|diff|ry)'
     gem.executables = []
-    gem.license = Gem::Licenses::NONSTANDARD
+    gem.license = Gem::Licenses::MIT
   end
   RIDL.build_gem(gemspec)
 end

@@ -8,7 +8,6 @@
 # included with this program.
 #
 # Copyright (c) Remedy IT Expertise BV
-# Chamber of commerce Rotterdam nr.276339, The Netherlands
 #--------------------------------------------------------------------
 
 class Parser
@@ -460,7 +459,7 @@ rule
   const_exp : or_expr
 
   or_expr : xor_expr
-	  | or_expr "|" xor_expr
+    | or_expr "|" xor_expr
               { Expression::Operation::Or.new(val[0], val[2]) }
 
   xor_expr : and_expr
