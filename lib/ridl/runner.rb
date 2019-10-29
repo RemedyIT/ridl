@@ -329,11 +329,6 @@ module IDL
               'Default: off') { |_|
         self.options[:debug] = true
       }
-      opts.on('--stdidl',
-              'Adds include path to standard IDL files provided with RIDL.',
-              'Default: not set') { |_|
-        self.options[:includepaths] << (File.expand_path(File.join(File.dirname(__FILE__), '..', 'idl'))+'/')
-      }
       opts.on('--search-includepath',
               'Use include paths to find main IDL source.',
               'Default: off') { |_|
