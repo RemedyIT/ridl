@@ -4,19 +4,19 @@
 
 == Description
 
-{RIDL}[https://www.remedy.nl/opensource/ridl.html] is a Ruby library implementing an OMG \IDL parser/compiler frontend with support for pluggable (and stackable) backends created by {Remedy IT}[https://www.remedy.nl].
+{RIDL}[https://www.remedy.nl/opensource/ridl.html] is a Ruby library implementing an Object Management Group (OMG) {IDL}[https://www.omg.org/spec/IDL] parser/compiler frontend with support for pluggable (and stackable) backends created by {Remedy IT}[https://www.remedy.nl].
 
 == Synopsis
 
-RIDL provides a framework for implementing compiler/generators for OMG standard \IDL definitions. The framework includes:
+RIDL provides a framework for implementing compiler/generators for OMG standard IDL definitions. The framework includes:
 * a {RACC}[https://github.com/ruby/racc] based parser supplemented with a custom scanner/tokenizer
 * a complete AST class hierarchy for representing parsed IDL specifications
 * a complete Type class hierarchy
-* \IDL constants expression support
-* a builtin \IDL preprocessor expression parser/evaluator
+* IDL constants expression support
+* a builtin IDL preprocessor expression parser/evaluator
 * a flexible framework for pluggable (and stackable) backends
 * basic support for backend code re-generation
-* compliant with the {OMG IDL \3.5}[https://www.omg.org/spec/IDL/3.5] standard.
+* compliant with the {OMG IDL 3.5}[https://www.omg.org/spec/IDL/3.5] standard.
 
 Remedy IT has developed multiple backends for RIDL. These include:
 * {R2CORBA}[https://www.remedy.nl/opensource/r2corba.html] generating Ruby code which is 100% open source
@@ -28,12 +28,6 @@ When you want to know more about how Remedy IT can assist you with developing yo
 == Bugs
 
 If you find a bug, please report it as {RIDL issue}[https://github.com/RemedyIT/ridl/issues].
-
-== License
-
-RIDL is Copyright (c) 2007-2019 Remedy IT Expertise BV, The Netherlands.
-
-It is free software, and may be redistributed under the terms specified in the link:LICENSE file.
 
 == Warranty
 
