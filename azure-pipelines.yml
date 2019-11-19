@@ -49,7 +49,7 @@ jobs:
       $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib -t gnuace configure -W aceroot=$(ACE_ROOT) -W taoroot=$(TAO_ROOT) -W mpcroot=$(MPC_ROOT)
     displayName: Run brix11 configure
   - powershell: |
-      $(X11_BASE_ROOT)/bin/brix11 env
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib env
       $(X11_BASE_ROOT)/bin/brix11 configure
     displayName: Print brix11 configuration
   - powershell: |
