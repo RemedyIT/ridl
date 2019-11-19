@@ -50,15 +50,15 @@ jobs:
     displayName: Run brix11 configure
   - powershell: |
       $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib env
-      $(X11_BASE_ROOT)/bin/brix11 configure
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib configure
     displayName: Print brix11 configuration
   - powershell: |
-      $(X11_BASE_ROOT)/bin/brix11 gen build axcioma/workspace.mwc
-      $(X11_BASE_ROOT)/bin/brix11 gen build $(TAOX11_ROOT)/examples -- gen build $(TAOX11_ROOT)/orbsvcs/tests -- gen build $(TAOX11_ROOT)/tests
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib gen build axcioma/workspace.mwc
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib gen build $(TAOX11_ROOT)/examples -- gen build $(TAOX11_ROOT)/orbsvcs/tests -- gen build $(TAOX11_ROOT)/tests
     displayName: Run brix11 gen build
   - powershell: |
-      $(X11_BASE_ROOT)/bin/brix11 make -N -d $(X11_BASE_ROOT)
-      $(X11_BASE_ROOT)/bin/brix11 make -N -d $(TAOX11_ROOT)/examples
-      $(X11_BASE_ROOT)/bin/brix11 make -N -d $(TAOX11_ROOT)/orbsvcs/tests
-      $(X11_BASE_ROOT)/bin/brix11 make -N -d $(TAOX11_ROOT)/tests
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib make -N -d $(X11_BASE_ROOT)
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib make -N -d $(TAOX11_ROOT)/examples
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib make -N -d $(TAOX11_ROOT)/orbsvcs/tests
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib make -N -d $(TAOX11_ROOT)/tests
     displayName: Run brix11 make
