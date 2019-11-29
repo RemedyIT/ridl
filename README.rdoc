@@ -20,7 +20,7 @@ RIDL provides a framework for implementing compiler/generators for OMG standard 
 * compliant with the {OMG IDL 3.5}[https://www.omg.org/spec/IDL/3.5] standard.
 
 Remedy IT has developed multiple backends for RIDL. These include:
-* {R2CORBA}[https://www.remedy.nl/opensource/r2corba.html] generating Ruby code which is 100% open source
+* {R2CORBA}[https://www.remedy.nl/opensource/r2corba.html] generating Ruby code
 * {TAOX11}[https://www.taox11.org] generating C++11 code
 * {AXCIOMA}[https://www.axcioma.org] generating C++11 code
 
