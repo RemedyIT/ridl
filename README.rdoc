@@ -44,4 +44,4 @@ The RIDL Gem is a Ruby-only Gem without any dependencies.
 
 == Releasing new RIDL Ruby Gem
 
-A new RIDL ruby gem release can be made by incrementing the RIDL version in link:lib/ridl/version.rb and create a new release on {github}[https://github.com/RemedyIT/ridl/releases] matching the new version (for example v2.7.0). The github {Ruby Gem Release}:https://github.com/RemedyIT/ridl/actions?query=workflow%3A%22Ruby+Gem+Release%22 action will automatically create a new gem and push it to {Rubygems.org}[https://www.rubygems.org/gems/ridl].
+A new RIDL ruby gem release can be made by incrementing the RIDL version in link:lib/ridl/version.rb and create a new release on {github}[https://github.com/RemedyIT/ridl/releases] matching the new version (for example v2.7.0). The github {Ruby Gem Release}[https://github.com/RemedyIT/ridl/actions?query=workflow%3A%22Ruby+Gem+Release%22] action will automatically create a new gem and push it to {Rubygems.org}[https://www.rubygems.org/gems/ridl].
