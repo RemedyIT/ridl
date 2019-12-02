@@ -15,7 +15,7 @@ module IDL
       self.class.name
     end
     def typeerror(val)
-      raise RuntimeError, "#{val.inspect} cannot narrow to #{self.typename}"
+      raise "#{val.inspect} cannot narrow to #{self.typename}"
     end
     def narrow(obj)
       obj
@@ -51,7 +51,7 @@ module IDL
 
     class UndefinedType
       def initialize(*args)
-        raise RuntimeError, "#{self.class.name}'s not implemented yet."
+        raise "#{self.class.name}'s not implemented yet."
       end
     end
 
@@ -222,7 +222,7 @@ module IDL
     class Fixed < Type
       attr_reader :digits, :scale
       def initialize(digits=nil, scale=nil)
-        raise RuntimeError, "significant digits for Fixed should be in the range 0-31" unless digits.nil? || (0..31) === digits.to_i
+        raise "significant digits for Fixed should be in the range 0-31" unless digits.nil? || (0..31) === digits.to_i
         @digits = digits.nil? ? digits : digits.to_i
         @scale = scale.nil? ? scale : scale.to_i
       end
@@ -277,7 +277,7 @@ module IDL
       attr_accessor :recursive
       def length; @size; end
       def initialize(t, size)
-        raise RuntimeError, "Anonymous type definitions are not allowed!" if t.is_anonymous?
+        raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
         @basetype = t
         @size = size
         @typename = format("sequence<%s%s>", t.typename,
@@ -321,7 +321,7 @@ module IDL
       attr_reader :basetype
       attr_reader :sizes
       def initialize(t, sizes)
-        raise RuntimeError, "Anonymous type definitions are not allowed!" if t.is_anonymous?
+        raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
         @basetype = t
         if sizes.nil?
           @sizes = []

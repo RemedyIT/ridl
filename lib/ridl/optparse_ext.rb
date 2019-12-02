@@ -162,7 +162,7 @@ module IDL
 
           def define_param_set(id, options = {}, &block)
             id = id.to_sym
-            raise RuntimeError, "option parameter set [#{id}] already exists" if @group.sets.has_key?(id)
+            raise "option parameter set [#{id}] already exists" if @group.sets.has_key?(id)
             @group.sets[id] = ParamSet.new(options)
             block.call(ParamSet::Configurator.new(@group.sets[id])) if block_given?
           end
@@ -242,7 +242,7 @@ module IDL
 
         def define_group(id, options = {}, &block)
           id = id.to_sym
-          raise RuntimeError, "option group [#{id}] already exists" if @option.groups.has_key?(id)
+          raise "option group [#{id}] already exists" if @option.groups.has_key?(id)
           @option.groups[id] = Group.new(id, options)
           block.call(Group::Configurator.new(@option.groups[id])) if block_given?
         end
@@ -328,7 +328,7 @@ module IDL
 
     def define_switch(switch, options = {}, &block)
       switch = switch.to_s
-      raise RuntimeError, "switch types mismatch" if @options.has_key?(switch) && options[:type] && options[:type] != @options[switch].type
+      raise "switch types mismatch" if @options.has_key?(switch) && options[:type] && options[:type] != @options[switch].type
       @options[switch] ||= Option.new(switch, options)
       block.call(Option::Configurator.new(@options[switch])) if block_given?
     end

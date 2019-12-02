@@ -25,7 +25,7 @@ class Delegator
   @@pragma_handlers = {}
 
   def self.add_pragma_handler(key, h = nil, &block)
-    raise RuntimeError, 'add_pragma_handler requires a callable object or a block' unless (h && h.respond_to?(:call)) || block_given?
+    raise 'add_pragma_handler requires a callable object or a block' unless (h && h.respond_to?(:call)) || block_given?
     @@pragma_handlers[key] = block_given? ? block : h
   end
 
@@ -201,7 +201,7 @@ class Delegator
     when IDL::AST::Enumerator
       w.visit_enumerator(m)
     else
-      raise RuntimeError, "Invalid IDL member type for walkthrough: #{m.class.name}"
+      raise "Invalid IDL member type for walkthrough: #{m.class.name}"
     end
   end
 
@@ -304,7 +304,7 @@ class Delegator
 
   def define_template_module(global, names)
     if global || names.size>1
-      raise RuntimeError, "no scoped identifier allowed for template module: #{(global ? '::' : '')+names.join('::')}"
+      raise "no scoped identifier allowed for template module: #{(global ? '::' : '')+names.join('::')}"
     end
     @cur = @cur.define(IDL::AST::TemplateModule, names[0])
     @cur.annotations.concat(@annotation_stack) unless @annotation_stack.empty?
@@ -332,7 +332,7 @@ class Delegator
     @template_module_name = nil # reset
     template_type = parse_scopedname(*tmp)
     unless template_type.node.is_a?(IDL::AST::TemplateModule)
-      raise RuntimeError, "invalid module template specification: #{template_type.node.typename} #{template_type.node.scoped_lm_name}"
+      raise "invalid module template specification: #{template_type.node.typename} #{template_type.node.scoped_lm_name}"
     end
     params = { :template => template_type.node, :template_params => parameters }
     mod_inst = @cur.define(IDL::AST::Module, name, params)
@@ -358,8 +358,7 @@ class Delegator
     params[:local] = attrib == :local
     params[:forward] = true
     params[:pseudo] = false
-    raise RuntimeError,
-       "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+    raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     @cur.define(IDL::AST::Interface, name, params)
     set_last
     @cur
@@ -402,8 +401,7 @@ class Delegator
   def declare_component(name)
     params = {}
     params[:forward] = true
-    raise RuntimeError,
-       "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+    raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     set_last
     @cur.define(IDL::AST::Component, name, params)
   end
@@ -465,8 +463,7 @@ class Delegator
     params = {}
     params[:abstract] = attrib == :abstract
     params[:forward] = true
-    raise RuntimeError,
-       "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+    raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     set_last
     @cur.define(IDL::AST::Eventtype, name, params)
     @cur
@@ -489,8 +486,7 @@ class Delegator
     params = {}
     params[:abstract] = attrib == :abstract
     params[:forward] = true
-    raise RuntimeError,
-       "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+    raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     set_last
     @cur.define(IDL::AST::Valuetype, name, params)
     @cur
@@ -562,8 +558,7 @@ class Delegator
     namelist.each do |nm|
       n = node.resolve(nm)
       if n.nil?
-        raise RuntimeError,
-          "cannot find type name '#{nm}' in scope '#{node.scoped_name}'"
+        raise "cannot find type name '#{nm}' in scope '#{node.scoped_name}'"
       end
       node = n
       first = node if first.nil?
@@ -588,8 +583,7 @@ class Delegator
     when IDL::AST::Enumerator
       Expression::Enumerator.new(node)
     else
-      raise RuntimeError,
-         "invalid reference to #{node.class.name}: #{node.scoped_name}"
+      raise "invalid reference to #{node.class.name}: #{node.scoped_name}"
     end
   end
 
@@ -607,8 +601,7 @@ class Delegator
         Type::ULongLong,
       ].detect {|t| t::Range === _value }
       if _type.nil?
-        raise RuntimeError,
-          "it's not a valid integer: #{v.to_s}"
+        raise "it's not a valid integer: #{v.to_s}"
       end
       k.new(_type.new, _value)
     when :string
@@ -633,9 +626,9 @@ class Delegator
       _expression
     else
       if not ::Integer === _expression.value
-        raise RuntimeError, "must be integer: #{_expression.value.inspect}"
+        raise "must be integer: #{_expression.value.inspect}"
       elsif _expression.value < 0
-        raise RuntimeError, "must be positive integer: #{_expression.value.to_s}"
+        raise "must be positive integer: #{_expression.value.to_s}"
       end
       _expression.value
     end
@@ -671,7 +664,7 @@ class Delegator
     @cur.raises = _raises || []
     @cur.context = _context
     if not @cur.context.nil?
-      raise RuntimeError, "context phrase's not supported"
+      raise "context phrase's not supported"
     end
     set_last(@cur)
     @cur = @cur.enclosure
@@ -688,8 +681,7 @@ class Delegator
 
   def declare_struct(_name)
     params = { :forward => true }
-    raise RuntimeError,
-       "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+    raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     set_last
     @cur.define(IDL::AST::Struct, _name, params)
     @cur
@@ -732,8 +724,7 @@ class Delegator
 
   def declare_union(_name)
     params = { :forward => true }
-    raise RuntimeError,
-       "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+    raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     set_last
     @cur.define(IDL::AST::Union, _name, params)
     @cur

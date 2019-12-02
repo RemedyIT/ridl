@@ -85,7 +85,7 @@ module IDL
     # Production management
 
     def push_production(id, producer)
-      raise RuntimeError, "Producer #{id} already queued" if @productionbatch.has_key?(id.to_sym)
+      raise "Producer #{id} already queued" if @productionbatch.has_key?(id.to_sym)
       @productionbatch[id.to_sym] = @productionstack.size
       @productionstack << [id.to_sym, producer]
     end
@@ -185,7 +185,7 @@ module IDL
                    else
                      File.open(_idlfile, 'r')
                    end
-            raise RuntimeError, 'cannot read from STDOUT' if $stdout == _fio
+            raise 'cannot read from STDOUT' if $stdout == _fio
 
             # parse IDL source
             IDL.log(1, "RIDL - parsing #{IO === _idlfile ? 'from STDIN': (StringIO === _idlfile ? 'from string' : _idlfile)}")
