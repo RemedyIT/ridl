@@ -37,8 +37,7 @@ module IDL
       def initialize(node)
         if $DEBUG
           unless IDL::AST::Const === node || (IDL::AST::TemplateParam === node && node.idltype.is_a?(IDL::Type::Const))
-            raise RuntimeError,
-              "#{node.scoped_name} must be constant: #{node.class.name}."
+            raise "#{node.scoped_name} must be constant: #{node.class.name}."
           end
         end
         @node = node
@@ -69,8 +68,7 @@ module IDL
       def initialize(node)
         if $DEBUG
           if not IDL::AST::Enumerator === node
-            raise RuntimeError,
-              "#{node.scoped_name} must be enumerator: #{node.class.name}."
+            raise "#{node.scoped_name} must be enumerator: #{node.class.name}."
           end
         end
         @node = node
@@ -87,8 +85,7 @@ module IDL
         n = self.class::NUMBER_OF_OPERANDS
 
         if _operands.size != n
-          raise RuntimeError,
-            format("%s must receive %d operand%s.",
+          raise format("%s must receive %d operand%s.",
             self.typename, n, if (n>1) then "s" else "" end)
         end
 
@@ -114,8 +111,7 @@ module IDL
       def Operation.suite_type(*types)
         types.each do |t|
           if not self::Applicable.include? t.class
-            raise RuntimeError,
-              "#{self.name} cannot be applicable for #{t.typename}"
+            raise "#{self.name} cannot be applicable for #{t.typename}"
           end
         end
 
@@ -173,8 +169,7 @@ module IDL
 
           t = IDL::Type::Boolean
           if (t1 == t && t2 != t) or (t1 != t && t2 == t)
-            raise RuntimeError,
-              "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
+            raise "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
           end
         end
       end
@@ -191,8 +186,7 @@ module IDL
           # it's expected that Double, LongDouble is a Float.
           s1,s2 = IDL::Type::Float, IDL::Type::Fixed
           if (t1 === s1 && t2 === s2) or (t1 === s2 && t2 === s1)
-            raise RuntimeError,
-              "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
+            raise "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
           end
         end
       end
@@ -237,8 +231,7 @@ module IDL
       protected
         def check_rop(rop)
           if not (0...64) === rop
-            raise RuntimeError,
-              "right operand for shift must be in the range 0 <= right operand < 64: #{rop}."
+            raise "right operand for shift must be in the range 0 <= right operand < 64: #{rop}."
           end
         end
       end

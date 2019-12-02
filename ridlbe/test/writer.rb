@@ -150,7 +150,7 @@ module IDL
       when Expression::ScopedName, Expression::Enumerator
         exp.node.scoped_rubyname
       else
-        raise RuntimeError, "unknown expression type: #{exp.class.name}"
+        raise "unknown expression type: #{exp.class.name}"
       end
     end
 
@@ -207,7 +207,7 @@ module IDL
       when Type::ScopedName
         s = value_to_s(Expression::Value.new(exp.idltype.node.idltype, v))
       else
-        raise RuntimeError, "#{exp.typename}'s not been supported yet."
+        raise "#{exp.typename}'s not been supported yet."
       end
       s
     end
@@ -241,7 +241,7 @@ module IDL
       when Expression::Operation::Mod
         s = expression_to_s(op[0]) + " % " + expression_to_s(op[1])
       else
-        raise RuntimeError, "unknown operation: #{exp.type.name}"
+        raise "unknown operation: #{exp.type.name}"
       end
       "(" + s + ")"
     end

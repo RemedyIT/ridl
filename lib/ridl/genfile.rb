@@ -224,22 +224,22 @@ module IDL
           if regen_marker_re =~ line
             case $1
             when 'BEGIN'
-              raise RuntimeError, "ERROR: Found unterminated regeneration section starting at #{@path}:#{in_section.last}." if in_section
+              raise "ERROR: Found unterminated regeneration section starting at #{@path}:#{in_section.last}." if in_section
               in_section = [$2, linenr]
               section = []
             when 'END'
-              raise RuntimeError, "ERROR: Found unmatched regeneration end at #{@path}:#{linenr}." unless in_section && ($2 == in_section.first)
+              raise "ERROR: Found unmatched regeneration end at #{@path}:#{linenr}." unless in_section && ($2 == in_section.first)
               sections[$2] = section
               in_section = nil
               section = []
             when 'HEADER_END'
-              raise RuntimeError, "ERROR: Found illegal header end marker at #{@path}:#{linenr}." unless _keep_header && in_section &&
+              raise "ERROR: Found illegal header end marker at #{@path}:#{linenr}." unless _keep_header && in_section &&
                                                                                                          ('HEADER' == in_section.first ) && (0 == in_section.last)
               sections[$2] = section
               in_section = nil
               section = []
             else
-              raise RuntimeError, "ERROR: Found invalid regeneration marker at #{@path}:#{linenr}."
+              raise "ERROR: Found invalid regeneration marker at #{@path}:#{linenr}."
             end
           elsif in_section
             section << line
