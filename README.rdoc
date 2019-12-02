@@ -1,5 +1,6 @@
 {<img src="https://badge.fury.io/rb/ridl.svg" alt="Gem Version" />}[https://badge.fury.io/rb/ridl]
 {<img src="https://dev.azure.com/remedyit/axcioma/_apis/build/status/ridl?branchName=master" alt="Azure pipeline" />}[https://dev.azure.com/remedyit/axcioma/_build?definitionId=7&_a=summary]
+{<img src="https://www.codefactor.io/repository/github/remedyit/ridl/badge" alt="CodeFactor" />}[https://www.codefactor.io/repository/github/remedyit/ridl]
 
 = RIDL Compiler
 
