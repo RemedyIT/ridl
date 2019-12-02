@@ -61,6 +61,11 @@ task :gem do
     gem.rdoc_options << '--main' << 'README.rdoc' << '--exclude' << '\.(idl|pidl|diff|ry)'
     gem.executables = []
     gem.license = 'MIT'
+    gem.metadata = {
+      "bug_tracker_uri"   => "https://github.com/RemedyIT/ridl/issues",
+      "source_code_uri"   => "https://github.com/RemedyIT/ridl"
+    }
+    gem.required_ruby_version = '>= 2.0'
   end
   RIDL.build_gem(gemspec)
 end
