@@ -13,8 +13,8 @@
 module IDL
 
   RIDL_VERSION_MAJOR = 2.freeze
-  RIDL_VERSION_MINOR = 6.freeze
-  RIDL_VERSION_RELEASE = 1.freeze
+  RIDL_VERSION_MINOR = 7.freeze
+  RIDL_VERSION_RELEASE = 0.freeze
   RIDL_VERSION = "#{RIDL_VERSION_MAJOR}.#{RIDL_VERSION_MINOR}.#{RIDL_VERSION_RELEASE}"
   RIDL_COPYRIGHT = "Copyright (c) 2007-#{Time.now.year} Remedy IT Expertise BV, The Netherlands".freeze
 
