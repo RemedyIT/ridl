@@ -109,7 +109,7 @@ module IDL
         :output_file => nil,
         :create_missing_dir => false
       }.merge(opts)
-      if @options[:regenerate] && File.exists?(@fullpath)
+      if @options[:regenerate] && File.exist?(@fullpath)
         parse_regeneration_content
       else
         @content = Content.new
@@ -159,7 +159,7 @@ module IDL
         fgen = @fout
         @fout = nil
         fgen.close(false) # close but do NOT unlink
-        if File.exists?(@fullpath)
+        if File.exist?(@fullpath)
           # create temporary backup
           ftmp = Tempfile.new(@name)
           ftmp_name = ftmp.path.dup
