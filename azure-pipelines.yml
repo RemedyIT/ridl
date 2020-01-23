@@ -65,7 +65,7 @@ jobs:
     displayName: Run brix11 configure
   - powershell: |
       $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib env
-      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib configure
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib configure -P
     displayName: Print brix11 configuration
   - powershell: |
       $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib gen build axcioma/workspace.mwc
