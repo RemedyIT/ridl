@@ -23,8 +23,9 @@ require 'optparse'
 class OptionParser::Switch::RequiredArgument
   def initialize(pattern = nil, conv = nil,
                  short = nil, long = nil, arg = nil,
-                 desc = ([] if short or long), block = Proc.new)
-    super
+                 desc = ([] if short or long), block = nil, &_block)
+    block ||= _block
+    super(pattern, conv, short, long, arg, desc, block)
     if (@long.nil? || @long.empty?) && (@arg =~ /^(<.*>|[\{].*[\}])((=|\s).*)?/)
       @multichar_short = true
       @has_arg = (@arg =~ /^(<.*>|[\{].*[\}])(=|\s).*$/ ? true : false)
