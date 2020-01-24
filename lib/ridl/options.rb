@@ -44,7 +44,7 @@ module IDL
     end
 
     def delete(k)
-      modifiable.delete(k)
+      table.delete(k)
     end
 
     def has_key?(k)
