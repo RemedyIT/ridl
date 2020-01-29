@@ -66,7 +66,7 @@ jobs:
       git clone --depth 1 git://github.com/RemedyIT/taox11.git $(TAOX11_ROOT)
     displayName: git clone dependent repositories
   - powershell: |
-      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib -t gnuace configure -W aceroot=$(ACE_ROOT) -W taoroot=$(TAO_ROOT) -W mpcroot=$(MPC_ROOT)
+      $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib configure -W aceroot=$(ACE_ROOT) -W taoroot=$(TAO_ROOT) -W mpcroot=$(MPC_ROOT)
     displayName: Run brix11 configure
   - powershell: |
       $(X11_BASE_ROOT)/bin/brix11 -D RIDL_ROOT=$(RIDL_ROOT)/lib env
