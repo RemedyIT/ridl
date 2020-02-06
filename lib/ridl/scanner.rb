@@ -517,9 +517,8 @@ module IDL
       else
         if s2[0] == ?_
           s2.slice!(0) ## if starts with CORBA IDL escape => remove
-        else
-          parse_error "identifier must begin with alphabet character: #{s2}" unless ALPHA_LC.include?(s2[0]) || ALPHA_UC.include?(s2[0])
         end
+        parse_error "identifier must begin with alphabet character: #{s2}" unless ALPHA_LC.include?(s2[0]) || ALPHA_UC.include?(s2[0])
       end
 
       # preprocessor check
