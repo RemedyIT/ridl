@@ -48,9 +48,9 @@ module IDL::AST
   end
 
   class Annotations
-    def initialize(stack = [], index = {})
-      @index = index
-      @stack = stack
+    def initialize
+      @index = {}
+      @stack = []
     end
 
     def empty?
@@ -74,17 +74,8 @@ module IDL::AST
       self[annid].each(&block)
     end
 
-    def clear
-      @index.clear
-      @stack.clear
-    end
-
     def concat(anns)
-      (anns || []).each {|_ann| self << _ann }
-    end
-
-    def dup
-      self.class.new(@stack.dup, @index.dup)
+      anns.each {|_ann| self << _ann } if anns
     end
   end
 
