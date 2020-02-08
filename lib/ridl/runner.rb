@@ -19,11 +19,6 @@ require 'ridl/options'
 
 module IDL
 
-  # TODO : LEGACY solution for R2CORBA; to be removed when R2CORBA has been updated
-  #        See also IDL#init
-  @@embedded = false unless class_variable_defined?(:@@embedded)
-  @@be_name = nil unless class_variable_defined?(:@@be_name)
-
   OPTIONS = Options.new({
       :outputdir       => nil,
       :includepaths    => [],
@@ -452,39 +447,37 @@ module IDL
   def IDL.init(argv = ARGV)
     options = OPTIONS.dup
 
-    unless @@embedded
-      # load config file(s) if any
-      Options.load_config(options)
+    # load config file(s) if any
+    Options.load_config(options)
 
-      IDL.log(2, "Configuration [#{options}]")
+    IDL.log(2, "Configuration [#{options}]")
 
-      # check commandline args for explicit language mapping backend
-      if argv.first =~ /^:\S+/
-        @@be_name = argv.shift.reverse.chop.reverse.to_sym
-      elsif ENV['RIDL_BE_SELECT']   # or from environment
-        @@be_name = ENV['RIDL_BE_SELECT'].to_sym
-      elsif options[:backend]       # or from configuration
-        @@be_name = options[:backend].to_sym
-      end
+    # check commandline args for explicit language mapping backend
+    if argv.first =~ /^:\S+/
+      be_name = argv.shift.reverse.chop.reverse.to_sym
+    elsif ENV['RIDL_BE_SELECT']   # or from environment
+      be_name = ENV['RIDL_BE_SELECT'].to_sym
+    elsif options[:backend]       # or from configuration
+      be_name = options[:backend].to_sym
+    end
 
-      # add optional search paths for RIDL backends
-      options[:be_path] ||= []
-      options[:be_path].unshift(*ENV['RIDL_BE_PATH'].split(/#{File::PATH_SEPARATOR}/)) if ENV['RIDL_BE_PATH']
-      options[:be_path].collect! {|p| p.gsub('\\', '/') } # cleanup to prevent mixed path separators
-      $:.concat(options[:be_path]) unless options[:be_path].empty?
+    # add optional search paths for RIDL backends
+    options[:be_path] ||= []
+    options[:be_path].unshift(*ENV['RIDL_BE_PATH'].split(/#{File::PATH_SEPARATOR}/)) if ENV['RIDL_BE_PATH']
+    options[:be_path].collect! {|p| p.gsub('\\', '/') } # cleanup to prevent mixed path separators
+    $:.concat(options[:be_path]) unless options[:be_path].empty?
 
-      # check for special bootstrapping switches
-      if argv.first == '--preprocess'
-        options[:preprocess] = true
-        argv.shift
-      elsif argv.first == '--ignore-pidl'
-        options[:ignore_pidl] = true
-        argv.shift
-      end
+    # check for special bootstrapping switches
+    if argv.first == '--preprocess'
+      options[:preprocess] = true
+      argv.shift
+    elsif argv.first == '--ignore-pidl'
+      options[:ignore_pidl] = true
+      argv.shift
     end
 
     # create RIDL engine
-    Thread.current[:ridl_engine] = Engine.new(@@be_name, options)
+    Thread.current[:ridl_engine] = Engine.new(be_name, options)
   end
 
   # main run method
