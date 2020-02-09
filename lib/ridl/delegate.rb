@@ -288,8 +288,8 @@ class Delegator
 
   def define_module(name)
     @cur = @cur.define(IDL::AST::Module, name)
-    @cur.annotations.concat(@annotation_stack) unless @annotation_stack.empty?
-    @annotation_stack.clear
+    @cur.annotations.concat(@annotation_stack)
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur
   end
@@ -307,8 +307,8 @@ class Delegator
       raise "no scoped identifier allowed for template module: #{(global ? '::' : '')+names.join('::')}"
     end
     @cur = @cur.define(IDL::AST::TemplateModule, names[0])
-    @cur.annotations.concat(@annotation_stack) unless @annotation_stack.empty?
-    @annotation_stack.clear
+    @cur.annotations.concat(@annotation_stack)
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur
   end
@@ -321,8 +321,8 @@ class Delegator
       define_template_module(*tmp)
     end
     params = { :type => type }
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::TemplateParam, name, params))
     @cur
   end
@@ -336,8 +336,8 @@ class Delegator
     end
     params = { :template => template_type.node, :template_params => parameters }
     mod_inst = @cur.define(IDL::AST::Module, name, params)
-    mod_inst.annotations.concat(@annotation_stack) unless @annotation_stack.empty?
-    @annotation_stack.clear
+    mod_inst.annotations.concat(@annotation_stack)
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(mod_inst.template.instantiate(mod_inst))
     @cur
   end
@@ -346,8 +346,8 @@ class Delegator
     params = {}
     params[:tpl_type] = type
     params[:tpl_params] = tpl_params || []
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::TemplateModuleReference, name, params))
     @cur
   end
@@ -371,8 +371,8 @@ class Delegator
     params[:pseudo] = attrib == :pseudo
     params[:forward] = false
     params[:inherits] = inherits
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Interface, name, params)
   end
@@ -387,8 +387,8 @@ class Delegator
     params[:component] = component
     params[:key] = key
     params[:supports] = supports || []
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Home, name, params)
   end
@@ -410,8 +410,8 @@ class Delegator
     params = {}
     params[:base] = base
     params[:supports] = supports || []
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Component, name, params)
   end
@@ -424,8 +424,8 @@ class Delegator
   def define_connector(name, base = nil)
     params = {}
     params[:base] = base
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Connector, name, params)
   end
@@ -437,8 +437,8 @@ class Delegator
 
   def define_porttype(name)
     params = {}
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Porttype, name, params)
   end
@@ -453,8 +453,8 @@ class Delegator
     params[:porttype] = porttype
     params[:type] = type
     params[:multiple] = multiple
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Port, name, params))
     @cur
   end
@@ -475,8 +475,8 @@ class Delegator
     params[:custom] = attrib == :custom
     params[:forward] = false
     params[:inherits] = inherits
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Eventtype, name, params)
     @cur
@@ -498,8 +498,8 @@ class Delegator
     params[:custom] = attrib == :custom
     params[:forward] = false
     params[:inherits] = inherits
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Valuetype, name, params)
     @cur
@@ -518,16 +518,16 @@ class Delegator
     params = {}
     params[:type] = type
     params[:visibility] = (public_ ? :public : :private)
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::StateMember, name, params))
     @cur
   end
 
   def define_valuebox(name, type)
     params = { :type => type }
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Valuebox, name, params))
     @cur
   end
@@ -536,8 +536,8 @@ class Delegator
     params = {}
     params[:params] = params_
     params[:raises] = raises_
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Initializer, name, params))
     @cur
   end
@@ -546,8 +546,8 @@ class Delegator
     params = {}
     params[:params] = params_
     params[:raises] = raises_
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Finder, name, params))
     @cur
   end
@@ -636,8 +636,8 @@ class Delegator
 
   def define_const(_type, _name, _expression)
     params = { :type => _type, :expression => _expression }
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Const, _name, params))
     @cur
   end
@@ -646,8 +646,8 @@ class Delegator
     params = Hash.new
     params[:oneway] = (_oneway == :oneway)
     params[:type]   = _type
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Operation, _name, params)
   end
@@ -655,8 +655,8 @@ class Delegator
     params = Hash.new
     params[:attribute] = _attribute
     params[:type] = _type
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Parameter, _name, params))
     @cur
   end
@@ -674,8 +674,8 @@ class Delegator
     params = Hash.new
     params[:type] = _type
     params[:readonly] = _readonly
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Attribute, _name, params))
   end
 
@@ -688,16 +688,16 @@ class Delegator
   end
   def define_struct(_name)
     params = { :forward => false }
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Struct, _name, params)
   end
   def declare_member(_type, _name)
     params = Hash.new
     params[:type] = _type
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Member, _name, params))
     @cur
   end
@@ -710,8 +710,8 @@ class Delegator
   end
   def define_exception(_name)
     params = { :forward => false }
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Exception, _name, params)
   end
@@ -731,23 +731,23 @@ class Delegator
   end
   def define_union(_name)
     params = { :forward => false }
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Union, _name, params)
   end
   def define_union_switchtype(union_node, switchtype)
     union_node.set_switchtype(switchtype)
-    union_node.annotations.concat(@annotation_stack) unless @annotation_stack.empty?
-    @annotation_stack.clear
+    union_node.annotations.concat(@annotation_stack)
+    @annotation_stack = IDL::AST::Annotations.new
     union_node
   end
   def define_case(_labels, _type, _name)
     params = Hash.new
     params[:type] = _type
     params[:labels] = _labels
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::UnionMember, _name, params))
     @cur
   end
@@ -762,8 +762,8 @@ class Delegator
 
   def define_enum(_name)
     params = {}
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Enum, _name, params)
   end
@@ -773,8 +773,8 @@ class Delegator
       :value => n,
       :enum => @cur
     }
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.enclosure.define(IDL::AST::Enumerator, _name, params))
     @cur
   end
@@ -788,8 +788,8 @@ class Delegator
   def declare_typedef(_type, _name)
     params = Hash.new
     params[:type] = _type
-    params[:annotations] = @annotation_stack.dup unless @annotation_stack.empty?
-    @annotation_stack.clear
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Typedef, _name, params))
     @cur
   end

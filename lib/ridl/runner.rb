@@ -34,6 +34,55 @@ module IDL
   CORE_OPTIONS = OPTIONS.keys
 
   class Engine
+
+    class ProductionStack
+      def initialize
+        @stack = []
+        @index = {}
+      end
+
+      def size
+        @stack.size
+      end
+
+      def empty?
+        @stack.empty?
+      end
+
+      def push(id, prod)
+        @index[id.to_sym] = @stack.size
+        @stack << [id.to_sym, prod]
+      end
+
+      def pop
+        return nil if empty?
+        id, prod = @stack.shift
+        @index.delete(id)
+        prod
+      end
+
+      def peek
+        return nil if empty?
+        id, _ = @stack.first
+        id
+      end
+
+      def remove(id)
+        return nil unless has?(id)
+        i = @index.delete(id.to_sym)
+        _, producer = @productionstack.delete(i)
+        producer
+      end
+
+      def has?(id)
+        @index.has_key?(id.to_sym)
+      end
+
+      def [](id)
+        @stack[@index[id.to_sym]].last
+      end
+    end
+
     def initialize(backend, options)
       @backend = backend ? Backend.load(backend) : Backend.null_be
       @initopts = options.merge({
@@ -46,8 +95,7 @@ module IDL
       })
       @optparser = init_optparser
       @inputstack = []
-      @productionbatch = {}
-      @productionstack = []
+      @productionstack = ProductionStack.new
       @options = nil
     end
 
@@ -80,29 +128,20 @@ module IDL
     # Production management
 
     def push_production(id, producer)
-      raise "Producer #{id} already queued" if @productionbatch.has_key?(id.to_sym)
-      @productionbatch[id.to_sym] = @productionstack.size
-      @productionstack << [id.to_sym, producer]
+      raise "Producer #{id} already queued" if @productionstack.has?(id)
+      @productionstack.push(id, producer)
     end
 
     def pop_production
-      return nil unless has_productions?
-      id, producer = @productionstack.shift
-      @productionbatch.delete(id)
-      producer
+      @productionstack.pop
     end
 
     def peek_production
-      return nil unless has_productions?
-      id, _ = @productionstack.first
-      id
+      @productionstack.peek
     end
 
     def remove_production(id)
-      return nil unless has_production?(id)
-      i = @productionbatch.delete(id.to_sym)
-      _, producer = @productionstack.delete(i)
-      producer
+      @productionstack.remove(id)
     end
 
     def has_productions?
@@ -110,11 +149,11 @@ module IDL
     end
 
     def has_production?(id)
-      @productionbatch.has_key?(id.to_sym)
+      @productionstack.has?(id)
     end
 
     def production(id)
-      @productionstack[@productionbatch[id.to_sym]].last
+      @productionstack[id]
     end
 
     # Verbosity control
