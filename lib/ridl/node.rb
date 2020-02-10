@@ -183,15 +183,11 @@ module IDL::AST
         raise "ID prefix should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(pfx[0,1])
         raise 'Invalid ID prefix! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed' unless REPO_ID_RE =~ pfx
       end
-      self._set_prefix(pfx)
+      self.set_prefix(pfx)
     end
 
     def replace_prefix(pfx)
       self.prefix = pfx
-    end
-
-    def _set_prefix(pfx)
-      @prefix = pfx.to_s
     end
 
     def repository_id
@@ -219,6 +215,11 @@ module IDL::AST
     end
 
   protected
+
+    def set_prefix(pfx)
+      @prefix = pfx.to_s
+    end
+
     def copy_from(_template, _context)
       @prefix = _template.instance_variable_get(:@prefix)
       @repo_id = _template.instance_variable_get(:@repo_id)
@@ -544,21 +545,21 @@ module IDL::AST
     def replace_prefix(pfx)
       self.prefix = pfx   # handles validation
       if @anchor.nil?
-        self.replace_prefix_(pfx)
+        self.replace_prefix_i(pfx)
       else
-        @anchor.replace_prefix_(pfx)
-      end
-    end
-
-    def _set_prefix(pfx)
-      if @anchor.nil?
-        self._set_prefix_(pfx)
-      else
-        @anchor._set_prefix_(pfx)
+        @anchor.replace_prefix_i(pfx)
       end
     end
 
   protected
+
+    def set_prefix(pfx)
+      if @anchor.nil?
+        self.set_prefix_i(pfx)
+      else
+        @anchor.set_prefix_i(pfx)
+      end
+    end
 
     def get_annotations
       @annotations
@@ -577,16 +578,16 @@ module IDL::AST
       self
     end
 
-    def replace_prefix_(pfx)
+    def replace_prefix_i(pfx)
       walk_members { |m| m.replace_prefix(pfx) }
       # propagate along chain using fast method
-      @next.replace_prefix_(pfx) unless @next.nil?
+      @next.replace_prefix_i(pfx) unless @next.nil?
     end
 
-    def _set_prefix_(pfx)
+    def set_prefix_i(pfx)
       @prefix = pfx
       # propagate along chain
-      self.next._set_prefix_(pfx) unless self.next.nil?
+      self.next.set_prefix_i(pfx) unless self.next.nil?
     end
 
     def search_self(_name)
