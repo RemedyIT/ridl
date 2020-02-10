@@ -112,16 +112,12 @@ module IDL::AST
       @name.unescaped_name
     end
 
-    def lm_name_for_scope
-      lm_name
-    end
-
     def scoped_name
       @scoped_name ||= @scopes.collect{|s| s.name}.join("::").freeze
     end
 
     def scoped_lm_name
-      @scoped_lm_name ||= @scopes.collect{|s| s.lm_name_for_scope }.join('::').freeze
+      @scoped_lm_name ||= (@enclosure ? [@enclosure.scoped_lm_name, lm_name].join('::') : '').freeze
     end
 
     def marshal_dump
@@ -214,7 +210,7 @@ module IDL::AST
       end
     end
 
-    def has_annotations?()
+    def has_annotations?
       !@annotations.empty?
     end
 
@@ -822,7 +818,10 @@ module IDL::AST
       #overrule
       @scopes = @enclosure.scopes
       @scoped_name = @scopes.collect{|s| s.name}.join("::")
-      @scoped_lm_name = @scopes.collect{|s| s.lm_name}.join("::")
+    end
+
+    def scoped_lm_name
+      @scoped_lm_name ||= @enclosure.scoped_lm_name
     end
 
     def marshal_dump
@@ -837,7 +836,6 @@ module IDL::AST
       #overrule
       @scopes = @enclosure.scopes || []
       @scoped_name = @scopes.collect{|s| s.name}.join("::")
-      @scoped_lm_name = @scopes.collect{|s| s.lm_name}.join("::")
     end
 
     def is_defined?; @defined; end
@@ -868,7 +866,6 @@ module IDL::AST
       #overrule
       @scopes = @enclosure.scopes
       @scoped_name = @scopes.collect{|s| s.name}.join("::")
-      @scoped_lm_name = @scopes.collect{|s| s.lm_name}.join("::")
       self
     end
 
