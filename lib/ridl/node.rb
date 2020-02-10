@@ -130,10 +130,6 @@ module IDL::AST
       @scoped_lm_name = nil
     end
 
-    def repo_scopes
-      @repo_scopes ||= (@enclosure.nil? ? [] : (@enclosure.repo_scopes.dup << self))
-    end
-
     def is_template?
       @enclosure && @enclosure.is_template?
     end
@@ -203,7 +199,7 @@ module IDL::AST
         @repo_ver = "1.0" unless @repo_ver
         format("IDL:%s%s:%s",
                 if @prefix.empty? then "" else @prefix+"/" end,
-                self.repo_scopes.collect{|s| s.name}.join("/"),
+                self.scopes.collect{|s| s.name}.join("/"),
                 @repo_ver)
       else
         @repo_id
@@ -393,7 +389,6 @@ module IDL::AST
       super(_name, _enclosure)
       @anchor = params[:anchor]
       @prefix = params[:prefix] || @prefix
-      @not_in_repo_id = params[:not_in_repo_id]
       @template = params[:template]
       @template_params = (params[:template_params] || []).dup
       @next = nil
@@ -436,10 +431,6 @@ module IDL::AST
 
     def instantiate(_context, _enclosure)
       super(_context, _enclosure, {})
-    end
-
-    def repo_scopes
-      @repo_scopes ||= (@enclosure.nil? ? [] : (@not_in_repo_id ? @enclosure.repo_scopes.dup : (@enclosure.repo_scopes.dup << self)))
     end
 
     def redefine(node, params)
@@ -840,10 +831,6 @@ module IDL::AST
 
     def is_defined?; @defined; end
     def is_preprocessed?; @preprocessed; end
-
-    def repo_scopes
-      @repo_scopes ||= (@enclosure.nil? ? [] : @enclosure.repo_scopes.dup)
-    end
 
     def introduce(node)
       @enclosure.introduce(node) unless node == self
