@@ -112,10 +112,6 @@ module IDL::AST
       @name.unescaped_name
     end
 
-    def parsed_name_scope
-      (@enclosure ? @enclosure.parsed_name_scope : '') + '::' + @name
-    end
-
     def lm_name_for_scope
       lm_name
     end
