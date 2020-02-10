@@ -129,7 +129,7 @@ module IDL::AST
     end
 
     def marshal_dump
-      [@name, @lm_name, @intern, @enclosure, @scopes, @prefix, @repo_id, @repo_ver, @annotations]
+      [@name, lm_name, @intern, @enclosure, @scopes, @prefix, @repo_id, @repo_ver, @annotations]
     end
 
     def marshal_load(vars)
