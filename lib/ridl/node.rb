@@ -97,7 +97,7 @@ module IDL::AST
       @lm_name = nil
       @intern = _name.rjust(1).downcase.intern
       @enclosure = _enclosure
-      @scopes = if @enclosure.nil? then [] else (@enclosure.scopes.dup << self) end
+      @scopes = if @enclosure then (@enclosure.scopes.dup << self) else [] end
       @prefix = ''
       @repo_id = nil
       @repo_ver = nil
@@ -106,6 +106,10 @@ module IDL::AST
 
     def lm_name
       @lm_name ||= @name.checked_name.dup
+    end
+
+    def lm_scopes
+      @lm_scopes ||= if @enclosure then (@enclosure.lm_scopes.dup << lm_name) else [] end
     end
 
     def unescaped_name
@@ -117,7 +121,7 @@ module IDL::AST
     end
 
     def scoped_lm_name
-      @scoped_lm_name ||= (@enclosure ? [@enclosure.scoped_lm_name, lm_name].join('::') : '').freeze
+      @scoped_lm_name ||= lm_scopes.join("::").freeze
     end
 
     def marshal_dump
@@ -128,6 +132,7 @@ module IDL::AST
       @name, @lm_name, @intern, @enclosure, @scopes, @prefix, @repo_id, @repo_ver, @annotations = vars
       @scoped_name = nil
       @scoped_lm_name = nil
+      @lm_scopes = nil
     end
 
     def is_template?
@@ -812,8 +817,8 @@ module IDL::AST
       @scoped_name = @scopes.collect{|s| s.name}.join("::")
     end
 
-    def scoped_lm_name
-      @scoped_lm_name ||= @enclosure.scoped_lm_name
+    def lm_scopes
+      @lm_scopes ||= @enclosure.lm_scopes
     end
 
     def marshal_dump
