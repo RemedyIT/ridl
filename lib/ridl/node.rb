@@ -81,7 +81,6 @@ module IDL::AST
 
   class Leaf
     attr_reader :name, :intern
-    attr_reader :lm_name
     attr_accessor :enclosure
     attr_reader :scopes
     attr_reader :prefix
@@ -95,7 +94,7 @@ module IDL::AST
       _name ||= ''
       _name = IDL::Scanner::Identifier.new(_name, _name) unless IDL::Scanner::Identifier === _name
       @name = _name
-      @lm_name = self.class.mk_name(_name.checked_name, _enclosure.nil? ? false : _enclosure.scopes.size>0).freeze
+      @lm_name = nil
       @intern = _name.rjust(1).downcase.intern
       @enclosure = _enclosure
       @scopes = if @enclosure.nil? then [] else (@enclosure.scopes.dup << self) end
@@ -103,6 +102,10 @@ module IDL::AST
       @repo_id = nil
       @repo_ver = nil
       @annotations = Annotations.new
+    end
+
+    def lm_name
+      @lm_name ||= @name.checked_name.dup
     end
 
     def unescaped_name
@@ -126,7 +129,7 @@ module IDL::AST
     end
 
     def marshal_dump
-      [@name, @lm_name, @intern, @enclosure, @scopes, @prefix, @repo_id, @repo_ver, @annotations]
+      [@name, lm_name, @intern, @enclosure, @scopes, @prefix, @repo_id, @repo_ver, @annotations]
     end
 
     def marshal_load(vars)
@@ -388,7 +391,6 @@ module IDL::AST
   class Enumerator < Leaf; end
 
   class Module < Node
-    NAMETYPE = :class
     DEFINABLE = [
       IDL::AST::Module, IDL::AST::Interface, IDL::AST::Valuebox, IDL::AST::Valuetype, IDL::AST::Const, IDL::AST::Struct,
       IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef, IDL::AST::Include,
@@ -638,7 +640,6 @@ module IDL::AST
   end # Module
 
   class TemplateParam < Leaf
-    NAMETYPE = :class
     attr_reader :idltype, :concrete
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -688,7 +689,6 @@ module IDL::AST
   end
 
   class TemplateModule < Module
-    NAMETYPE = :class
     DEFINABLE = [
       IDL::AST::Include, IDL::AST::Module, IDL::AST::Interface, IDL::AST::Valuebox, IDL::AST::Valuetype,
       IDL::AST::Const, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef,
@@ -775,7 +775,6 @@ module IDL::AST
   end # TemplateModule
 
   class TemplateModuleReference < Leaf
-    NAMETYPE = :class
     def initialize(_name, _enclosure, _params)
       super(_name, _enclosure)
       unless _params[:tpl_type].is_a?(IDL::Type::ScopedName) && _params[:tpl_type].is_node?(IDL::AST::TemplateModule)
@@ -952,7 +951,6 @@ module IDL::AST
   end # Derivable
 
   class Interface < Derivable
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute,
                  IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
     attr_reader :bases
@@ -1125,7 +1123,6 @@ module IDL::AST
   end # Interface
 
   class ComponentBase < Derivable
-    NAMETYPE = :class
     DEFINABLE = []
     attr_reader :base
     attr_reader :interfaces
@@ -1290,7 +1287,6 @@ module IDL::AST
   end # ComponentBase
 
   class Home < ComponentBase
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::Initializer, IDL::AST::Finder,
                  IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
     attr_reader :component
@@ -1365,7 +1361,6 @@ module IDL::AST
   end # Home
 
   class Connector < ComponentBase
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
 
     def initialize(_name, _enclosure, params)
@@ -1444,7 +1439,6 @@ module IDL::AST
   end # Connector
 
   class Component < ComponentBase
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
 
     def initialize(_name, _enclosure, params)
@@ -1528,7 +1522,6 @@ module IDL::AST
   end # Component
 
   class Porttype < Node
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
     attr_reader :idltype
     def initialize(_name, _enclosure, params)
@@ -1550,7 +1543,6 @@ module IDL::AST
   end # Porttype
 
   class Port < Leaf
-    NAMETYPE = :member
     PORTTYPES = [:facet, :receptacle, :emitter, :publisher, :consumer, :port, :mirrorport]
     PORT_MIRRORS = {:facet => :receptacle, :receptacle => :facet}
     EXTPORTDEF_ANNOTATION = 'ExtendedPortDef'
@@ -1630,7 +1622,6 @@ module IDL::AST
   end # Port
 
   class Valuebox < Leaf
-    NAMETYPE = :class
     attr_reader :idltype, :boxed_type
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -1666,7 +1657,6 @@ module IDL::AST
   end # Valuebox
 
   class Valuetype < Derivable
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::Include, IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::StateMember, IDL::AST::Initializer,
                  IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
     attr_reader :bases, :interfaces
@@ -1959,7 +1949,6 @@ module IDL::AST
   end # Eventtype
 
   class StateMember < Leaf
-    NAMETYPE = :member
     attr_reader :idltype, :visibility
     def initialize(_name, _enclosure, params)
       @is_recursive = false
@@ -2067,7 +2056,6 @@ module IDL::AST
   end # StateMember
 
   class Initializer < Leaf
-    NAMETYPE = :member
     attr_reader :raises, :params
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -2129,7 +2117,6 @@ module IDL::AST
   end # Finder
 
   class Const < Leaf
-    NAMETYPE = :class
     attr_reader :idltype, :expression, :value
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -2170,7 +2157,6 @@ module IDL::AST
   end # Const
 
   class Parameter < Leaf
-    NAMETYPE = :member
     IN, OUT, INOUT = 0, 1, 2
     ATTRIBUTE_MAP = {
       :in => IN,
@@ -2226,7 +2212,6 @@ module IDL::AST
   end # Parameter
 
   class Operation < Node
-    NAMETYPE = :member
     DEFINABLE = [IDL::AST::Parameter]
     attr_reader :idltype, :oneway, :raises
     attr_accessor :context
@@ -2343,7 +2328,6 @@ module IDL::AST
   class Attribute < Leaf
     attr_reader :idltype, :readonly
     attr_reader :get_raises, :set_raises
-    NAMETYPE = :member
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype  = params[:type]
@@ -2433,7 +2417,6 @@ module IDL::AST
   end # Attribute
 
   class Struct < Node
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
     attr_reader :idltype
     def initialize(_name, _enclosure, params)
@@ -2505,7 +2488,6 @@ module IDL::AST
 
   class Member < Leaf
     attr_reader :idltype
-    NAMETYPE = :member
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype  = params[:type]
@@ -2571,7 +2553,6 @@ module IDL::AST
   end # Member
 
   class Union < Node
-    NAMETYPE = :class
     DEFINABLE = [IDL::AST::UnionMember, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
     attr_reader :idltype
     attr_accessor :switchtype
@@ -2689,7 +2670,6 @@ module IDL::AST
   end # Union
 
   class UnionMember < Member
-    NAMETYPE = :member
     attr_reader :labels
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure, params)
@@ -2719,7 +2699,6 @@ module IDL::AST
   end # UnionMember
 
   class Enum < Leaf
-    NAMETYPE = :class
     attr_reader :idltype
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -2752,7 +2731,6 @@ module IDL::AST
   end # Enum
 
   class Enumerator < Leaf
-    NAMETYPE = :class
     attr_reader :idltype, :enum, :value
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -2783,7 +2761,6 @@ module IDL::AST
 
   class Typedef < Leaf
     attr_reader :idltype
-    NAMETYPE = :class
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype  = params[:type]
