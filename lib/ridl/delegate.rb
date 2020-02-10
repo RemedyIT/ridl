@@ -205,10 +205,6 @@ class Delegator
     end
   end
 
-  def cur_parsed_name_scope
-    @cur ? @cur.parsed_name_scope : ''
-  end
-
   def is_included?(s)
     @includes.has_key?(s)
   end
