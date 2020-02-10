@@ -112,22 +112,6 @@ module IDL
       end
     end
 
-    module LeafMixin
-      def self.included(klass)
-        klass.extend ClassMethods
-      end
-
-      module ClassMethods
-        def mk_name(nm, is_scoped)
-          return nm.dup
-        end
-      end
-    end # module LeafMixin
-
-    IDL::AST::Leaf.class_eval do
-      include LeafMixin
-    end
-
     module ScannerMixin
 
       def chk_identifier(ident)
