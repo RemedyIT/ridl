@@ -97,7 +97,7 @@ module IDL::AST
       @lm_name = nil
       @intern = _name.rjust(1).downcase.intern
       @enclosure = _enclosure
-      @scopes = if @enclosure.nil? then [] else (@enclosure.scopes.dup << self) end
+      @scopes = if @enclosure then (@enclosure.scopes.dup << self) else [] end
       @prefix = ''
       @repo_id = nil
       @repo_ver = nil
@@ -108,12 +108,12 @@ module IDL::AST
       @lm_name ||= @name.checked_name.dup
     end
 
-    def unescaped_name
-      @name.unescaped_name
+    def lm_scopes
+      @lm_scopes ||= if @enclosure then (@enclosure.lm_scopes.dup << lm_name) else [] end
     end
 
-    def lm_name_for_scope
-      lm_name
+    def unescaped_name
+      @name.unescaped_name
     end
 
     def scoped_name
@@ -121,7 +121,7 @@ module IDL::AST
     end
 
     def scoped_lm_name
-      @scoped_lm_name ||= @scopes.collect{|s| s.lm_name_for_scope }.join('::').freeze
+      @scoped_lm_name ||= lm_scopes.join("::").freeze
     end
 
     def marshal_dump
@@ -132,10 +132,7 @@ module IDL::AST
       @name, @lm_name, @intern, @enclosure, @scopes, @prefix, @repo_id, @repo_ver, @annotations = vars
       @scoped_name = nil
       @scoped_lm_name = nil
-    end
-
-    def repo_scopes
-      @repo_scopes ||= (@enclosure.nil? ? [] : (@enclosure.repo_scopes.dup << self))
+      @lm_scopes = nil
     end
 
     def is_template?
@@ -191,15 +188,11 @@ module IDL::AST
         raise "ID prefix should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(pfx[0,1])
         raise 'Invalid ID prefix! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed' unless REPO_ID_RE =~ pfx
       end
-      self._set_prefix(pfx)
+      self.set_prefix(pfx)
     end
 
     def replace_prefix(pfx)
       self.prefix = pfx
-    end
-
-    def _set_prefix(pfx)
-      @prefix = pfx.to_s
     end
 
     def repository_id
@@ -207,14 +200,14 @@ module IDL::AST
         @repo_ver = "1.0" unless @repo_ver
         format("IDL:%s%s:%s",
                 if @prefix.empty? then "" else @prefix+"/" end,
-                self.repo_scopes.collect{|s| s.name}.join("/"),
+                self.scopes.collect{|s| s.name}.join("/"),
                 @repo_ver)
       else
         @repo_id
       end
     end
 
-    def has_annotations?()
+    def has_annotations?
       !@annotations.empty?
     end
 
@@ -227,6 +220,11 @@ module IDL::AST
     end
 
   protected
+
+    def set_prefix(pfx)
+      @prefix = pfx.to_s
+    end
+
     def copy_from(_template, _context)
       @prefix = _template.instance_variable_get(:@prefix)
       @repo_id = _template.instance_variable_get(:@repo_id)
@@ -397,7 +395,6 @@ module IDL::AST
       super(_name, _enclosure)
       @anchor = params[:anchor]
       @prefix = params[:prefix] || @prefix
-      @not_in_repo_id = params[:not_in_repo_id]
       @template = params[:template]
       @template_params = (params[:template_params] || []).dup
       @next = nil
@@ -440,10 +437,6 @@ module IDL::AST
 
     def instantiate(_context, _enclosure)
       super(_context, _enclosure, {})
-    end
-
-    def repo_scopes
-      @repo_scopes ||= (@enclosure.nil? ? [] : (@not_in_repo_id ? @enclosure.repo_scopes.dup : (@enclosure.repo_scopes.dup << self)))
     end
 
     def redefine(node, params)
@@ -557,21 +550,21 @@ module IDL::AST
     def replace_prefix(pfx)
       self.prefix = pfx   # handles validation
       if @anchor.nil?
-        self.replace_prefix_(pfx)
+        self.replace_prefix_i(pfx)
       else
-        @anchor.replace_prefix_(pfx)
-      end
-    end
-
-    def _set_prefix(pfx)
-      if @anchor.nil?
-        self._set_prefix_(pfx)
-      else
-        @anchor._set_prefix_(pfx)
+        @anchor.replace_prefix_i(pfx)
       end
     end
 
   protected
+
+    def set_prefix(pfx)
+      if @anchor.nil?
+        self.set_prefix_i(pfx)
+      else
+        @anchor.set_prefix_i(pfx)
+      end
+    end
 
     def get_annotations
       @annotations
@@ -590,16 +583,16 @@ module IDL::AST
       self
     end
 
-    def replace_prefix_(pfx)
+    def replace_prefix_i(pfx)
       walk_members { |m| m.replace_prefix(pfx) }
       # propagate along chain using fast method
-      @next.replace_prefix_(pfx) unless @next.nil?
+      @next.replace_prefix_i(pfx) unless @next.nil?
     end
 
-    def _set_prefix_(pfx)
+    def set_prefix_i(pfx)
       @prefix = pfx
       # propagate along chain
-      self.next._set_prefix_(pfx) unless self.next.nil?
+      self.next.set_prefix_i(pfx) unless self.next.nil?
     end
 
     def search_self(_name)
@@ -822,7 +815,10 @@ module IDL::AST
       #overrule
       @scopes = @enclosure.scopes
       @scoped_name = @scopes.collect{|s| s.name}.join("::")
-      @scoped_lm_name = @scopes.collect{|s| s.lm_name}.join("::")
+    end
+
+    def lm_scopes
+      @lm_scopes ||= @enclosure.lm_scopes
     end
 
     def marshal_dump
@@ -837,15 +833,10 @@ module IDL::AST
       #overrule
       @scopes = @enclosure.scopes || []
       @scoped_name = @scopes.collect{|s| s.name}.join("::")
-      @scoped_lm_name = @scopes.collect{|s| s.lm_name}.join("::")
     end
 
     def is_defined?; @defined; end
     def is_preprocessed?; @preprocessed; end
-
-    def repo_scopes
-      @repo_scopes ||= (@enclosure.nil? ? [] : @enclosure.repo_scopes.dup)
-    end
 
     def introduce(node)
       @enclosure.introduce(node) unless node == self
@@ -868,7 +859,6 @@ module IDL::AST
       #overrule
       @scopes = @enclosure.scopes
       @scoped_name = @scopes.collect{|s| s.name}.join("::")
-      @scoped_lm_name = @scopes.collect{|s| s.lm_name}.join("::")
       self
     end
 
