@@ -575,7 +575,9 @@ module IDL::AST
       if _template.has_anchor?
         # module anchor is first to be copied/instantiated and
         # should be registered in _context
-        @anchor = IDL::AST::TemplateParam.concrete_param(_context, _template.anchor)
+        cp = IDL::AST::TemplateParam.concrete_param(_context, _template.anchor)
+        # concrete param must be a IDL::Type::NodeType and it's node a Module
+        @anchor = cp.node
         # link ourself into module chain
         @anchor.find_last.set_next(self)
       end
@@ -667,7 +669,8 @@ module IDL::AST
           _node.concrete
         else
           # referenced template node should have been instantiated already and available through context
-          _context[_node]
+          _cn = _context[_node]
+          _cn.is_a?(IDL::AST::Const) ? _cn.expression : _cn.idltype
         end
         raise "cannot resolve concrete node for template #{_node.typename} #{_node.scoped_lm_name}" unless _cnode
         _cnode
@@ -749,8 +752,8 @@ module IDL::AST
         else
           raise "invalid instantiation parameter for #{typename} #{scoped_lm_name}: #{_cp.class.name}"
         end
-        # if we  get here all is well -> store concrete param
-        _tp.set_concrete_param(_cp.is_a?(IDL::Type::ScopedName) ? _cp.node : _cp)
+        # if we  get here all is well -> store concrete param (either IDL type or expression)
+        _tp.set_concrete_param(_cp)
       end
       # instantiate template by copying template module state to module instance
       _module_instance.copy_from(self, _context)
@@ -790,9 +793,8 @@ module IDL::AST
 
     def instantiate(_context, _enclosure)
       inst_params = @params.collect do |tp|
-        # concrete objects are either Expression or Node; latter needs to be repacked as IDL::Type::ScopedName
-        # as that is what the TemplateModule#instantiate expects
-        tp.concrete.is_a?(IDL::Expression) ? tp.concrete : IDL::Type::ScopedName.new(tp.concrete)
+        # concrete objects are either Expression or Type
+        tp.concrete
       end
       mod_inst = IDL::AST::Module.new(self.name, _enclosure, { :template => @template, :template_params => inst_params })
       @template.instantiate(mod_inst, _context)
@@ -991,7 +993,7 @@ module IDL::AST
     def add_bases(inherits_)
       inherits_.each do |tc|
         unless tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::TemplateParam)
-          unless (tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::Interface))
+          unless (tc.is_a?(IDL::Type::NodeType) && tc.is_node?(IDL::AST::Interface))
             raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{tc.typename}"
           end
           rtc = tc.resolved_type
@@ -1099,7 +1101,7 @@ module IDL::AST
     def concrete_bases(_context)
       # collect all bases and resolve any template param types
       @bases.collect do |_base|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _base))
+        IDL::AST::TemplateParam.concrete_param(_context, _base)
       end
     end
 
@@ -1139,7 +1141,7 @@ module IDL::AST
 
     def instantiate(_context, _enclosure, _params = {})
       _params.merge!({
-        :base => @base ? IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, @base)) : @base,
+        :base => @base ? IDL::AST::TemplateParam.concrete_param(_context, @base) : @base,
         :supports => self.concrete_interfaces(_context)
       })
       # instantiate concrete def and validate
@@ -1267,7 +1269,7 @@ module IDL::AST
     def concrete_interfaces(_context)
       # collect all bases and resolve any template param types
       @interfaces.collect do |_intf|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _intf))
+        IDL::AST::TemplateParam.concrete_param(_context, _intf)
       end
     end
   end # ComponentBase
@@ -1302,8 +1304,8 @@ module IDL::AST
 
     def instantiate(_context, _enclosure)
       _params  = {
-        :component => IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, @component)),
-        :primarykey => @primarykey ? IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, @primarykey)) : @primarykey
+        :component => IDL::AST::TemplateParam.concrete_param(_context, @component),
+        :primarykey => @primarykey ? IDL::AST::TemplateParam.concrete_param(_context, @primarykey) : @primarykey
       }
       # instantiate concrete home def and validate
       super(_context, _enclosure, _params)
@@ -1542,15 +1544,15 @@ module IDL::AST
       case @porttype
       when :facet, :receptacle
         unless @idltype.is_a?(IDL::Type::Object) ||
-              (@idltype.is_a?(IDL::Type::ScopedName) && (@idltype.is_node?(IDL::AST::Interface) || @idltype.is_node?(IDL::AST::TemplateParam)))
+              (@idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Interface) || @idltype.is_node?(IDL::AST::TemplateParam)))
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       when :port, :mirrorport
-        unless @idltype.is_a?(IDL::Type::ScopedName) && (@idltype.is_node?(IDL::AST::Porttype) || @idltype.is_node?(IDL::AST::TemplateParam))
+        unless @idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Porttype) || @idltype.is_node?(IDL::AST::TemplateParam))
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       else
-        unless @idltype.is_a?(IDL::Type::ScopedName) && (@idltype.is_node?(IDL::AST::Eventtype) ||  @idltype.is_node?(IDL::AST::TemplateParam))
+        unless @idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Eventtype) ||  @idltype.is_node?(IDL::AST::TemplateParam))
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       end
@@ -1915,13 +1917,13 @@ module IDL::AST
     def concrete_bases(_context)
       # collect all bases and resolve any template param types
       @bases.collect do |_base|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _base))
+        IDL::AST::TemplateParam.concrete_param(_context, _base)
       end
     end
 
     def concrete_interfaces(_context)
       @interfaces.collect do |_intf|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _intf))
+        IDL::AST::TemplateParam.concrete_param(_context, _intf)
       end
     end
   end # Valuetype

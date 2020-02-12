@@ -65,6 +65,7 @@ module IDL
     class NodeType < Type
       attr_reader :node
       def initialize(node)
+        raise node.inspect if node && !node.is_a?(IDL::AST::Leaf)
         @node = node
       end
       def is_local?(recurstk = nil)
