@@ -20,7 +20,7 @@ self.class.module_eval(<<'...end racc/parser.rb/module_eval...', 'racc/parser.rb
 # without restriction.
 #++
 
-require 'racc/info'
+# require 'racc/info'
 
 unless defined?(NotImplementedError)
   NotImplementedError = NotImplementError # :nodoc:
@@ -195,10 +195,10 @@ module Racc
 
   class Parser
 
-    Racc_Runtime_Version = ::Racc::VERSION unless defined?(Racc_Runtime_Version)
+    Racc_Runtime_Version = '1.4.16' unless defined?(Racc_Runtime_Version)
     Racc_Runtime_Revision = '$Id: 7adc21ee7a5690f10b7ff399b8af4e2717b9d94c $' unless defined?(Racc_Runtime_Revision)
 
-    Racc_Runtime_Core_Version_R = ::Racc::VERSION unless defined?(Racc_Runtime_Core_Version_R)
+    Racc_Runtime_Core_Version_R = '1.4.16' unless defined?(Racc_Runtime_Core_Version_R)
     Racc_Runtime_Core_Revision_R = '$Id: 7adc21ee7a5690f10b7ff399b8af4e2717b9d94c $'.split[1] unless defined?(Racc_Runtime_Core_Revision_R)
     begin
       if Object.const_defined?(:RUBY_ENGINE) and RUBY_ENGINE == 'jruby'
