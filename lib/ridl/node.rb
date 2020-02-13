@@ -679,7 +679,7 @@ module IDL::AST
         raise "cannot resolve concrete node for template #{tpl_elem.typename} #{tpl_elem.scoped_lm_name}" unless celem
         celem
       else
-        tpl_elem # just return the element itself if not from the template scope
+        tpl_elem.idltype # just return the element's idltype if not from the template scope
       end
     end
   end
@@ -1154,7 +1154,7 @@ module IDL::AST
 
     def set_base(parent)
       unless parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(IDL::AST::TemplateParam)
-        unless (parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(self.class))
+        unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
         if parent.resolved_type.node.has_base?(self)
@@ -1382,7 +1382,7 @@ module IDL::AST
 
     def set_base(parent)
       unless parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(IDL::AST::TemplateParam)
-        if not (parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(self.class))
+        unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
         @resolved_base = parent.resolved_type.node
@@ -1458,7 +1458,7 @@ module IDL::AST
 
     def set_base(parent)
       unless parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(IDL::AST::TemplateParam)
-        if not (parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(self.class))
+        unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
         @resolved_base = parent.resolved_type.node
