@@ -656,9 +656,9 @@ class Delegator
     set_last(@cur.define(IDL::AST::Parameter, _name, params))
     @cur
   end
-  def declare_op_footer(_raises, _context)
+  def declare_op_footer(_raises, instantiation_context)
     @cur.raises = _raises || []
-    @cur.context = _context
+    @cur.context = instantiation_context
     if not @cur.context.nil?
       raise "context phrase's not supported"
     end

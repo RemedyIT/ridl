@@ -45,7 +45,7 @@ module IDL
       self.class == idltype.class
     end
 
-    def instantiate(_context)
+    def instantiate(instantiation_context)
       self
     end
 
@@ -107,9 +107,9 @@ module IDL
       def is_template?
         @node.is_template?
       end
-      def instantiate(_context)
+      def instantiate(instantiation_context)
         if self.is_template?
-          cp = IDL::AST::TemplateParam.concrete_param(_context, @node)
+          cp = IDL::AST::TemplateParam.concrete_param(instantiation_context, @node)
           cp.is_a?(Type) ? cp : ScopedName.new(cp)
         else
           self
@@ -237,8 +237,8 @@ module IDL
       def is_template?
         (@size && @size.is_a?(IDL::Expression) && @size.is_template?)
       end
-      def instantiate(_context)
-        self.is_template? ? (Type::Fixed.new(@size.instantiate(_context).value)) : self
+      def instantiate(instantiation_context)
+        self.is_template? ? (Type::Fixed.new(@size.instantiate(instantiation_context).value)) : self
       end
     end
 
@@ -268,8 +268,8 @@ module IDL
       def matches?(idltype)
         super && self.size == idltype.size
       end
-      def instantiate(_context)
-        self.is_template? ? (Type::String.new(@size.instantiate(_context).value)) : self
+      def instantiate(instantiation_context)
+        self.is_template? ? (Type::String.new(@size.instantiate(instantiation_context).value)) : self
       end
     end
 
@@ -313,8 +313,8 @@ module IDL
       def matches?(idltype)
         super && self.size == idltype.size && self.basetype.resolved_type.matches?(idltype.basetype.resolved_type)
       end
-      def instantiate(_context)
-        self.is_template? ? Type::Sequence.new(@basetype.instantiate(_context), @size ? @size.instantiate(_context).value : nil) : self
+      def instantiate(instantiation_context)
+        self.is_template? ? Type::Sequence.new(@basetype.instantiate(instantiation_context), @size ? @size.instantiate(instantiation_context).value : nil) : self
       end
     end
 
@@ -353,8 +353,8 @@ module IDL
       def matches?(idltype)
         super && self.sizes == idltype.sizes && self.basetype.resolved_type.matches?(idltype.basetype.resolved_type)
       end
-      def instantiate(_context)
-        self.is_template? ? Type::Array.new(@basetype.instantiate(_context), @sizes.collect { |sz| sz.instantiate(_context).value }) : self
+      def instantiate(instantiation_context)
+        self.is_template? ? Type::Array.new(@basetype.instantiate(instantiation_context), @sizes.collect { |sz| sz.instantiate(instantiation_context).value }) : self
       end
     end
 
@@ -384,8 +384,8 @@ module IDL
       def matches?(idltype)
         super && self.size == idltype.size
       end
-      def instantiate(_context)
-        self.is_template? ? Type::WString.new(@size.instantiate(_context).value) : self
+      def instantiate(instantiation_context)
+        self.is_template? ? Type::WString.new(@size.instantiate(instantiation_context).value) : self
       end
     end
 
@@ -510,8 +510,8 @@ module IDL
       def is_template?
         @type.is_template?
       end
-      def instantiate(_context)
-        self.is_template? ? Type::Const.new(@type.instantiate(_context)) : self
+      def instantiate(instantiation_context)
+        self.is_template? ? Type::Const.new(@type.instantiate(instantiation_context)) : self
       end
       def is_node?(node_class)
         @type.is_node?(node_class)
