@@ -21,7 +21,7 @@ module IDL
       false
     end
 
-    def instantiate(instantiation_context)
+    def instantiate(_)
       self
     end
 

@@ -45,7 +45,7 @@ module IDL
       self.class == idltype.class
     end
 
-    def instantiate(instantiation_context)
+    def instantiate(_)
       self
     end
 
@@ -314,7 +314,11 @@ module IDL
         super && self.size == idltype.size && self.basetype.resolved_type.matches?(idltype.basetype.resolved_type)
       end
       def instantiate(instantiation_context)
-        self.is_template? ? Type::Sequence.new(@basetype.instantiate(instantiation_context), @size ? @size.instantiate(instantiation_context).value : nil) : self
+        if self.is_template?
+          Type::Sequence.new(@basetype.instantiate(instantiation_context), @size ? @size.instantiate(instantiation_context).value : nil)
+        else
+          self
+        end
       end
     end
 

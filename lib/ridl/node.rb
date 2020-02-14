@@ -225,11 +225,11 @@ module IDL::AST
       @prefix = pfx.to_s
     end
 
-    def copy_from(_template, instantiation_context)
-      @prefix = _template.instance_variable_get(:@prefix)
-      @repo_id = _template.instance_variable_get(:@repo_id)
-      @repo_ver = _template.instance_variable_get(:@repo_ver)
-      @annotations = _template.instance_variable_get(:@annotations)
+    def copy_from(template, _)
+      @prefix = template.instance_variable_get(:@prefix)
+      @repo_id = template.instance_variable_get(:@repo_id)
+      @repo_ver = template.instance_variable_get(:@repo_ver)
+      @annotations = template.instance_variable_get(:@annotations)
       self
     end
   end # Leaf
