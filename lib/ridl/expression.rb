@@ -21,7 +21,7 @@ module IDL
       false
     end
 
-    def instantiate(_context)
+    def instantiate(_)
       self
     end
 
@@ -47,9 +47,9 @@ module IDL
       def is_template?
         @node.is_template?
       end
-      def instantiate(_context)
+      def instantiate(instantiation_context)
         if self.is_template?
-          cp = IDL::AST::TemplateParam.concrete_param(_context, @node)
+          cp = IDL::AST::TemplateParam.concrete_param(instantiation_context, @node)
           cp.is_a?(Expression) ? cp : ScopedName.new(cp)
         else
           self
@@ -104,8 +104,8 @@ module IDL
         @operands.any? { |o| o.is_template? }
       end
 
-      def instantiate(_context)
-        self.is_template? ? self.class.new(*@operands.collect { |o| o.instantiate(_context) }) : self
+      def instantiate(instantiation_context)
+        self.is_template? ? self.class.new(*@operands.collect { |o| o.instantiate(instantiation_context) }) : self
       end
 
       def Operation.suite_type(*types)

@@ -139,8 +139,8 @@ module IDL::AST
       @enclosure && @enclosure.is_template?
     end
 
-    def instantiate(_context, _enclosure, _params = {})
-      (_context[self] = self.class.new(self.name, _enclosure, _params)).copy_from(self, _context)
+    def instantiate(instantiation_context, _enclosure, _params = {})
+      (instantiation_context[self] = self.class.new(self.name, _enclosure, _params)).copy_from(self, instantiation_context)
     end
 
     def set_repo_id(id)
@@ -225,11 +225,11 @@ module IDL::AST
       @prefix = pfx.to_s
     end
 
-    def copy_from(_template, _context)
-      @prefix = _template.instance_variable_get(:@prefix)
-      @repo_id = _template.instance_variable_get(:@repo_id)
-      @repo_ver = _template.instance_variable_get(:@repo_ver)
-      @annotations = _template.instance_variable_get(:@annotations)
+    def copy_from(template, _)
+      @prefix = template.instance_variable_get(:@prefix)
+      @repo_id = template.instance_variable_get(:@repo_id)
+      @repo_ver = template.instance_variable_get(:@repo_ver)
+      @annotations = template.instance_variable_get(:@annotations)
       self
     end
   end # Leaf
@@ -340,10 +340,10 @@ module IDL::AST
       self.walk_members(&block)
     end
 
-    def copy_from(_template, _context)
+    def copy_from(_template, instantiation_context)
       super
       _template.__send__(:walk_members_for_copy) do |child|
-        _child_copy = child.instantiate(_context, self)
+        _child_copy = child.instantiate(instantiation_context, self)
         @children << _child_copy
         # introduce unless already introduced (happens with module chains)
         @introduced[_child_copy.intern] = _child_copy unless @introduced.has_key?(_child_copy.intern)
@@ -435,8 +435,8 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
-      super(_context, _enclosure, {})
+    def instantiate(instantiation_context, _enclosure)
+      super(instantiation_context, _enclosure, {})
     end
 
     def redefine(node, params)
@@ -570,13 +570,16 @@ module IDL::AST
       @annotations
     end
 
-    def copy_from(_template, _context)
+    def copy_from(_template, instantiation_context)
       super
       if _template.has_anchor?
         # module anchor is first to be copied/instantiated and
-        # should be registered in _context
-        @anchor = IDL::AST::TemplateParam.concrete_param(_context, _template.anchor)
-        # link ourself into module chain
+        # should be registered in instantiation_context
+        cp = IDL::AST::TemplateParam.concrete_param(instantiation_context, _template.anchor)
+        # concrete param must be a IDL::Type::NodeType and it's node a Module (should never fail)
+        raise "Invalid concrete anchor found" unless cp.is_a?(IDL::Type::NodeType) && cp.node.is_a?(IDL::AST::Module)
+        @anchor = cp.node
+        # link our self into module chain
         @anchor.find_last.set_next(self)
       end
       @next = nil # to be sure
@@ -661,18 +664,22 @@ module IDL::AST
       false
     end
 
-    def self.concrete_param(_context, _node)
-      if _node.is_template?
-        _cnode = if _node.is_a?(IDL::AST::TemplateParam)
-          _node.concrete
+    def self.concrete_param(instantiation_context, tpl_elem)
+      # is this an element from the template's scope
+      if tpl_elem.is_template?
+        celem = if tpl_elem.is_a?(IDL::AST::TemplateParam)  # an actual template parameter?
+          tpl_elem.concrete # get the template parameter's concrete (instantiation argument) value
         else
-          # referenced template node should have been instantiated already and available through context
-          _context[_node]
+          # referenced template elements should have been instantiated already and available through context
+          ctxelem = instantiation_context[tpl_elem]
+          # all items in the context are AST elements but for a concrete parameter value only constants and type
+          # elements will be referenced; return accordingly
+          ctxelem.is_a?(IDL::AST::Const) ? ctxelem.expression : ctxelem.idltype
         end
-        raise "cannot resolve concrete node for template #{_node.typename} #{_node.scoped_lm_name}" unless _cnode
-        _cnode
+        raise "cannot resolve concrete node for template #{tpl_elem.typename} #{tpl_elem.scoped_lm_name}" unless celem
+        celem
       else
-        _node
+        tpl_elem.idltype # just return the element's idltype if not from the template scope
       end
     end
   end
@@ -705,7 +712,7 @@ module IDL::AST
       @template_params
     end
 
-    def instantiate(_module_instance, _context = {})
+    def instantiate(_module_instance, instantiation_context = {})
       # process concrete parameters
       @template_params.each_with_index do |_tp, _ix|
         raise "missing template parameter for #{typename} #{scoped_lm_name}: #{_tp.name}" unless _ix < _module_instance.template_params.size
@@ -749,11 +756,11 @@ module IDL::AST
         else
           raise "invalid instantiation parameter for #{typename} #{scoped_lm_name}: #{_cp.class.name}"
         end
-        # if we  get here all is well -> store concrete param
-        _tp.set_concrete_param(_cp.is_a?(IDL::Type::ScopedName) ? _cp.node : _cp)
+        # if we  get here all is well -> store concrete param (either IDL type or expression)
+        _tp.set_concrete_param(_cp)
       end
       # instantiate template by copying template module state to module instance
-      _module_instance.copy_from(self, _context)
+      _module_instance.copy_from(self, instantiation_context)
     end
 
   protected
@@ -788,14 +795,13 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       inst_params = @params.collect do |tp|
-        # concrete objects are either Expression or Node; latter needs to be repacked as IDL::Type::ScopedName
-        # as that is what the TemplateModule#instantiate expects
-        tp.concrete.is_a?(IDL::Expression) ? tp.concrete : IDL::Type::ScopedName.new(tp.concrete)
+        # concrete objects are either Expression or Type
+        tp.concrete
       end
       mod_inst = IDL::AST::Module.new(self.name, _enclosure, { :template => @template, :template_params => inst_params })
-      @template.instantiate(mod_inst, _context)
+      @template.instantiate(mod_inst, instantiation_context)
       mod_inst
     end
 
@@ -851,7 +857,7 @@ module IDL::AST
     end
 
   protected
-    def copy_from(_template, _context)
+    def copy_from(_template, instantiation_context)
       super
       @filename = _template.filename
       @defined = _template.is_defined?
@@ -969,17 +975,17 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
         :forward => self.is_forward?,
         :abstract => self.is_abstract?,
         :pseudo => self.is_pseudo?,
         :local => self.is_local?,
-        :inherits => self.concrete_bases(_context)
+        :inherits => self.concrete_bases(instantiation_context)
       }
       # instantiate concrete interface def and validate
       # concrete bases
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
 
     def is_abstract?; @abstract; end
@@ -991,7 +997,7 @@ module IDL::AST
     def add_bases(inherits_)
       inherits_.each do |tc|
         unless tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::TemplateParam)
-          unless (tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::Interface))
+          unless (tc.is_a?(IDL::Type::NodeType) && tc.is_node?(IDL::AST::Interface))
             raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{tc.typename}"
           end
           rtc = tc.resolved_type
@@ -1096,10 +1102,10 @@ module IDL::AST
 
   protected
 
-    def concrete_bases(_context)
+    def concrete_bases(instantiation_context)
       # collect all bases and resolve any template param types
-      @bases.collect do |_base|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _base))
+      @bases.collect do |base|
+        IDL::AST::TemplateParam.concrete_param(instantiation_context, base)
       end
     end
 
@@ -1137,18 +1143,18 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure, _params = {})
+    def instantiate(instantiation_context, _enclosure, _params = {})
       _params.merge!({
-        :base => @base ? IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, @base)) : @base,
-        :supports => self.concrete_interfaces(_context)
+        :base => @base ? IDL::AST::TemplateParam.concrete_param(instantiation_context, @base) : @base,
+        :supports => self.concrete_interfaces(instantiation_context)
       })
       # instantiate concrete def and validate
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
 
     def set_base(parent)
       unless parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(IDL::AST::TemplateParam)
-        unless (parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(self.class))
+        unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
         if parent.resolved_type.node.has_base?(self)
@@ -1264,10 +1270,10 @@ module IDL::AST
       (@resolved_base ? [@resolved_base] : []).concat(@resolved_interfaces)
     end
 
-    def concrete_interfaces(_context)
+    def concrete_interfaces(instantiation_context)
       # collect all bases and resolve any template param types
       @interfaces.collect do |_intf|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _intf))
+        IDL::AST::TemplateParam.concrete_param(instantiation_context, _intf)
       end
     end
   end # ComponentBase
@@ -1300,13 +1306,13 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params  = {
-        :component => IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, @component)),
-        :primarykey => @primarykey ? IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, @primarykey)) : @primarykey
+        :component => IDL::AST::TemplateParam.concrete_param(instantiation_context, @component),
+        :primarykey => @primarykey ? IDL::AST::TemplateParam.concrete_param(instantiation_context, @primarykey) : @primarykey
       }
       # instantiate concrete home def and validate
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
 
     def set_component_and_key(comp, key)
@@ -1362,9 +1368,9 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       # instantiate concrete connector def and validate
-      super(_context, _enclosure, {})
+      super(instantiation_context, _enclosure, {})
     end
 
     def is_defined?; true; end
@@ -1376,7 +1382,7 @@ module IDL::AST
 
     def set_base(parent)
       unless parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(IDL::AST::TemplateParam)
-        if not (parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(self.class))
+        unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
         @resolved_base = parent.resolved_type.node
@@ -1442,9 +1448,9 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       # instantiate concrete component def and validate
-      super(_context, _enclosure, { :forward => self.is_forward? })
+      super(instantiation_context, _enclosure, { :forward => self.is_forward? })
     end
 
     def is_defined?; @defined; end
@@ -1452,7 +1458,7 @@ module IDL::AST
 
     def set_base(parent)
       unless parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(IDL::AST::TemplateParam)
-        if not (parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(self.class))
+        unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
         @resolved_base = parent.resolved_type.node
@@ -1523,8 +1529,8 @@ module IDL::AST
       @children.select {|c| IDL::AST::Attribute === c}
     end
 
-    def instantiate(_context, _enclosure)
-      super(_context, _enclosure, {})
+    def instantiate(instantiation_context, _enclosure)
+      super(instantiation_context, _enclosure, {})
     end
   end # Porttype
 
@@ -1542,28 +1548,28 @@ module IDL::AST
       case @porttype
       when :facet, :receptacle
         unless @idltype.is_a?(IDL::Type::Object) ||
-              (@idltype.is_a?(IDL::Type::ScopedName) && (@idltype.is_node?(IDL::AST::Interface) || @idltype.is_node?(IDL::AST::TemplateParam)))
+              (@idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Interface) || @idltype.is_node?(IDL::AST::TemplateParam)))
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       when :port, :mirrorport
-        unless @idltype.is_a?(IDL::Type::ScopedName) && (@idltype.is_node?(IDL::AST::Porttype) || @idltype.is_node?(IDL::AST::TemplateParam))
+        unless @idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Porttype) || @idltype.is_node?(IDL::AST::TemplateParam))
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       else
-        unless @idltype.is_a?(IDL::Type::ScopedName) && (@idltype.is_node?(IDL::AST::Eventtype) ||  @idltype.is_node?(IDL::AST::TemplateParam))
+        unless @idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Eventtype) ||  @idltype.is_node?(IDL::AST::TemplateParam))
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       end
       @multiple = params[:multiple] ? true : false
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :type => @idltype.instantiate(_context),
+        :type => @idltype.instantiate(instantiation_context),
         :porttype => @porttype,
         :multiple => @multiple
       }
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
 
     def multiple?
@@ -1634,11 +1640,11 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :type => @boxed_type.instantiate(_context)
+        :type => @boxed_type.instantiate(instantiation_context)
       }
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
   end # Valuebox
 
@@ -1699,7 +1705,7 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
         :forward => self.is_forward?,
         :abstract => self.is_abstract?,
@@ -1707,12 +1713,12 @@ module IDL::AST
         :inherits => {
           :base => {
             :truncatable => self.is_truncatable?,
-            :list => self.concrete_bases(_context)
+            :list => self.concrete_bases(instantiation_context)
           },
-          :supports => self.concrete_interfaces(_context)
+          :supports => self.concrete_interfaces(instantiation_context)
         }
       }
-      inst = super(_context, _enclosure, _params)
+      inst = super(instantiation_context, _enclosure, _params)
       inst.defined = true
       inst
     end
@@ -1912,16 +1918,16 @@ module IDL::AST
       @resolved_bases
     end
 
-    def concrete_bases(_context)
+    def concrete_bases(instantiation_context)
       # collect all bases and resolve any template param types
       @bases.collect do |_base|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _base))
+        IDL::AST::TemplateParam.concrete_param(instantiation_context, _base)
       end
     end
 
-    def concrete_interfaces(_context)
+    def concrete_interfaces(instantiation_context)
       @interfaces.collect do |_intf|
-        IDL::Type::ScopedName.new(IDL::AST::TemplateParam.concrete_param(_context, _intf))
+        IDL::AST::TemplateParam.concrete_param(instantiation_context, _intf)
       end
     end
   end # Valuetype
@@ -2016,12 +2022,12 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :type => @idltype.instantiate(_context),
+        :type => @idltype.instantiate(instantiation_context),
         :visibility => self.visibility
       }
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
 
     def is_local?(recurstk)
@@ -2072,28 +2078,28 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :raises => self.concrete_raises(_context)
+        :raises => self.concrete_raises(instantiation_context)
       }
-      _init = super(_context, _enclosure, _params)
-      _init.set_concrete_parameters(_context, @params)
+      _init = super(instantiation_context, _enclosure, _params)
+      _init.set_concrete_parameters(instantiation_context, @params)
       _init
     end
 
   protected
 
-    def concrete_raises(_context)
+    def concrete_raises(instantiation_context)
       @raises.collect do |ex|
-        ex.instantiate(_context)
+        ex.instantiate(instantiation_context)
       end
     end
 
-    def set_concrete_parameters(_context, parms)
+    def set_concrete_parameters(instantiation_context, parms)
       @params = parms.collect do |parm|
         IDL::AST::Parameter.new(parm.name, self,
                            { :attribute => :in,
-                             :type => parm.idltype.instantiate(_context) })
+                             :type => parm.idltype.instantiate(instantiation_context) })
       end
     end
 
@@ -2133,12 +2139,12 @@ module IDL::AST
       end
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :type => @idltype.instantiate(_context),
-        :expression => @expression.instantiate(_context)
+        :type => @idltype.instantiate(instantiation_context),
+        :expression => @expression.instantiate(instantiation_context)
       }
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
   end # Const
 
@@ -2188,12 +2194,12 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :type => @idltype.instantiate(_context),
+        :type => @idltype.instantiate(instantiation_context),
         :attribute => @attribute
       }
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
   end # Parameter
 
@@ -2241,13 +2247,13 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :type => @idltype.instantiate(_context),
+        :type => @idltype.instantiate(instantiation_context),
         :oneway => @oneway,
       }
-      _op = super(_context, _enclosure, _params)
-      _op.raises = self.concrete_raises(_context)
+      _op = super(instantiation_context, _enclosure, _params)
+      _op.raises = self.concrete_raises(instantiation_context)
       _op.context = @context
       _op
     end
@@ -2288,13 +2294,13 @@ module IDL::AST
 
   protected
 
-    def concrete_raises(_context)
+    def concrete_raises(instantiation_context)
       @raises.collect do |ex|
-        ex.instantiate(_context)
+        ex.instantiate(instantiation_context)
       end
     end
 
-    def copy_from(_template, _context)
+    def copy_from(_template, instantiation_context)
       super
       self.walk_members do |param|
         case param.attribute
@@ -2349,14 +2355,14 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :type => @idltype.instantiate(_context),
+        :type => @idltype.instantiate(instantiation_context),
         :readonly => @readonly
       }
-      _att = super(_context, _enclosure, _params)
-      _att.get_raises = self.concrete_get_raises(_context)
-      _att.set_raises = self.concrete_set_raises(_context)
+      _att = super(instantiation_context, _enclosure, _params)
+      _att.get_raises = self.concrete_get_raises(instantiation_context)
+      _att.set_raises = self.concrete_set_raises(instantiation_context)
       _att
     end
 
@@ -2389,15 +2395,15 @@ module IDL::AST
 
   protected
 
-    def concrete_get_raises(_context)
+    def concrete_get_raises(instantiation_context)
       @get_raises.collect do |ex|
-        ex.instantiate(_context)
+        ex.instantiate(instantiation_context)
       end
     end
 
-    def concrete_set_raises(_context)
+    def concrete_set_raises(instantiation_context)
       @set_raises.collect do |ex|
-        ex.instantiate(_context)
+        ex.instantiate(instantiation_context)
       end
     end
   end # Attribute
@@ -2448,11 +2454,11 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
         :forward => @forward
       }
-      _s = super(_context, _enclosure, _params)
+      _s = super(instantiation_context, _enclosure, _params)
       _s.defined = self.is_defined?
       _s
     end
@@ -2530,11 +2536,11 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure, _params = {})
+    def instantiate(instantiation_context, _enclosure, _params = {})
       _params.merge!({
-        :type => @idltype.instantiate(_context),
+        :type => @idltype.instantiate(instantiation_context),
       })
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
   end # Member
 
@@ -2637,12 +2643,12 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
         :forward => @forward
       }
-      _u = super(_context, _enclosure, _params)
-      _u.set_switchtype(@switchtype.instantiate(_context))
+      _u = super(instantiation_context, _enclosure, _params)
+      _u.set_switchtype(@switchtype.instantiate(instantiation_context))
       _u.validate_labels
       _u.defined = self.is_defined?
       _u
@@ -2676,11 +2682,11 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       _params = {
-        :labels => @labels.collect { |l| l == :default ? l : l.instantiate(_context) },
+        :labels => @labels.collect { |l| l == :default ? l : l.instantiate(instantiation_context) },
       }
-      super(_context, _enclosure, _params)
+      super(instantiation_context, _enclosure, _params)
     end
   end # UnionMember
 
@@ -2710,8 +2716,8 @@ module IDL::AST
       @enums << n
     end
 
-    def instantiate(_context, _enclosure)
-      super(_context, _enclosure, {})
+    def instantiate(instantiation_context, _enclosure)
+      super(instantiation_context, _enclosure, {})
     end
 
   end # Enum
@@ -2737,11 +2743,11 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
+    def instantiate(instantiation_context, _enclosure)
       # find already instantiated Enum parent
       _enum = _enclosure.resolve(@enum.name)
       raise "Unable to resolve instantiated Enum scope for enumerator #{@enum.name}::#{name} instantiation" unless _enum
-      super(_context, _enclosure, { :enum => _enum, :value => @value })
+      super(instantiation_context, _enclosure, { :enum => _enum, :value => @value })
     end
   end # Enumerator
 
@@ -2765,8 +2771,8 @@ module IDL::AST
       super(vars)
     end
 
-    def instantiate(_context, _enclosure)
-      super(_context, _enclosure, { :type => @idltype.instantiate(_context) })
+    def instantiate(instantiation_context, _enclosure)
+      super(instantiation_context, _enclosure, { :type => @idltype.instantiate(instantiation_context) })
     end
   end # Typedef
 end

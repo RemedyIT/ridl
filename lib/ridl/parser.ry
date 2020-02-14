@@ -122,9 +122,7 @@ rule
                                   | template_module_inst_parameters "," template_module_inst_parameter
                                     { val[0] << val[2]; val[0] }
 
-  template_module_inst_parameter : base_type_spec
-                                   { val[0] }
-                                 | template_type_spec
+  template_module_inst_parameter : simple_type_spec
                                    { val[0] }
                                  | const_exp
                                    { val[0] }
