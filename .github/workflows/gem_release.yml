@@ -11,10 +11,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - name: Set up Ruby 2.6
-      uses: ruby/setup-ruby@v1
+    - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.6.x
+        ruby-version: 2.7
     - name: Publish to RubyGems
       run: |
         mkdir -p $HOME/.gem
