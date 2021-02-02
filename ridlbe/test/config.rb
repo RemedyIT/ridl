@@ -67,7 +67,7 @@ module IDL
       #   in options - initialized option hash
       #
       becfg.on_process_input do |parser, options|
-        IDL::Test.process_input(parser,options)
+        IDL::Test.process_input(parser, options)
       end # becfg.on_process_input
 
     end # Backend.configure

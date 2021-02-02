@@ -80,7 +80,7 @@ module IDL
         if false
           if not @bwd.nil? or cur.nil? or @fwd.nil?
           printf("%c(%02x), %c(%02x), %c(%02x) @(l:%d,c:%d)\n",
-                @bwd,@bwd,cur,cur,@fwd,@fwd, @pos.line, @pos.column)
+                @bwd, @bwd, cur, cur, @fwd, @fwd, @pos.line, @pos.column)
           end
         end
         @bwd = cur
@@ -324,7 +324,7 @@ module IDL
       @ifdef.empty? || @ifdef.last
     end
     def positions
-      @stack.reverse.inject(@in.nil? ? [] : [@in.position]) {|pos_arr,(_, _, _,in_, _)| pos_arr << in_.position }
+      @stack.reverse.inject(@in.nil? ? [] : [@in.position]) {|pos_arr, (_, _, _, in_, _)| pos_arr << in_.position }
     end
     def parse_error(msg, ex = nil)
       e = IDL::ParseError.new(msg, positions)
@@ -370,7 +370,7 @@ module IDL
       long manages mirrorport module multiple native Object octet oneway out port porttype primarykey private provides
       public publishes raises readonly setraises sequence short string struct supports switch TRUE truncatable typedef
       typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring
-    ).inject(TokenRegistry.new) { |h,a| h[a.downcase.to_sym] = a; h }
+    ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a; h }
 
     LITERALS = [
       :integer_literal,
@@ -760,7 +760,7 @@ module IDL
 
     def resolve_define(id, stack = [])
       return id if %w(true false).include?(id)
-      IDL.log(3,"*** RIDL - resolve_define(#{id})")
+      IDL.log(3, "*** RIDL - resolve_define(#{id})")
       if @defined.has_key?(id)
         define_ = @defined[id]
         stack << id
@@ -773,7 +773,7 @@ module IDL
     end
 
     def eval_directive(s)
-      IDL.log(3,"** RIDL - eval_directive(#{s})")
+      IDL.log(3, "** RIDL - eval_directive(#{s})")
       rc = eval(s)
       case rc
       when FalseClass, TrueClass
@@ -789,7 +789,7 @@ module IDL
       @in.skipwhile {|c| SPACES.include?(c) }
       s = getline
       /^(\w*)\s*/ === s
-      s1,s2 = $1, $' #'
+      s1, s2 = $1, $' #'
 
       if /(else|endif|elif)/ === s1
 
@@ -854,7 +854,7 @@ module IDL
           if do_parse?
             # match 'defined(Foo)' or 'defined Foo'
             while s2 =~ /(^|[\W])defined(\s*\(\s*(\w+)\s*\)|\s+(\w+))/
-              IDL.log(3,"** RIDL - parse_directive : resolving 'defined(#{$3 || $4})'")
+              IDL.log(3, "** RIDL - parse_directive : resolving 'defined(#{$3 || $4})'")
               def_id = $3 || $4
               # resolve 'defined' expression to 'true' or 'false' according to actual macro definition
               s2.gsub!(/(^|[\W])(defined\s*[\s\(]\s*#{def_id}(\s*\))?)/, '\1'+"#{@defined.has_key?(def_id).to_s}")
@@ -897,8 +897,8 @@ module IDL
           @defined.delete(s2)
 
         when 'include'
-          if s2[0,1] == '"' || s2[0,1] == '<'
-            quoted_inc = (s2[0,1] == '"')
+          if s2[0, 1] == '"' || s2[0, 1] == '<'
+            quoted_inc = (s2[0, 1] == '"')
             if s2.size>2
               s2.strip!
               s2 = s2.slice(1..(s2.size-2))

@@ -342,7 +342,7 @@ module IDL
       opts.on('-I PATH', '--include=PATH', String,
               'Adds include searchpath.',
               'Default: none') { |v|
-        self.options[:includepaths] << (v.end_with?('\\','/') ? v : v+'/')
+        self.options[:includepaths] << (v.end_with?('\\', '/') ? v : v+'/')
       }
       opts.on('-Dmacro=[value]', String, 'defines preprocessor macro') { |v|
         name, value = v.split('=')

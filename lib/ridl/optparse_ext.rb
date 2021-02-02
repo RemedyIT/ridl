@@ -134,7 +134,7 @@ module IDL
               key = to_key(spec)
               @params[key] = { :option_name => key }
             when Hash
-              spec.each do |k,v|
+              spec.each do |k, v|
                 @params[to_key(k)] = (if Hash === v
                   {
                     :option_name => to_key(v[:option_name] || k),
