@@ -480,7 +480,7 @@ module IDL
         0
       end
       def max
-        @node.enumerators.length-1
+        @node.enumerators.length - 1
       end
       def in_range?(val)
         val >= self.min && val <= self.max
