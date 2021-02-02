@@ -50,7 +50,7 @@ module IDL
       rescue LoadError => ex
         IDL.error "ERROR: Cannot load RIDL backend [:#{be_name}]"
         IDL.error ex.inspect
-        IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level>0
+        IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level > 0
         exit 1
       end
     end

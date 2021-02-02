@@ -281,7 +281,7 @@ module IDL
         end
         @stack << [:include, @prefix, @ifdef, @in, @ifskip]
         # record file dir as new searchpath
-        @xincludepaths << (File.dirname(fpath)+'/')
+        @xincludepaths << (File.dirname(fpath) + '/')
         @prefix = nil
         @ifdef = Array.new
         @in = In.new(File.open(fpath, 'r'), fpath)
@@ -299,7 +299,7 @@ module IDL
       @expansions.include?(define)
     end
     def more_source?
-      @stack.size>0
+      @stack.size > 0
     end
     def in_expansion?
       more_source? and @stack.last[0] == :define
@@ -308,7 +308,7 @@ module IDL
       # make sure to close the input source
       @in.close
       # check if we have any previous source still stacked up
-      if @stack.size>0
+      if @stack.size > 0
         if @stack.last[0] == :include
           @xincludepaths.pop # remove directory of finished include
           @directiver.leave_include
@@ -334,7 +334,7 @@ module IDL
 
     LFCR = [ (?\n), (?\r) ]
     SPACES = [ (?\ ), (?\t) ]
-    WHITESPACE = SPACES+LFCR
+    WHITESPACE = SPACES + LFCR
 
     ANNOTATION = ?@
     ANNOTATION_STR = '@'
@@ -822,7 +822,7 @@ module IDL
             else
               while s2 =~ /(^|[\W])defined\s*\(\s*(\w+)\s*\)/
                  def_id = $2
-                 s2.gsub!(/(^|[\W])(defined\s*\(\s*\w+\s*\))/, '\1'+"#{@defined.has_key?(def_id).to_s}")
+                 s2.gsub!(/(^|[\W])(defined\s*\(\s*\w+\s*\))/, '\1' + "#{@defined.has_key?(def_id).to_s}")
               end
               s2.gsub!(/(^|[\W])([A-Za-z_][\w]*)/) do |_| "#{$1}#{resolve_define($2)}" end
               begin
@@ -857,7 +857,7 @@ module IDL
               IDL.log(3, "** RIDL - parse_directive : resolving 'defined(#{$3 || $4})'")
               def_id = $3 || $4
               # resolve 'defined' expression to 'true' or 'false' according to actual macro definition
-              s2.gsub!(/(^|[\W])(defined\s*[\s\(]\s*#{def_id}(\s*\))?)/, '\1'+"#{@defined.has_key?(def_id).to_s}")
+              s2.gsub!(/(^|[\W])(defined\s*[\s\(]\s*#{def_id}(\s*\))?)/, '\1' + "#{@defined.has_key?(def_id).to_s}")
             end
             # match and resolve any macro variables listed in conditional expression
             s2.gsub!(/(^|[\W])([A-Za-z_][\w]*)/) do |_| "#{$1}#{resolve_define($2)}" end
@@ -899,9 +899,9 @@ module IDL
         when 'include'
           if s2[0, 1] == '"' || s2[0, 1] == '<'
             quoted_inc = (s2[0, 1] == '"')
-            if s2.size>2
+            if s2.size > 2
               s2.strip!
-              s2 = s2.slice(1..(s2.size-2))
+              s2 = s2.slice(1..(s2.size - 2))
             else
               s2 = ''
             end
@@ -941,7 +941,7 @@ module IDL
       while true
         ch = @in.getc
         if ch.nil?
-          if @ifdef.size>0 and !in_expansion?
+          if @ifdef.size > 0 and !in_expansion?
             parse_error 'mismatched #if/#endif'
           end
           if more_source?
