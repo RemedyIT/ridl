@@ -124,7 +124,7 @@ module IDL
       when Array
         v.collect {|e| _dup_elem(e) }
       when Hash
-        v.inject({}) {|h, (k,e)| h[k] = _dup_elem(e); h }
+        v.inject({}) {|h, (k, e)| h[k] = _dup_elem(e); h }
       when OpenStruct
         v.class.new(_dup_elem(v.__send__(:table)))
       else

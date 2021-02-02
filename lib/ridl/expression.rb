@@ -184,7 +184,7 @@ module IDL
           superclass.checktype(*types)
 
           # it's expected that Double, LongDouble is a Float.
-          s1,s2 = IDL::Type::Float, IDL::Type::Fixed
+          s1, s2 = IDL::Type::Float, IDL::Type::Fixed
           if (t1 === s1 && t2 === s2) or (t1 === s2 && t2 === s1)
             raise "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
           end
@@ -218,13 +218,13 @@ module IDL
       end
 
       class Or < Boolean2
-        def calculate(lop,rop); lop | rop; end
+        def calculate(lop, rop); lop | rop; end
       end
       class And < Boolean2
-        def calculate(lop,rop); lop & rop; end
+        def calculate(lop, rop); lop & rop; end
       end
       class Xor < Boolean2
-        def calculate(lop,rop); lop ^ rop; end
+        def calculate(lop, rop); lop ^ rop; end
       end
 
       class Shift < Integer2
@@ -236,32 +236,32 @@ module IDL
         end
       end
       class LShift < Shift
-        def calculate(lop,rop)
+        def calculate(lop, rop)
           check_rop(rop)
           lop << rop
         end
       end
       class RShift < Shift
-        def calculate(lop,rop)
+        def calculate(lop, rop)
           check_rop(rop)
           lop >> rop
         end
       end
 
       class Add < Float2
-        def calculate(lop,rop); lop + rop; end
+        def calculate(lop, rop); lop + rop; end
       end
       class Minus < Float2
-        def calculate(lop,rop); lop - rop; end
+        def calculate(lop, rop); lop - rop; end
       end
       class Mult < Float2
-        def calculate(lop,rop); lop * rop; end
+        def calculate(lop, rop); lop * rop; end
       end
       class Div < Float2
-        def calculate(lop,rop); lop / rop; end
+        def calculate(lop, rop); lop / rop; end
       end
       class Mod < Integer2
-        def calculate(lop,rop); lop % rop; end
+        def calculate(lop, rop); lop % rop; end
       end
     end #of class Operation
   end #of class Expression

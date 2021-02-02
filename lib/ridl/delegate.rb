@@ -562,7 +562,7 @@ class Delegator
     root.introduce(first)
     case node
     when IDL::AST::Module, IDL::AST::TemplateModule,
-         IDL::AST::Interface,IDL::AST::Home, IDL::AST::Component,
+         IDL::AST::Interface, IDL::AST::Home, IDL::AST::Component,
          IDL::AST::Porttype, IDL::AST::Connector,
          IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef,
          IDL::AST::Exception, IDL::AST::Enum,

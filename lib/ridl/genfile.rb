@@ -67,7 +67,7 @@ module IDL
     class Content
       def initialize(sections = {})
         # copy content map transforming all keys to symbols
-        @sections = sections.inject({}) {|m,(k,v)| m[k.to_sym] = v; m }
+        @sections = sections.inject({}) {|m, (k, v)| m[k.to_sym] = v; m }
       end
 
       def sections
@@ -96,7 +96,7 @@ module IDL
         @path = path
         @fullpath = File.expand_path(path)
         @name = File.basename(path)
-        @ext = File.extname(path).sub(/^\./,'')
+        @ext = File.extname(path).sub(/^\./, '')
       else
         @path = @fullpath = @name = @ext = ''
       end

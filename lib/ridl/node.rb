@@ -19,7 +19,7 @@ module IDL::AST
       @id = id.to_sym
       # copy field map transforming all keys to symbols and
       # detecting nested annotation objects
-      @fields = fields.inject({}) do |m,(k,v)|
+      @fields = fields.inject({}) do |m, (k, v)|
           m[k.to_sym] = case v
               when Array
                 v.collect { |ve| Hash === ve ? Annotation.new(*ve.to_a.first) : ve }
@@ -159,8 +159,8 @@ module IDL::AST
       if id_arr.first == 'IDL'
         id_arr.shift
         id_str = id_arr.shift.to_s
-        raise 'ID identifiers should not start or end with \'/\'' if id_str[0,1]=='/' or id_str[-1, 1]=='/'
-        raise "ID identifiers should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(id_str[0,1])
+        raise 'ID identifiers should not start or end with \'/\'' if id_str[0, 1]=='/' or id_str[-1, 1]=='/'
+        raise "ID identifiers should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(id_str[0, 1])
         raise 'Invalid ID! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed for identifiers' unless REPO_ID_RE =~ id_str
       end
       @repo_id = id
@@ -184,8 +184,8 @@ module IDL::AST
 
     def prefix=(pfx)
       unless pfx.to_s.empty?
-        raise 'ID prefix should not start or end with \'/\'' if pfx[0,1]=='/' or pfx[-1, 1]=='/'
-        raise "ID prefix should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(pfx[0,1])
+        raise 'ID prefix should not start or end with \'/\'' if pfx[0, 1]=='/' or pfx[-1, 1]=='/'
+        raise "ID prefix should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(pfx[0, 1])
         raise 'Invalid ID prefix! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed' unless REPO_ID_RE =~ pfx
       end
       self.set_prefix(pfx)
@@ -912,7 +912,7 @@ module IDL::AST
         # check if the matched name resulted in multiple different nodes or all the same
         r_one = results.shift
         unless results.all? {|r| r_one == r || (r_one.class == r.class && r_one.scoped_name == r.scoped_name) }
-          s = results.inject([r_one]) {|l,r| l << r unless l.include?(r); l }.collect{ |n| n.scoped_name }.join(", ")
+          s = results.inject([r_one]) {|l, r| l << r unless l.include?(r); l }.collect{ |n| n.scoped_name }.join(", ")
           raise "\"#{_name}\" is ambiguous. " + s
         end
       end
@@ -1048,13 +1048,13 @@ module IDL::AST
       @resolved_bases
     end
 
-    def operations(include_bases=false,traversed=nil)
+    def operations(include_bases=false, traversed=nil)
       ops = @children.find_all { |c| c.is_a?(IDL::AST::Operation) }
       ops.concat(base_operations(traversed || [])) if include_bases
       ops
     end
 
-    def attributes(include_bases=false,traversed=nil)
+    def attributes(include_bases=false, traversed=nil)
       atts = @children.find_all { |c| c.is_a?(IDL::AST::Attribute) }
       atts.concat(base_attributes(traversed || [])) if include_bases
       atts
@@ -1338,13 +1338,13 @@ module IDL::AST
       @primarykey = key.node if key
     end
 
-    def operations(include_bases=false,traversed=nil)
+    def operations(include_bases=false, traversed=nil)
       ops = @children.find_all { |c| c.is_a?(IDL::AST::Operation) }
       ops.concat(base_operations(traversed || [])) if include_bases
       ops
     end
 
-    def attributes(include_bases=false,traversed=nil)
+    def attributes(include_bases=false, traversed=nil)
       atts = @children.find_all { |c| c.is_a?(IDL::AST::Attribute) }
       atts.concat(base_attributes(traversed || [])) if include_bases
       atts
@@ -1393,7 +1393,7 @@ module IDL::AST
       @base = parent.node
     end
 
-    def ports(include_bases=false,traversed=nil)
+    def ports(include_bases=false, traversed=nil)
       ports = @children.inject([]) do |lst, c|
         lst.concat(c.ports) if IDL::AST::Port === c
         lst
@@ -1402,7 +1402,7 @@ module IDL::AST
       ports
     end
 
-    def attributes(include_bases=false,traversed=nil)
+    def attributes(include_bases=false, traversed=nil)
       atts = @children.inject([]) do |lst, c|
         if IDL::AST::Port === c
           lst.concat(c.attributes)
@@ -1472,7 +1472,7 @@ module IDL::AST
       @base = parent.node
     end
 
-    def ports(include_bases=false,traversed=nil)
+    def ports(include_bases=false, traversed=nil)
       ports = @children.inject([]) do |lst, c|
         lst.concat(c.ports) if IDL::AST::Port === c
         lst
@@ -1481,11 +1481,11 @@ module IDL::AST
       ports
     end
 
-    def operations(include_bases=false,traversed=nil)
+    def operations(include_bases=false, traversed=nil)
       include_bases ? base_operations(traversed || []) : []
     end
 
-    def attributes(include_bases=false,traversed=nil)
+    def attributes(include_bases=false, traversed=nil)
       atts = @children.inject([]) do |lst, c|
         if IDL::AST::Port === c
           lst.concat(c.attributes)
