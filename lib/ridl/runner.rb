@@ -185,7 +185,7 @@ module IDL
           @optparser.parse!(argv)
         rescue ArgumentError => ex
           IDL.error(ex.inspect)
-          IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level>0
+          IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level > 0
           return false
         end
 
@@ -201,7 +201,7 @@ module IDL
 
           input_base = File.basename(argv.first)
           if input_base != argv.first
-            options[:xincludepaths] << (File.dirname(argv.first)+'/')
+            options[:xincludepaths] << (File.dirname(argv.first) + '/')
           end
 
           return !parse("#include \"#{input_base}\"", options).nil?
@@ -222,7 +222,7 @@ module IDL
             raise 'cannot read from STDOUT' if $stdout == _fio
 
             # parse IDL source
-            IDL.log(1, "RIDL - parsing #{IO === _idlfile ? 'from STDIN': (StringIO === _idlfile ? 'from string' : _idlfile)}")
+            IDL.log(1, "RIDL - parsing #{IO === _idlfile ? 'from STDIN' : (StringIO === _idlfile ? 'from string' : _idlfile)}")
 
             unless _parser = parse(_fio, _opts)
               return false
@@ -248,7 +248,7 @@ module IDL
                 end
 
               rescue Backend::ProcessStop
-                IDL.log(2, "RIDL - processing #{IO === _idlfile ? 'from STDIN': (StringIO === _idlfile ? 'from string' : _idlfile)} stopped with \"#{$!.message}\"")
+                IDL.log(2, "RIDL - processing #{IO === _idlfile ? 'from STDIN' : (StringIO === _idlfile ? 'from string' : _idlfile)} stopped with \"#{$!.message}\"")
 
               rescue => ex
                 IDL.error(ex)
@@ -310,7 +310,7 @@ module IDL
                      end
             _arg = _fpath unless _fpath.nil?
           end
-          _opts[:xincludepaths] << (File.dirname(_arg)+'/')
+          _opts[:xincludepaths] << (File.dirname(_arg) + '/')
         end
 
         _opts[:outputdir] ||= '.'
@@ -329,20 +329,20 @@ module IDL
     def init_optparser
       script_name = File.basename($0, '.*')
       if not script_name =~ /ridlc/
-        script_name = 'ruby '+$0
+        script_name = 'ruby ' + $0
       end
 
       # set up option parser with common options
       opts = OptionParser.new
       opts.banner = "Usage: #{script_name} [:backend] [options] [<idlfile> [<idlfile> ...]]\n\n" +
-          "    backend\t\tSpecifies the IDL language mapping backend to use.\n"+
-          "           \t\tDefault = :null\n\n"+
+          "    backend\t\tSpecifies the IDL language mapping backend to use.\n" +
+          "           \t\tDefault = :null\n\n" +
           "    Active language mapping = :#{backend.name}"
       opts.separator ''
       opts.on('-I PATH', '--include=PATH', String,
               'Adds include searchpath.',
               'Default: none') { |v|
-        self.options[:includepaths] << (v.end_with?('\\','/') ? v : v+'/')
+        self.options[:includepaths] << (v.end_with?('\\','/') ? v : v + '/')
       }
       opts.on('-Dmacro=[value]', String, 'defines preprocessor macro') { |v|
         name, value = v.split('=')

@@ -213,7 +213,7 @@ class Delegator
     params = { :filename => s, :fullpath => fullpath }
     params[:defined] = true
     params[:preprocessed] = @preprocess
-    @cur = @cur.define(IDL::AST::Include, "$INC:"+s, params)
+    @cur = @cur.define(IDL::AST::Include, "$INC:" + s, params)
     @includes[s] = @cur
     set_last
     @cur
@@ -228,7 +228,7 @@ class Delegator
     params = { :filename => s, :fullpath => @includes[s].fullpath }
     params[:defined] = false
     params[:preprocessed] = @includes[s].is_preprocessed?
-    @cur.define(IDL::AST::Include, "$INC:"+s, params)
+    @cur.define(IDL::AST::Include, "$INC:" + s, params)
   end
 
   def pragma_prefix(s)
@@ -299,8 +299,8 @@ class Delegator
   end
 
   def define_template_module(global, names)
-    if global || names.size>1
-      raise "no scoped identifier allowed for template module: #{(global ? '::' : '')+names.join('::')}"
+    if global || names.size > 1
+      raise "no scoped identifier allowed for template module: #{(global ? '::' : '') + names.join('::')}"
     end
     @cur = @cur.define(IDL::AST::TemplateModule, names[0])
     @cur.annotations.concat(@annotation_stack)

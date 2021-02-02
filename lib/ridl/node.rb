@@ -159,7 +159,7 @@ module IDL::AST
       if id_arr.first == 'IDL'
         id_arr.shift
         id_str = id_arr.shift.to_s
-        raise 'ID identifiers should not start or end with \'/\'' if id_str[0,1]=='/' or id_str[-1, 1]=='/'
+        raise 'ID identifiers should not start or end with \'/\'' if id_str[0,1] == '/' or id_str[-1, 1] == '/'
         raise "ID identifiers should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(id_str[0,1])
         raise 'Invalid ID! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed for identifiers' unless REPO_ID_RE =~ id_str
       end
@@ -184,7 +184,7 @@ module IDL::AST
 
     def prefix=(pfx)
       unless pfx.to_s.empty?
-        raise 'ID prefix should not start or end with \'/\'' if pfx[0,1]=='/' or pfx[-1, 1]=='/'
+        raise 'ID prefix should not start or end with \'/\'' if pfx[0,1] == '/' or pfx[-1, 1] == '/'
         raise "ID prefix should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(pfx[0,1])
         raise 'Invalid ID prefix! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed' unless REPO_ID_RE =~ pfx
       end
@@ -199,7 +199,7 @@ module IDL::AST
       if @repo_id.nil?
         @repo_ver = "1.0" unless @repo_ver
         format("IDL:%s%s:%s",
-                if @prefix.empty? then "" else @prefix+"/" end,
+                if @prefix.empty? then "" else @prefix + "/" end,
                 self.scopes.collect{|s| s.name}.join("/"),
                 @repo_ver)
       else
@@ -1556,7 +1556,7 @@ module IDL::AST
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       else
-        unless @idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Eventtype) ||  @idltype.is_node?(IDL::AST::TemplateParam))
+        unless @idltype.is_a?(IDL::Type::NodeType) && (@idltype.is_node?(IDL::AST::Eventtype) || @idltype.is_node?(IDL::AST::TemplateParam))
           raise "invalid type for #{typename} #{scoped_lm_name}:  #{@idltype.typename}"
         end
       end
@@ -1794,7 +1794,7 @@ module IDL::AST
             raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
           if (not rtc.node.is_abstract?) and @bases.size > 0
-            raise "concrete basevalue #{tc.node.typename} #{tc.node.scoped_lm_name} MUST "+
+            raise "concrete basevalue #{tc.node.typename} #{tc.node.scoped_lm_name} MUST " +
                   "be first and only non-abstract in inheritance list for #{typename} #{scoped_lm_name}"
           end
           @resolved_bases << rtc.node
@@ -1946,7 +1946,7 @@ module IDL::AST
       @is_recursive = false
       @has_incomplete_type = false
       super(_name, _enclosure)
-      @idltype  = params[:type]
+      @idltype = params[:type]
       @visibility = (params[:visibility] == :public ? :public : :private)
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if params[:type].is_anonymous?
@@ -2112,7 +2112,7 @@ module IDL::AST
     attr_reader :idltype, :expression, :value
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype  = params[:type]
+      @idltype = params[:type]
       @expression = params[:expression]
       @value = nil
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
@@ -2158,7 +2158,7 @@ module IDL::AST
     attr_reader :idltype
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype  = params[:type]
+      @idltype = params[:type]
       @attribute = params[:attribute]
       unless ATTRIBUTE_MAP.has_key?(@attribute)
         raise "invalid attribute for parameter: #{params[:attribute]}"
@@ -2210,7 +2210,7 @@ module IDL::AST
 
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype  = params[:type]
+      @idltype = params[:type]
       @oneway = (params[:oneway] == true)
       @in = []
       @out = []
@@ -2322,7 +2322,7 @@ module IDL::AST
     attr_reader :get_raises, :set_raises
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype  = params[:type]
+      @idltype = params[:type]
       @get_raises = []
       @set_raises = []
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
@@ -2726,7 +2726,7 @@ module IDL::AST
     attr_reader :idltype, :enum, :value
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype  = IDL::Type::ULong.new
+      @idltype = IDL::Type::ULong.new
       @enum = params[:enum]
       @value = params[:value]
       @enum.add_enumerator(self)

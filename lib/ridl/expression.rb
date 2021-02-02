@@ -86,7 +86,7 @@ module IDL
 
         if _operands.size != n
           raise format("%s must receive %d operand%s.",
-            self.typename, n, if (n>1) then "s" else "" end)
+            self.typename, n, if (n > 1) then "s" else "" end)
         end
 
         unless _operands.any? { |o| o.is_template? }
@@ -210,7 +210,7 @@ module IDL
         Applicable = Integer2::Applicable
         def calculate(op)
           if @idltype.is_unsigned?()
-            (2**@idltype.bits-1)-op
+            (2**@idltype.bits - 1) - op
           else
             ~op
           end
