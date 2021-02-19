@@ -73,7 +73,7 @@ module IDL
             @pos.line += 1
             @pos.column = 1
           end
-              else
+        else
           @pos.column += 1
         end
 
