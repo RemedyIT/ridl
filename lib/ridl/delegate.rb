@@ -258,7 +258,7 @@ class Delegator
   end
 
   def handle_pragma(pragma_string)
-    unless @@pragma_handlers.values.any? {|h| h.call(self, @cur, pragma_string)}
+    unless @@pragma_handlers.values.reduce(false) {|rc, h| h.call(self, @cur, pragma_string) || rc }
       IDL.log(1, "RIDL - unrecognized pragma encountered: #{pragma_string}.")
     end
   end
