@@ -1316,8 +1316,8 @@ module IDL::AST
     end
 
     def set_component_and_key(comp, key)
-      unless comp && comp.is_a?(IDL::Type::ScopedName) && comp.is_node?(IDL::AST::TemplateParam)
-        unless comp && comp.is_a?(IDL::Type::ScopedName) && comp.is_node?(IDL::AST::Component)
+      unless comp&.is_a?(IDL::Type::ScopedName) && comp.is_node?(IDL::AST::TemplateParam)
+        unless comp&.is_a?(IDL::Type::ScopedName) && comp.is_node?(IDL::AST::Component)
           raise (comp ?
                   "invalid managed component for #{typename} #{scoped_lm_name}: #{comp.typename}" :
                   "missing managed component specification for #{typename} #{scoped_lm_name}")
@@ -1327,7 +1327,7 @@ module IDL::AST
         end
         @resolved_comp = comp.resolved_type.node
       end
-      unless key && key.is_a?(IDL::Type::ScopedName) && key.is_node?(IDL::AST::TemplateParam)
+      unless key&.is_a?(IDL::Type::ScopedName) && key.is_node?(IDL::AST::TemplateParam)
         ## TODO : add check for Components::PrimaryKeyBase base type
         unless key.nil? || (key.is_a?(IDL::Type::ScopedName) && key.is_node?(IDL::AST::Valuetype))
           raise "invalid primary key for #{typename} #{scoped_lm_name}: #{key.typename}"
@@ -2776,4 +2776,3 @@ module IDL::AST
     end
   end # Typedef
 end
-

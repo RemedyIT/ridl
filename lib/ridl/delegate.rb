@@ -25,7 +25,7 @@ class Delegator
   @@pragma_handlers = {}
 
   def self.add_pragma_handler(key, h = nil, &block)
-    raise 'add_pragma_handler requires a callable object or a block' unless (h && h.respond_to?(:call)) || block_given?
+    raise 'add_pragma_handler requires a callable object or a block' unless h&.respond_to?(:call) || block_given?
     @@pragma_handlers[key] = block_given? ? block : h
   end
 
