@@ -477,7 +477,7 @@ module IDL
         @scan_comment = false
       end
       # check identifier for keywords
-      if token && token.first == :identifier
+      if token&.first == :identifier
         # keyword check
         if (a = KEYWORDS.assoc(token.last.to_s)).nil?
           token = [ :identifier, Identifier.new(token.last.to_s, chk_identifier(token.last.to_s), token.last.unescaped_name) ]
