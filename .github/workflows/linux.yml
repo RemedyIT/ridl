@@ -80,23 +80,25 @@ jobs:
       with:
         repository: DOCGroup/ACE_TAO
         path: ${{ env.DOC_ROOT }}
-        ref: Latest_ACE7TAO3_Micro
+        ref: ACE+TAO-7_0_4
     - name: checkout MPC
       uses: actions/checkout@v2
       with:
         repository: DOCGroup/MPC
         path: ${{ env.MPC_ROOT }}
-        ref: Latest_ACE7TAO3_Micro
+        ref: ACE+TAO-7_0_4
     - name: checkout taox11
       uses: actions/checkout@v2
       with:
         repository: RemedyIT/taox11
         path: ${{ env.TAOX11_ROOT }}
+        ref: v2.2.1_dev
     - name: checkout axcioma
       uses: actions/checkout@v2
       with:
         repository: RemedyIT/axcioma
         path: ${{ env.X11_BASE_ROOT }}
+        ref: v2.2.1_dev
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
