@@ -2,6 +2,8 @@ name: Ruby Gem Release
 
 on:
   release:
+    tags:
+      - v*
     types: [published]
 
 permissions:
