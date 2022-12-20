@@ -52,7 +52,7 @@ task :gem do
     # gem is a Gem::Specification... see https://guides.rubygems.org/specification-reference/ for more options
     gem.summary = %Q{Ruby OMG IDL compiler}
     gem.description = %Q{OMG v3.3 compliant native Ruby IDL compiler frontend with support for pluggable (and stackable) backends.}
-    gem.email = 'mcorino@remedy.nl'
+    gem.email = 'info@remedy.nl'
     gem.homepage = "https://www.remedy.nl/opensource/ridl.html"
     gem.authors = ['Martin Corino', 'Johnny Willemsen']
     gem.files = %w{LICENSE README.rdoc}.concat(Dir.glob('lib/**/*').select {|fnm| File.basename(fnm) != 'orb.pidlc'})
