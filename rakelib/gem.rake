@@ -65,7 +65,7 @@ task :gem do
       "bug_tracker_uri"   => "https://github.com/RemedyIT/ridl/issues",
       "source_code_uri"   => "https://github.com/RemedyIT/ridl"
     }
-    gem.required_ruby_version = '>= 2.0'
+    gem.required_ruby_version = '>= 2.5'
   end
   RIDL.build_gem(gemspec)
 end
