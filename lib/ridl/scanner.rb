@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+require 'racc/parser'
 require 'delegate'
 
 module IDL
