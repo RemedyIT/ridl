@@ -1,0 +1,146 @@
+name: linux
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 7 * * SUN'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tao:
+    permissions:
+      actions: read  # for github/codeql-action/init to get workflow details
+      contents: read  # for actions/checkout to fetch code
+      security-events: write  # for github/codeql-action/analyze to upload SARIF results
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - CC: gcc-11
+            CXX: g++-11
+            PackageDeps: g++-11
+            os: ubuntu-20.04
+            ruby: '3.1'
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} ${{ matrix.CXX }} ruby-${{ matrix.ruby }}
+    env:
+      DOC_ROOT: ${{ github.workspace }}/ACE
+      MPC_ROOT: ${{ github.workspace }}/ACE/MPC
+      RIDL_ROOT: ${{ github.workspace }}
+      R2CORBA_ROOT: ${{ github.workspace }}/r2corba
+      CC: ${{ matrix.CC }}
+      CXX: ${{ matrix.CXX }}
+    steps:
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: checkout ridl
+      uses: actions/checkout@v3
+    - name: checkout ACE_TAO
+      uses: actions/checkout@v3
+      with:
+        repository: DOCGroup/ACE_TAO
+        path: ${{ env.DOC_ROOT }}
+        ref: Latest_ACE7TAO3_Micro
+    - name: checkout MPC
+      uses: actions/checkout@v3
+      with:
+        repository: DOCGroup/MPC
+        path: ${{ env.MPC_ROOT }}
+        ref: Latest_ACE7TAO3_Micro
+    - name: checkout r2corba
+      uses: actions/checkout@v3
+      with:
+        repository: RemedyIT/r2corba
+        path: ${{ env.R2CORBA_ROOT }}
+    - name: Add Repo ${{ matrix.Repo }}
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+        sudo apt-add-repository "deb http://apt.llvm.org/$(lsb_release -cs)/ ${{ matrix.Repo }} main"
+      if: matrix.Repo != ''
+    - name: Add packages
+      run: |
+        sudo apt-get --yes update
+        sudo apt-get --yes install ${{ matrix.PackageDeps }}
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: cpp, ruby
+      if: matrix.feature == 'CodeQL'
+    - name: Run rake configure
+      run: |
+        cd $Env:R2CORBA_ROOT && rake configure
+      shell: pwsh
+    - name: Run rake build
+      run: |
+        cd $Env:R2CORBA_ROOT && rake build
+      shell: pwsh
+    - name: Run rake test
+      run: |
+        cd $Env:R2CORBA_ROOT && rake test
+      shell: pwsh
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      if: matrix.feature == 'CodeQL'
+  jacorb:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            ruby: 'jruby'
+            jacorb_version: '3.9'
+            java-version: '8'
+            java-package: 'jdk'
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }}-${{ matrix.ruby }}-jacorb-${{ matrix.jacorb_version }}-${{ matrix.java-package }}-${{ matrix.java-version }}
+    env:
+      JACORB_HOME: ${{ github.workspace }}/jacorb/jacorb-${{ matrix.jacorb_version }}
+      RIDL_ROOT: ${{ github.workspace }}
+      R2CORBA_ROOT: ${{ github.workspace }}/r2corba
+    steps:
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.java-version }}
+        java-package: ${{ matrix.java-package }}
+        architecture: 'x64'
+        distribution: 'zulu'
+    - name: checkout ridl
+      uses: actions/checkout@v3
+    - name: checkout r2corba
+      uses: actions/checkout@v3
+      with:
+        repository: RemedyIT/r2corba
+        path: ${{ env.R2CORBA_ROOT }}
+    - name: Download a file
+      uses: carlosperate/download-file-action@v1
+      id: download-jacorb
+      with:
+        file-url: 'https://www.jacorb.org/releases/${{ matrix.jacorb_version }}/jacorb-${{ matrix.jacorb_version }}-binary.zip'
+        file-name: 'jacorb-${{ matrix.jacorb_version }}.zip'
+        location: '${{ github.workspace }}'
+    - uses: montudor/action-zip@v1
+      with:
+        args: unzip -qq jacorb-${{ matrix.jacorb_version }}.zip -d jacorb
+    - name: Run rake configure
+      run: |
+        cd $Env:R2CORBA_ROOT && rake configure
+      shell: pwsh
+    - name: Run rake build
+      run: |
+        cd $Env:R2CORBA_ROOT && rake build
+      shell: pwsh
+    - name: Run rake test
+      run: |
+        cd $Env:R2CORBA_ROOT && rake test
+      shell: pwsh
