@@ -33,6 +33,8 @@ jobs:
     name: ${{ matrix.os }} ${{ matrix.CXX }} ruby-${{ matrix.ruby }}
     env:
       DOC_ROOT: ${{ github.workspace }}/ACE
+      ACE_ROOT: ${{ github.workspace }}/ACE/ACE
+      TAO_ROOT: ${{ github.workspace }}/ACE/TAO
       MPC_ROOT: ${{ github.workspace }}/ACE/MPC
       RIDL_ROOT: ${{ github.workspace }}
       R2CORBA_ROOT: ${{ github.workspace }}/r2corba
