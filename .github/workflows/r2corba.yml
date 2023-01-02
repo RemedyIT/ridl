@@ -125,7 +125,7 @@ jobs:
         repository: RemedyIT/r2corba
         path: ${{ env.R2CORBA_ROOT }}
     - name: Download a file
-      uses: carlosperate/download-file-action@v1
+      uses: carlosperate/download-file-action@v2
       id: download-jacorb
       with:
         file-url: 'https://www.jacorb.org/releases/${{ matrix.jacorb_version }}/jacorb-${{ matrix.jacorb_version }}-binary.zip'
