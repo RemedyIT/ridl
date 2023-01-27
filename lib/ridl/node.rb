@@ -2165,6 +2165,7 @@ module IDL::AST
       end
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if params[:type].is_anonymous?
+        raise "Exception #{@idltype.typename} is not allowed in an argument of an operation!" if @idltype.is_node?(IDL::AST::Exception)
         if @idltype.is_local?
           if _enclosure.enclosure.is_a?(IDL::AST::Interface) && !_enclosure.enclosure.is_local?
             raise "Local type #{@idltype.typename} not allowed for operation on unrestricted interface"
@@ -2327,6 +2328,7 @@ module IDL::AST
       @set_raises = []
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
+        raise "Exception #{@idltype.typename} is not allowed as an attribute!" if @idltype.is_node?(IDL::AST::Exception)
         if @idltype.is_local?
           if _enclosure.is_a?(IDL::AST::Interface) && !_enclosure.is_local?
             raise "Local type #{@idltype.typename} not allowed for operation on unrestricted interface"
@@ -2485,6 +2487,7 @@ module IDL::AST
       @idltype  = params[:type]
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
+        raise "Exception #{@idltype.typename} is not allowed as member!" if @idltype.is_node?(IDL::AST::Exception)
         ## check for use of incomplete types
         if !@idltype.is_complete?
           ## verify type is used in sequence
