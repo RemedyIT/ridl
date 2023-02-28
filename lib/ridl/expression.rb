@@ -209,7 +209,7 @@ module IDL
       class UnaryNot < Unary
         Applicable = Integer2::Applicable
         def calculate(op)
-          if @idltype.is_unsigned?()
+          if @idltype.is_unsigned?
             (2**@idltype.bits - 1) - op
           else
             ~op

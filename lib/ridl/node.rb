@@ -1766,8 +1766,8 @@ module IDL::AST
     end
 
     def truncatable_ids
-      ids = [self.repository_id()]
-      ids.concat(@resolved_bases.first().truncatable_ids()) if self.has_concrete_base?() && self.is_truncatable?()
+      ids = [self.repository_id]
+      ids.concat(@resolved_bases.first.truncatable_ids) if self.has_concrete_base? && self.is_truncatable?
       ids
     end
 
