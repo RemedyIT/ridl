@@ -1793,7 +1793,7 @@ module IDL::AST
           if @resolved_bases.include?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
-          if (not rtc.node.is_abstract?) and @bases.size > 0
+          if (not rtc.node.is_abstract?) and !@bases.empty?
             raise "concrete basevalue #{tc.node.typename} #{tc.node.scoped_lm_name} MUST " +
                   "be first and only non-abstract in inheritance list for #{typename} #{scoped_lm_name}"
           end
@@ -1811,7 +1811,7 @@ module IDL::AST
           end
           rif_ = if_.resolved_type
           ### @@TODO@@ further validation
-          if (not rif_.node.is_abstract?) and @interfaces.size > 0
+          if (not rif_.node.is_abstract?) and !@interfaces.empty?
             raise "concrete interface '#{rif_.node.scoped_lm_name}' inheritance not allowed for #{typename} #{scoped_lm_name}. Valuetypes can only inherit (support) a single concrete interface."
           end
           if (not rif_.node.is_abstract?) && (not is_interface_compatible?(rif_.node))
