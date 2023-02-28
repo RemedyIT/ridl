@@ -298,7 +298,7 @@ module IDL
       @expansions.include?(define)
     end
     def more_source?
-      @stack.size > 0
+      !@stack.empty?
     end
     def in_expansion?
       more_source? and @stack.last[0] == :define
@@ -307,7 +307,7 @@ module IDL
       # make sure to close the input source
       @in.close
       # check if we have any previous source still stacked up
-      if @stack.size > 0
+      if !@stack.empty?
         if @stack.last[0] == :include
           @xincludepaths.pop # remove directory of finished include
           @directiver.leave_include
@@ -511,7 +511,7 @@ module IDL
       s2 = s0.dup               # (to be) unescaped id
 
       # simple check
-      if s2.length == 0
+      if s2.empty?
         parse_error 'identifier expected!'
       else
         if s2[0] == ?_
@@ -940,7 +940,7 @@ module IDL
       while true
         ch = @in.getc
         if ch.nil?
-          if @ifdef.size > 0 and !in_expansion?
+          if !@ifdef.empty? and !in_expansion?
             parse_error 'mismatched #if/#endif'
           end
           if more_source?
