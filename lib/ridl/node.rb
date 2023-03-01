@@ -854,6 +854,7 @@ module IDL::AST
     def is_defined?
       @defined
     end
+
     def is_preprocessed?
       @preprocessed
     end
@@ -1007,15 +1008,19 @@ module IDL::AST
     def is_abstract?
       @abstract
     end
+
     def is_local?
       @local
     end
+
     def is_pseudo?
       @pseudo
     end
+
     def is_defined?
       @defined
     end
+
     def is_forward?
       not @defined
     end
@@ -1413,6 +1418,7 @@ module IDL::AST
     def is_defined?
       true
     end
+
     def is_forward?
       false
     end
@@ -1498,6 +1504,7 @@ module IDL::AST
     def is_defined?
       @defined
     end
+
     def is_forward?
       not @defined
     end
@@ -1775,24 +1782,31 @@ module IDL::AST
     def is_abstract?
       @abstract
     end
+
     def is_custom?
       @custom
     end
+
     def is_truncatable?
       @truncatable
     end
+
     def is_defined?
       @defined
     end
+
     def defined=(f)
       @defined = f
     end
+
     def is_forward?
       @forward
     end
+
     def is_recursive?
       @recursive
     end
+
     def recursive=(f)
       @recursive = f
     end
@@ -2506,15 +2520,19 @@ module IDL::AST
     def is_defined?
       @defined
     end
+
     def defined=(f)
       @defined = f
     end
+
     def is_forward?
       @forward
     end
+
     def is_recursive?
       @recursive
     end
+
     def recursive=(f)
       @recursive = f
     end
@@ -2661,15 +2679,19 @@ module IDL::AST
     def is_defined?
       @defined
     end
+
     def defined=(f)
       @defined = f
     end
+
     def is_forward?
       @forward
     end
+
     def is_recursive?
       @recursive
     end
+
     def recursive=(f)
       @recursive = f
     end
