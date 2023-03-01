@@ -236,7 +236,7 @@ module IDL
           @defined[name] = value
         end
       end
-      @ifdef = Array.new
+      @ifdef = []
       @ifskip = false
       @ifnest = 0
       i = nil
@@ -301,7 +301,7 @@ module IDL
         # record file dir as new searchpath
         @xincludepaths << (File.dirname(fpath) + '/')
         @prefix = nil
-        @ifdef = Array.new
+        @ifdef = []
         @in = In.new(File.open(fpath, 'r'), fpath)
         @directiver.enter_include(src, fpath)
         @directiver.pragma_prefix(nil)

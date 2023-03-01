@@ -654,7 +654,7 @@ class Delegator
   end
 
   def declare_op_header(_oneway, _type, _name)
-    params = Hash.new
+    params = {}
     params[:oneway] = (_oneway == :oneway)
     params[:type]   = _type
     params[:annotations] = @annotation_stack
@@ -664,7 +664,7 @@ class Delegator
   end
 
   def declare_op_parameter(_attribute, _type, _name)
-    params = Hash.new
+    params = {}
     params[:attribute] = _attribute
     params[:type] = _type
     params[:annotations] = @annotation_stack
@@ -685,7 +685,7 @@ class Delegator
   end
 
   def declare_attribute(_type, _name, _readonly = false)
-    params = Hash.new
+    params = {}
     params[:type] = _type
     params[:readonly] = _readonly
     params[:annotations] = @annotation_stack
@@ -711,7 +711,7 @@ class Delegator
   end
 
   def declare_member(_type, _name)
-    params = Hash.new
+    params = {}
     params[:type] = _type
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
@@ -767,7 +767,7 @@ class Delegator
   end
 
   def define_case(_labels, _type, _name)
-    params = Hash.new
+    params = {}
     params[:type] = _type
     params[:labels] = _labels
     params[:annotations] = @annotation_stack
@@ -813,7 +813,7 @@ class Delegator
   end
 
   def declare_typedef(_type, _name)
-    params = Hash.new
+    params = {}
     params[:type] = _type
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new

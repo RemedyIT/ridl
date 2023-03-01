@@ -236,7 +236,7 @@ module IDL::AST
   class Node < Leaf
     def initialize(name, enclosure)
       super
-      @introduced = Hash.new
+      @introduced = {}
       @children = []
       introduce(self)
     end
@@ -270,7 +270,7 @@ module IDL::AST
       end
     end
 
-    def define(_type, _name, params = Hash.new)
+    def define(_type, _name, params = {})
       unless is_definable?(_type)
         raise "#{_type.to_s} is not definable in #{self.typename}."
       end
