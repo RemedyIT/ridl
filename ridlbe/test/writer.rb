@@ -18,7 +18,7 @@ module IDL
       @nest = 0
     end
 
-    def print(str);       @output << str; end
+    def print(str); @output << str; end
 
     def println(str = "");  @output << str << "\n"; end
 

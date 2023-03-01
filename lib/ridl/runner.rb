@@ -234,7 +234,7 @@ module IDL
             # process parse result -> code generation
             IDL.log(2, 'RIDL - processing input')
 
-            GenFile.transaction  do
+            GenFile.transaction do
               begin
 
                 backend.process_input(_parser, _opts)

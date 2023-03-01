@@ -551,7 +551,7 @@ module IDL::AST
     end
 
     def replace_prefix(pfx)
-      self.prefix = pfx   # handles validation
+      self.prefix = pfx # handles validation
       if @anchor.nil?
         self.replace_prefix_i(pfx)
       else
@@ -672,7 +672,7 @@ module IDL::AST
     def self.concrete_param(instantiation_context, tpl_elem)
       # is this an element from the template's scope
       if tpl_elem.is_template?
-        celem = if tpl_elem.is_a?(IDL::AST::TemplateParam)  # an actual template parameter?
+        celem = if tpl_elem.is_a?(IDL::AST::TemplateParam) # an actual template parameter?
           tpl_elem.concrete # get the template parameter's concrete (instantiation argument) value
         else
           # referenced template elements should have been instantiated already and available through context
@@ -745,7 +745,7 @@ module IDL::AST
                # no further checks
             when IDL::Type::Sequence # 'sequence' or 'sequence<...>'
               _tptype = _tp.idltype
-              unless _tptype.basetype.is_a?(IDL::Type::Void)  # 'sequence'
+              unless _tptype.basetype.is_a?(IDL::Type::Void) # 'sequence'
                 # check basetype
                 unless _tptype.basetype.is_a?(IDL::Type::ScopedName) &&
                        _tptype.basetype.is_node?(IDL::AST::TemplateParam) &&
@@ -1109,7 +1109,7 @@ module IDL::AST
         newnode = node.class.new(node.name, self, params)
         newnode.annotations.concat(params[:annotations])
         introduce(newnode)
-        @children << newnode  # add overriding child
+        @children << newnode # add overriding child
         return newnode
       end
     end
@@ -1277,7 +1277,7 @@ module IDL::AST
         newnode = node.class.new(node.name, self, params)
         newnode.annotations.concat(params[:annotations])
         introduce(newnode)
-        @children << newnode  # add overriding child
+        @children << newnode # add overriding child
         return newnode
       end
     end
@@ -1325,7 +1325,7 @@ module IDL::AST
     end
 
     def instantiate(instantiation_context, _enclosure)
-      _params  = {
+      _params = {
         component: IDL::AST::TemplateParam.concrete_param(instantiation_context, @component),
         primarykey: @primarykey ? IDL::AST::TemplateParam.concrete_param(instantiation_context, @primarykey) : @primarykey
       }
@@ -1641,7 +1641,7 @@ module IDL::AST
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = IDL::Type::Valuebox.new(self)
-      @boxed_type  = params[:type]
+      @boxed_type = params[:type]
       unless @boxed_type.is_a?(IDL::Type::ScopedName) && @boxed_type.is_node?(IDL::AST::TemplateParam)
         if @boxed_type.resolved_type.is_a?(IDL::Type::Valuetype)
           raise "boxing valuetype #{@boxed_type.scoped_lm_name} in Valuebox #{scoped_lm_name} not allowed"
@@ -1760,7 +1760,7 @@ module IDL::AST
       # not local if forward decl or recursion detected
       return false if is_forward? || recurstk.include?(self)
 
-      recurstk.push self   # track root node to detect recursion
+      recurstk.push self # track root node to detect recursion
       ret = state_members.any? { |m| m.is_local?(recurstk) }
       recurstk.pop
       ret
@@ -2478,7 +2478,7 @@ module IDL::AST
       # not local if forward decl or recursion detected
       return false if is_forward? || recurstk.include?(self)
 
-      recurstk.push self   # track root node to detect recursion
+      recurstk.push self # track root node to detect recursion
       ret = members.any? { |m| m.is_local?(recurstk) }
       recurstk.pop
       ret
@@ -2524,7 +2524,7 @@ module IDL::AST
     attr_reader :idltype
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype  = params[:type]
+      @idltype = params[:type]
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
         raise "Exception #{@idltype.typename} is not allowed as member!" if @idltype.is_node?(IDL::AST::Exception)
@@ -2623,7 +2623,7 @@ module IDL::AST
       # not local if forward decl or recursion detected
       return false if is_forward? || recurstk.include?(self)
 
-      recurstk.push self   # track root node to detect recursion
+      recurstk.push self # track root node to detect recursion
       ret = members.any? { |m| m.is_local?(recurstk) }
       recurstk.pop
       ret
@@ -2718,7 +2718,7 @@ module IDL::AST
       if params[:labels].include?(:default)
         @labels = [ :default ]
       else
-        @labels  = params[:labels]
+        @labels = params[:labels]
       end
     end
 
@@ -2805,7 +2805,7 @@ module IDL::AST
     attr_reader :idltype
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype  = params[:type]
+      @idltype = params[:type]
     end
 
     def is_local?(recurstk = [])

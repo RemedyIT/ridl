@@ -410,7 +410,7 @@ module IDL
         # determin vaue type; if it has a body it is an annotation instance
         annotation_value = if member_annotation_body
           { member_annotation_id => member_annotation_body }
-        else  # otherwise it is a symbolic value
+        else # otherwise it is a symbolic value
           member_annotation_id.to_sym
         end
         # get next token if needed
@@ -996,7 +996,7 @@ module IDL
 
         when ch == ?L
           _nxtc = @in.lookc
-          if _nxtc == ?\'  #' #single quote, for a character literal.
+          if _nxtc == ?\' #' #single quote, for a character literal.
             @in.skipc # skip 'L'
             _nxtc = @in.lookc
             ret = if _nxtc == ?\\
@@ -1062,7 +1062,7 @@ module IDL
           elsif _nxtc == ?/
             # skip comment like a `// ...\n'
             @in.skipc
-            unless @scan_comment  # scan_comment will be true when parsing commented annotations
+            unless @scan_comment # scan_comment will be true when parsing commented annotations
               _nxtc = @in.lookc
               if _nxtc == ANNOTATION
                 @in.skipc
@@ -1152,7 +1152,7 @@ module IDL
             return ret
           end
 
-        when ch == ?\'  #' #single quote, for a character literal.
+        when ch == ?\' #' #single quote, for a character literal.
           _nxtc = @in.lookc
           ret = if _nxtc == ?\\
             @in.skipc
