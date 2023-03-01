@@ -14,10 +14,12 @@ require 'delegate'
 module IDL
   class ParseError < StandardError
     attr_reader :positions
+
     def initialize(msg, positions)
       super(msg)
       @positions = positions
     end
+
     def inspect
       puts "#{self.class.name}: #{message}"
       @positions.each { |pos|
@@ -35,6 +37,7 @@ module IDL
       def to_s
         format('%s: line %d, column %d', name.to_s, line, column)
       end
+
       def inspect
         to_s
       end
@@ -48,15 +51,20 @@ module IDL
         @pos = Position.new(name, line, column)
         @mark = nil
       end
+
       def position
         @pos
       end
+
       def column
         @pos.column
       end
+
       # cursor set at last gotten character.
       # ex: after initialization, position is (0,0).
-      def to_s; @src.to_s; end
+      def to_s
+        @src.to_s
+      end
 
       def lookc
         @fwd
@@ -97,20 +105,22 @@ module IDL
       end
       alias skipc getc
 
-      def skipwhile(*chars, &block)
+      def skipwhile(*_chars, &block)
         if block
           until (ch = lookc).nil?
             return ch unless block.call(ch)
+
             skipc
           end
         end
         nil
       end
 
-      def skipuntil(*chars, &block)
+      def skipuntil(*_chars, &block)
         if block
           until (ch = lookc).nil?
             return ch if block.call(ch)
+
             skipc
           end
         end
@@ -148,14 +158,17 @@ module IDL
         @src = src
         @ix = 0
       end
+
       def to_s
         @src
       end
+
       def getc
         ch = @src[@ix]
         @ix += 1
         ch
       end
+
       def close
         @ix = 0
       end
@@ -165,15 +178,19 @@ module IDL
       def [](key)
         super(::Symbol === key ? key : key.to_s.to_sym)
       end
+
       def []=(key, val)
         super(::Symbol === key ? key : key.to_s.to_sym, val.to_s)
       end
+
       def has_key?(key)
         super(::Symbol === key ? key : key.to_s.to_sym)
       end
+
       def delete(key)
         super(::Symbol === key ? key : key.to_s.to_sym)
       end
+
       def assoc(key)
         k_ = (::Symbol === key ? key : key.to_s.to_sym)
         self.has_key?(k_) ? [k_, self[k_]] : nil
@@ -184,6 +201,7 @@ module IDL
       def initialize(table_)
         @table = table_
       end
+
       def [](key)
         key = (::Integer === key) ? key.chr.to_sym : key.to_sym
         @table[key]
@@ -194,8 +212,8 @@ module IDL
     # to carry both 'raw' IDL name as well as language mapped
     # name
     class Identifier < DelegateClass(::String)
-      attr_reader :checked_name
-      attr_reader :unescaped_name
+      attr_reader :checked_name, :unescaped_name
+
       def initialize(idl_id, checked_id, unescaped_idl_id = nil)
         super(idl_id)
         @checked_name = checked_id
@@ -219,7 +237,7 @@ module IDL
           @defined[name] = value
         end
       end
-      @ifdef = Array.new
+      @ifdef = []
       @ifskip = false
       @ifnest = 0
       i = nil
@@ -241,6 +259,7 @@ module IDL
       @scan_comment = false # true if parsing commented annotation
       @in_annotation = false # true if parsing annotation
     end
+
     def find_include(fname, all = true)
       if File.file?(fname) && File.readable?(fname)
         File.expand_path(fname)
@@ -261,6 +280,7 @@ module IDL
         fp
       end
     end
+
     def check_include(path, fname)
       fp = path + fname
       File.file?(fp) && File.readable?(fp)
@@ -282,32 +302,37 @@ module IDL
         # record file dir as new searchpath
         @xincludepaths << (File.dirname(fpath) + '/')
         @prefix = nil
-        @ifdef = Array.new
+        @ifdef = []
         @in = In.new(File.open(fpath, 'r'), fpath)
         @directiver.enter_include(src, fpath)
         @directiver.pragma_prefix(nil)
       end
     end
+
     def enter_expansion(src, define)
       IDL.log(2, "** RIDL - enter_expansion > #{define} = #{src}")
       @stack << [:define, nil, nil, @in, nil]
       @expansions << define
       @in = In.new(StrIStream.new(src), @in.position.name, @in.position.line, @in.position.column)
     end
+
     def is_expanded?(define)
       @expansions.include?(define)
     end
+
     def more_source?
       !@stack.empty?
     end
+
     def in_expansion?
       more_source? and @stack.last[0] == :define
     end
+
     def leave_source
       # make sure to close the input source
       @in.close
       # check if we have any previous source still stacked up
-      if !@stack.empty?
+      unless @stack.empty?
         if @stack.last[0] == :include
           @xincludepaths.pop # remove directory of finished include
           @directiver.leave_include
@@ -319,12 +344,15 @@ module IDL
         end
       end
     end
+
     def do_parse?
       @ifdef.empty? || @ifdef.last
     end
+
     def positions
-      @stack.reverse.inject(@in.nil? ? [] : [@in.position]) {|pos_arr, (_, _, _, in_, _)| pos_arr << in_.position }
+      @stack.reverse.inject(@in.nil? ? [] : [@in.position]) { |pos_arr, (_, _, _, in_, _)| pos_arr << in_.position }
     end
+
     def parse_error(msg, ex = nil)
       e = IDL::ParseError.new(msg, positions)
       e.set_backtrace(ex.backtrace) unless ex.nil?
@@ -359,8 +387,8 @@ module IDL
     FULL_IDCHARS = IDCHARS + DIGITS
 
     ESCTBL = CharRegistry.new({
-      :n => "\n", :t => "\t", :v => "\v", :b => "\b",
-      :r => "\r", :f => "\f", :a => "\a"
+      n: "\n", t: "\t", v: "\v", b: "\b",
+      r: "\r", f: "\f", a: "\a"
     })
 
     KEYWORDS = %w(
@@ -369,7 +397,8 @@ module IDL
       long manages mirrorport module multiple native Object octet oneway out port porttype primarykey private provides
       public publishes raises readonly setraises sequence short string struct supports switch TRUE truncatable typedef
       typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring
-    ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a; h }
+    ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a
+ h }
 
     LITERALS = [
       :integer_literal,
@@ -379,11 +408,11 @@ module IDL
       # :wide_character_literal,
       :fixed_pt_literal,
       :floating_pt_literal,
-      :boolean_literal ]
+      :boolean_literal]
 
     BOOL_LITERALS = {
-        :false => false,
-        :true => true
+        false: false,
+        true: true
       }
 
     def is_literal?(o)
@@ -408,7 +437,7 @@ module IDL
         # determin vaue type; if it has a body it is an annotation instance
         annotation_value = if member_annotation_body
           { member_annotation_id => member_annotation_body }
-        else  # otherwise it is a symbolic value
+        else # otherwise it is a symbolic value
           member_annotation_id.to_sym
         end
         # get next token if needed
@@ -439,7 +468,7 @@ module IDL
             token = next_token # ')'  (in case of single value annotation) or '='
             if token.first == ')'
               parse_error 'invalid annotation member' if annotation_body
-              annotation_body = { :value => s1 }
+              annotation_body = { value: s1 }
             else
               parse_error 'invalid annotation member' unless token.first == '='
               token, annotation_value = extract_annotation_value
@@ -479,9 +508,9 @@ module IDL
       if token&.first == :identifier
         # keyword check
         if (a = KEYWORDS.assoc(token.last.to_s)).nil?
-          token = [ :identifier, Identifier.new(token.last.to_s, chk_identifier(token.last.to_s), token.last.unescaped_name) ]
+          token = [:identifier, Identifier.new(token.last.to_s, chk_identifier(token.last.to_s), token.last.unescaped_name)]
         elsif token.last == a[1]
-          token = [ a[1], nil ]
+          token = [a[1], nil]
         else
           parse_error "'#{token.last}' collides with a keyword '#{a[1]}'"
         end
@@ -494,7 +523,7 @@ module IDL
     end
 
     def skip_spaces
-      @in.skipwhile {|c| SPACES.include?(c) }
+      @in.skipwhile { |c| SPACES.include?(c) }
     end
 
     def next_identifier(first = nil)
@@ -529,15 +558,15 @@ module IDL
       # keyword check
       elsif @in_annotation
         if BOOL_LITERALS.has_key?(s1)
-          [ :boolean_literal, BOOL_LITERALS[s1] ]
+          [:boolean_literal, BOOL_LITERALS[s1]]
         else
-          [ :identifier, Identifier.new(s2, s2, s0) ]
+          [:identifier, Identifier.new(s2, s2, s0)]
         end
       elsif (a = KEYWORDS.assoc(s1)).nil?
         # check for language mapping keyword
-        [ :identifier, Identifier.new(s2, chk_identifier(s2), s0) ]
+        [:identifier, Identifier.new(s2, chk_identifier(s2), s0)]
       elsif s0 == a[1]
-        [ a[1], nil ]
+        [a[1], nil]
       else
         parse_error "'#{s0}' collides with IDL keyword '#{a[1]}'"
       end
@@ -640,11 +669,11 @@ module IDL
       when 'n', 't', 'v', 'b', 'r', 'f', 'a'
         ret = ''
         ret << ch
-        ret = [ :esc, ret ]
+        ret = [:esc, ret]
       else
         ret = ''
         ret << ch
-        ret = [ :esc_ch, ch ]
+        ret = [:esc_ch, ch]
       end
       ret
     end
@@ -652,17 +681,17 @@ module IDL
     def skipfloat_or_fixed
       if @in.lookc == DOT
         @in.skipc
-        @in.skipwhile {|c| DIGITS.include?(c) }
+        @in.skipwhile { |c| DIGITS.include?(c) }
       end
       if ['e', 'E'].include? @in.lookc
         @in.skipc
         @in.skipc if SIGNS.include? @in.lookc
-        @in.skipwhile {|c| DIGITS.include?(c) }
+        @in.skipwhile { |c| DIGITS.include?(c) }
         return :floating_pt_literal
       elsif ['d', 'D'].include? @in.lookc
         @in.skipc
         @in.skipc if SIGNS.include? @in.lookc
-        @in.skipwhile {|c| DIGITS.include?(c) }
+        @in.skipwhile { |c| DIGITS.include?(c) }
         return :fixed_pt_literal
       end
       :floating_pt_literal
@@ -681,8 +710,9 @@ module IDL
       while true
         ch = @in.lookc
         break if ch.nil?
+
         case
-        when (ch == "\"") #"
+        when (ch == "\"") # "
           s << @in.getc # opening quote
           while true
             if @in.lookc == "\\"
@@ -690,7 +720,7 @@ module IDL
               s << @in.getc
               _, escstr = next_escape_str(true)
               s << escstr
-            elsif @in.lookc == "\"" #"
+            elsif @in.lookc == "\"" # "
               break
             elsif @in.lookc
               # normal character
@@ -700,18 +730,18 @@ module IDL
             end
           end
           s << @in.getc # closing quote
-        when (ch == "\'") #' # quoted character
+        when (ch == "\'") # ' # quoted character
           s << @in.getc # opening quote
           if @in.lookc == "\\"
             # escape sequence
             s << @in.getc
             _, escstr = next_escape_str(true)
             s << escstr
-          elsif @in.lookc && @in.lookc != "\'" #'
+          elsif @in.lookc && @in.lookc != "\'" # '
             # normal character
             s << @in.getc
           end
-          if @in.lookc != "\'" #'
+          if @in.lookc != "\'" # '
             parse_error "character literal must be single character enclosed in \"'\""
           end
           s << @in.getc # closing quote
@@ -759,6 +789,7 @@ module IDL
 
     def resolve_define(id, stack = [])
       return id if %w(true false).include?(id)
+
       IDL.log(3, "*** RIDL - resolve_define(#{id})")
       if @defined.has_key?(id)
         define_ = @defined[id]
@@ -785,10 +816,11 @@ module IDL
     end
 
     def parse_directive
-      @in.skipwhile {|c| SPACES.include?(c) }
+      @in.skipwhile { |c| SPACES.include?(c) }
       s = getline
       /^(\w*)\s*/ === s
-      s1, s2 = $1, $' #'
+      s1 = $1
+      s2 = $' # '
 
       if /(else|endif|elif)/ === s1
 
@@ -797,7 +829,7 @@ module IDL
         end
         case s1
         when 'else'
-          if @ifnest == 0
+          if @ifnest.zero?
             if @ifskip # true branch has already been parsed
               @ifdef[@ifdef.size - 1] = false
             else
@@ -806,14 +838,14 @@ module IDL
             end
           end
         when 'endif'
-          if @ifnest == 0
+          if @ifnest.zero?
             @ifdef.pop
             @ifskip = @ifdef.last
           else
             @ifnest -= 1
           end
         else
-          if @ifnest == 0
+          if @ifnest.zero?
             if @ifskip || @ifdef[@ifdef.size - 1]
               # true branch has already been parsed so skip from now on
               @ifdef[@ifdef.size - 1] = false
@@ -829,9 +861,9 @@ module IDL
                 @ifskip = @ifdef[@ifdef.size - 1]
               rescue IDL::ParseError
                 raise
-              rescue => ex
-                p ex
-                puts ex.backtrace.join("\n")
+              rescue => e
+                p e
+                puts e.backtrace.join("\n")
                 parse_error 'error evaluating #elif'
               end
             end
@@ -865,9 +897,9 @@ module IDL
               @ifskip = @ifdef.last
             rescue IDL::ParseError
               raise
-            rescue => ex
-              p ex
-              puts ex.backtrace.join("\n")
+            rescue => e
+              p e
+              puts e.backtrace.join("\n")
               parse_error 'error evaluating #if'
             end
           else
@@ -930,13 +962,13 @@ module IDL
     end
 
     def next_token_before_eol
-      @in.skipwhile {|c| SPACES.include?(c)}
+      @in.skipwhile { |c| SPACES.include?(c) }
       LFCR.include?(@in.lookc) ? nil : next_token
     end
 
     def next_token
       sign = nil
-      str = '' #initialize empty string
+      str = '' # initialize empty string
       while true
         ch = @in.getc
         if ch.nil?
@@ -952,7 +984,7 @@ module IDL
         end
 
         if WHITESPACE.include? ch
-          @in.skipwhile {|c| WHITESPACE.include?(c) }
+          @in.skipwhile { |c| WHITESPACE.include?(c) }
           next
         end
 
@@ -992,26 +1024,26 @@ module IDL
 
         when ch == 'L'
           _nxtc = @in.lookc
-          if _nxtc == "\'"  #' #single quote, for a character literal.
+          if _nxtc == ?\' # ' #single quote, for a character literal.
             @in.skipc # skip 'L'
             _nxtc = @in.lookc
             ret = if _nxtc == "\\"
               @in.skipc
               next_escape_str
-            elsif _nxtc == "\'" #'
+            elsif _nxtc == "\'" # '
               [ nil, nil ]
             else
-              [ :char, '' << @in.getc ]
+              [:char, '' << @in.getc]
             end
 
-            if @in.lookc != "\'" #'
+            if @in.lookc != "\'" # '
               parse_error "wide character literal must be single wide character enclosed in \"'\""
             end
 
             @in.skipc
-            return [ :wide_character_literal, ret ]
+            return [:wide_character_literal, ret]
 
-          elsif _nxtc == "\"" #" #double quote, for a string literal.
+          elsif _nxtc == "\"" # " #double quote, for a string literal.
             ret = []
             chs = ''
             @in.skipc # skip 'L'
@@ -1022,10 +1054,10 @@ module IDL
                 ret << [:char, chs] unless chs.empty?
                 chs = ''
                 ret << next_escape_str
-              elsif _nxtc == "\"" #"
+              elsif _nxtc == "\"" # "
                 @in.skipc
                 ret << [:char, chs] unless chs.empty?
-                return [ :wide_string_literal, ret ]
+                return [:wide_string_literal, ret]
               else
                 chs << @in.getc
               end
@@ -1058,14 +1090,14 @@ module IDL
           elsif _nxtc == '/'
             # skip comment like a `// ...\n'
             @in.skipc
-            unless @scan_comment  # scan_comment will be true when parsing commented annotations
+            unless @scan_comment # scan_comment will be true when parsing commented annotations
               _nxtc = @in.lookc
               if _nxtc == ANNOTATION
                 @in.skipc
                 # return token returned by parse_annotation or parse next token recursively
                 return parse_annotation(true) || next_token
               else
-                @in.skipuntil {|c| LFCR.include?(c) }
+                @in.skipuntil { |c| LFCR.include?(c) }
               end
             end
             str = '' # reset
@@ -1087,7 +1119,7 @@ module IDL
 
         when ('1'..'9').include?(ch)
           @in.mark(sign, ch)
-          @in.skipwhile {|c| DIGITS.include?(c) }
+          @in.skipwhile { |c| DIGITS.include?(c) }
           num_type = (['.', 'e', 'E', 'd', 'D'].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
 
           r = @in.getregion
@@ -1102,7 +1134,7 @@ module IDL
 
         when ch == DOT #
           @in.mark(ch)
-          @in.skipwhile {|c| DIGITS.include?(c) }
+          @in.skipwhile { |c| DIGITS.include?(c) }
           num_type = (DOT != @in.lookc) ? skipfloat_or_fixed : nil
           s = @in.getregion
           if s == '.'
@@ -1127,10 +1159,10 @@ module IDL
             return [:integer_literal, s.hex]
           else
             dec = false
-            @in.skipwhile {|c| OCTALS.include?(c) }
+            @in.skipwhile { |c| OCTALS.include?(c) }
             if ('8'..'9').include? @in.lookc
               dec = TRUE
-              @in.skipwhile {|c| DIGITS.include?(c) }
+              @in.skipwhile { |c| DIGITS.include?(c) }
             end
 
             num_type = (['.', 'e', 'E', 'd', 'D'].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
@@ -1148,34 +1180,34 @@ module IDL
             return ret
           end
 
-        when ch == "\'"  #' #single quote, for a character literal.
+        when ch == "\'" # ' #single quote, for a character literal.
           _nxtc = @in.lookc
           ret = if _nxtc == "\\"
             @in.skipc
             next_escape
-          elsif _nxtc == "\'" #'
+          elsif _nxtc == "\'" # '
             0
           elsif _nxtc
             ('' << @in.getc).unpack('C').first
           end
 
-          if @in.lookc != "\'" #'
+          if @in.lookc != "\'" # '
             parse_error "character literal must be single character enclosed in \"'\""
           end
 
           @in.skipc
-          return [ :character_literal, ret ]
+          return [:character_literal, ret]
 
-        when ch == "\"" #" #double quote, for a string literal.
+        when ch == "\"" # " #double quote, for a string literal.
           ret = ''
           while true
             _nxtc = @in.lookc
             if _nxtc == "\\"
               @in.skipc
               ret << next_escape
-            elsif _nxtc == "\"" #"
+            elsif _nxtc == "\"" # "
               @in.skipc
-              return [ :string_literal, ret ]
+              return [:string_literal, ret]
             elsif _nxtc
               ret << @in.getc
             else
@@ -1186,11 +1218,10 @@ module IDL
         else
           parse_error 'illegal character [' << ch << ']'
 
-        end #of case
+        end # of case
 
-      end #of while
+      end # of while
       parse_error 'unexcepted error'
-    end #of method next_token
+    end # of method next_token
   end
-
 end

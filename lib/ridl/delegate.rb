@@ -13,11 +13,9 @@ require 'ridl/node'
 require 'ridl/expression'
 
 module IDL
-
 ORB_PIDL = 'orb.pidlc'.freeze
 
 class Delegator
-
   # #pragma handler registry
   # each keyed entry a callable object:
   # - responds to #call(delegator, cur_node, pragma_string)
@@ -26,6 +24,7 @@ class Delegator
 
   def self.add_pragma_handler(key, h = nil, &block)
     raise 'add_pragma_handler requires a callable object or a block' unless h&.respond_to?(:call) || block_given?
+
     @@pragma_handlers[key] = block_given? ? block : h
   end
 
@@ -41,7 +40,7 @@ class Delegator
     @preprocout = params[:output] if @preprocess
     @ignore_pidl = params[:ignore_pidl] || false
     @root_namespace = nil
-    if not params[:namespace].nil?
+    unless params[:namespace].nil?
       @root_namespace = IDL::AST::Module.new(params[:namespace], nil, {})
     end
   end
@@ -58,8 +57,8 @@ class Delegator
           begin
             @root, @includes = Marshal.load(f)
             @cur = @root
-          rescue Exception => ex
-            IDL.error("RIDL - failed to load ORB pidlc [#{ex}]\n You probably need to rebuild the bootstrap file (compile orb.idl to orb.pidlc).")
+          rescue Exception => e
+            IDL.error("RIDL - failed to load ORB pidlc [#{e}]\n You probably need to rebuild the bootstrap file (compile orb.idl to orb.pidlc).")
             exit(1)
           ensure
             f.close
@@ -73,6 +72,7 @@ class Delegator
     @last = nil
     @last_pos = nil
   end
+
   def post_parse
     if @preprocess
       Marshal.dump([@root, @includes], @preprocout)
@@ -100,7 +100,7 @@ class Delegator
   def walk_member(m, w)
     case m
     when IDL::AST::Include
-      if !m.is_preprocessed?
+      unless m.is_preprocessed?
         if @expand_includes
           if m.is_defined?
             w.enter_include(m)
@@ -131,6 +131,7 @@ class Delegator
       _te = w.respond_to?(:enter_home)
       _tl = w.respond_to?(:leave_home)
       return unless _te || _tl
+
       w.enter_home(m) if _te
       m.walk_members { |cm| walk_member(cm, w) }
       w.leave_home(m) if _tl
@@ -141,6 +142,7 @@ class Delegator
         _te = w.respond_to?(:enter_component)
         _tl = w.respond_to?(:leave_component)
         return unless _te || _tl
+
         w.enter_component(m) if _te
         m.walk_members { |cm| walk_member(cm, w) }
         w.leave_component(m) if _tl
@@ -149,6 +151,7 @@ class Delegator
       _te = w.respond_to?(:enter_connector)
       _tl = w.respond_to?(:leave_connector)
       return unless _te || _tl
+
       w.enter_connector(m) if _te
       m.walk_members { |cm| walk_member(cm, w) }
       w.leave_connector(m) if _tl
@@ -210,7 +213,7 @@ class Delegator
   end
 
   def enter_include(s, fullpath)
-    params = { :filename => s, :fullpath => fullpath }
+    params = { filename: s, fullpath: fullpath }
     params[:defined] = true
     params[:preprocessed] = @preprocess
     @cur = @cur.define(IDL::AST::Include, "$INC:" + s, params)
@@ -219,13 +222,13 @@ class Delegator
     @cur
   end
 
-  def leave_include()
+  def leave_include
     set_last
     @cur = @cur.enclosure
   end
 
   def declare_include(s)
-    params = { :filename => s, :fullpath => @includes[s].fullpath }
+    params = { filename: s, fullpath: @includes[s].fullpath }
     params[:defined] = false
     params[:preprocessed] = @includes[s].is_preprocessed?
     @cur.define(IDL::AST::Include, "$INC:" + s, params)
@@ -258,7 +261,7 @@ class Delegator
   end
 
   def handle_pragma(pragma_string)
-    unless @@pragma_handlers.values.reduce(false) {|rc, h| h.call(self, @cur, pragma_string) || rc }
+    unless @@pragma_handlers.values.reduce(false) { |rc, h| h.call(self, @cur, pragma_string) || rc }
       IDL.log(1, "RIDL - unrecognized pragma encountered: #{pragma_string}.")
     end
   end
@@ -289,7 +292,8 @@ class Delegator
     set_last
     @cur
   end
-  def end_module(node)
+
+  def end_module(_node)
     set_last(@cur)
     @cur = @cur.enclosure # must equals to argument mod
   end
@@ -302,6 +306,7 @@ class Delegator
     if global || names.size > 1
       raise "no scoped identifier allowed for template module: #{(global ? '::' : '') + names.join('::')}"
     end
+
     @cur = @cur.define(IDL::AST::TemplateModule, names[0])
     @cur.annotations.concat(@annotation_stack)
     @annotation_stack = IDL::AST::Annotations.new
@@ -316,7 +321,7 @@ class Delegator
       @template_module_name = nil # reset
       define_template_module(*tmp)
     end
-    params = { :type => type }
+    params = { type: type }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::TemplateParam, name, params))
@@ -330,7 +335,8 @@ class Delegator
     unless template_type.node.is_a?(IDL::AST::TemplateModule)
       raise "invalid module template specification: #{template_type.node.typename} #{template_type.node.scoped_lm_name}"
     end
-    params = { :template => template_type.node, :template_params => parameters }
+
+    params = { template: template_type.node, template_params: parameters }
     mod_inst = @cur.define(IDL::AST::Module, name, params)
     mod_inst.annotations.concat(@annotation_stack)
     @annotation_stack = IDL::AST::Annotations.new
@@ -348,13 +354,14 @@ class Delegator
     @cur
   end
 
-  def declare_interface(name, attrib=nil)
+  def declare_interface(name, attrib = nil)
     params = {}
     params[:abstract] = attrib == :abstract
     params[:local] = attrib == :local
     params[:forward] = true
     params[:pseudo] = false
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     @cur.define(IDL::AST::Interface, name, params)
     set_last
     @cur
@@ -372,7 +379,8 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Interface, name, params)
   end
-  def end_interface(node)
+
+  def end_interface(_node)
     set_last(@cur)
     @cur = @cur.enclosure # must equals to argument mod
   end
@@ -389,7 +397,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Home, name, params)
   end
 
-  def end_home(node)
+  def end_home(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -398,6 +406,7 @@ class Delegator
     params = {}
     params[:forward] = true
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Component, name, params)
   end
@@ -412,7 +421,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Component, name, params)
   end
 
-  def end_component(node)
+  def end_component(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -426,7 +435,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Connector, name, params)
   end
 
-  def end_connector(node)
+  def end_connector(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -439,7 +448,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Porttype, name, params)
   end
 
-  def end_porttype(node)
+  def end_porttype(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -455,17 +464,18 @@ class Delegator
     @cur
   end
 
-  def declare_eventtype(name, attrib=nil)
+  def declare_eventtype(name, attrib = nil)
     params = {}
     params[:abstract] = attrib == :abstract
     params[:forward] = true
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Eventtype, name, params)
     @cur
   end
 
-  def define_eventtype(name, attrib, inherits={})
+  def define_eventtype(name, attrib, inherits = {})
     params = {}
     params[:abstract] = attrib == :abstract
     params[:custom] = attrib == :custom
@@ -478,17 +488,18 @@ class Delegator
     @cur
   end
 
-  def declare_valuetype(name, attrib=nil)
+  def declare_valuetype(name, attrib = nil)
     params = {}
     params[:abstract] = attrib == :abstract
     params[:forward] = true
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Valuetype, name, params)
     @cur
   end
 
-  def define_valuetype(name, attrib, inherits={})
+  def define_valuetype(name, attrib, inherits = {})
     params = {}
     params[:abstract] = attrib == :abstract
     params[:custom] = attrib == :custom
@@ -521,7 +532,7 @@ class Delegator
   end
 
   def define_valuebox(name, type)
-    params = { :type => type }
+    params = { type: type }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Valuebox, name, params))
@@ -556,6 +567,7 @@ class Delegator
       if n.nil?
         raise "cannot find type name '#{nm}' in scope '#{node.scoped_name}'"
       end
+
       node = n
       first = node if first.nil?
     end
@@ -594,11 +606,12 @@ class Delegator
         Type::Short,
         Type::Long,
         Type::LongLong,
-        Type::ULongLong,
-      ].detect {|t| t::Range === _value }
+        Type::ULongLong
+      ].detect { |t| t::Range === _value }
       if _type.nil?
         raise "it's not a valid integer: #{v.to_s}"
       end
+
       k.new(_type.new, _value)
     when :string
       k.new(Type::String.new, _value)
@@ -623,15 +636,16 @@ class Delegator
     else
       if not ::Integer === _expression.value
         raise "must be integer: #{_expression.value.inspect}"
-      elsif _expression.value < 0
+      elsif _expression.value.negative?
         raise "must be positive integer: #{_expression.value.to_s}"
       end
+
       _expression.value
     end
   end
 
   def define_const(_type, _name, _expression)
-    params = { :type => _type, :expression => _expression }
+    params = { type: _type, expression: _expression }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Const, _name, params))
@@ -639,7 +653,7 @@ class Delegator
   end
 
   def declare_op_header(_oneway, _type, _name)
-    params = Hash.new
+    params = {}
     params[:oneway] = (_oneway == :oneway)
     params[:type]   = _type
     params[:annotations] = @annotation_stack
@@ -647,8 +661,9 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Operation, _name, params)
   end
+
   def declare_op_parameter(_attribute, _type, _name)
-    params = Hash.new
+    params = {}
     params[:attribute] = _attribute
     params[:type] = _type
     params[:annotations] = @annotation_stack
@@ -656,18 +671,20 @@ class Delegator
     set_last(@cur.define(IDL::AST::Parameter, _name, params))
     @cur
   end
+
   def declare_op_footer(_raises, instantiation_context)
     @cur.raises = _raises || []
     @cur.context = instantiation_context
-    if not @cur.context.nil?
+    unless @cur.context.nil?
       raise "context phrase's not supported"
     end
+
     set_last(@cur)
     @cur = @cur.enclosure
   end
 
-  def declare_attribute(_type, _name, _readonly=false)
-    params = Hash.new
+  def declare_attribute(_type, _name, _readonly = false)
+    params = {}
     params[:type] = _type
     params[:readonly] = _readonly
     params[:annotations] = @annotation_stack
@@ -675,28 +692,32 @@ class Delegator
     set_last(@cur.define(IDL::AST::Attribute, _name, params))
   end
 
-  def declare_struct(_name)
-    params = { :forward => true }
+  def declare_struct(name)
+    params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
-    @cur.define(IDL::AST::Struct, _name, params)
+    @cur.define(IDL::AST::Struct, name, params)
     @cur
   end
-  def define_struct(_name)
-    params = { :forward => false }
+
+  def define_struct(name)
+    params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
-    @cur = @cur.define(IDL::AST::Struct, _name, params)
+    @cur = @cur.define(IDL::AST::Struct, name, params)
   end
-  def declare_member(_type, _name)
-    params = Hash.new
+
+  def declare_member(_type, name)
+    params = {}
     params[:type] = _type
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
-    set_last(@cur.define(IDL::AST::Member, _name, params))
+    set_last(@cur.define(IDL::AST::Member, name, params))
     @cur
   end
+
   def end_struct(node)
     node.defined = true
     set_last(@cur)
@@ -704,42 +725,48 @@ class Delegator
     @cur = @cur.enclosure
     ret
   end
-  def define_exception(_name)
-    params = { :forward => false }
+
+  def define_exception(name)
+    params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
-    @cur = @cur.define(IDL::AST::Exception, _name, params)
+    @cur = @cur.define(IDL::AST::Exception, name, params)
   end
-  def end_exception(node)
+
+  def end_exception(_node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure
     ret
   end
 
-  def declare_union(_name)
-    params = { :forward => true }
+  def declare_union(name)
+    params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
-    @cur.define(IDL::AST::Union, _name, params)
+    @cur.define(IDL::AST::Union, name, params)
     @cur
   end
-  def define_union(_name)
-    params = { :forward => false }
+
+  def define_union(name)
+    params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
-    @cur = @cur.define(IDL::AST::Union, _name, params)
+    @cur = @cur.define(IDL::AST::Union, name, params)
   end
+
   def define_union_switchtype(union_node, switchtype)
     union_node.set_switchtype(switchtype)
     union_node.annotations.concat(@annotation_stack)
     @annotation_stack = IDL::AST::Annotations.new
     union_node
   end
+
   def define_case(_labels, _type, _name)
-    params = Hash.new
+    params = {}
     params[:type] = _type
     params[:labels] = _labels
     params[:annotations] = @annotation_stack
@@ -747,6 +774,7 @@ class Delegator
     set_last(@cur.define(IDL::AST::UnionMember, _name, params))
     @cur
   end
+
   def end_union(node)
     node.validate_labels
     node.defined = true
@@ -763,18 +791,20 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Enum, _name, params)
   end
+
   def declare_enumerator(_name)
     n = @cur.enumerators.length
     params = {
-      :value => n,
-      :enum => @cur
+      value: n,
+      enum: @cur
     }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.enclosure.define(IDL::AST::Enumerator, _name, params))
     @cur
   end
-  def end_enum(node)
+
+  def end_enum(_node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure
@@ -782,7 +812,7 @@ class Delegator
   end
 
   def declare_typedef(_type, _name)
-    params = Hash.new
+    params = {}
     params[:type] = _type
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new

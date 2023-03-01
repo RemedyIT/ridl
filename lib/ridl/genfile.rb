@@ -13,9 +13,7 @@ require 'tempfile'
 require 'fileutils'
 
 module IDL
-
   class GenFile
-
     self.singleton_class.class_eval do
       private
 
@@ -37,11 +35,13 @@ module IDL
       end
 
       def _commit
-        _transaction.reject! { |fgen| fgen.save; true }
+        _transaction.reject! { |fgen| fgen.save
+ true }
       end
 
       def _rollback
-        _transaction.reject! { |fgen| fgen.remove; true } if _transaction
+        _transaction.reject! { |fgen| fgen.remove
+ true } if _transaction
       end
 
       def _push(fgen)
@@ -67,7 +67,8 @@ module IDL
     class Content
       def initialize(sections = {})
         # copy content map transforming all keys to symbols
-        @sections = sections.inject({}) {|m, (k, v)| m[k.to_sym] = v; m }
+        @sections = sections.inject({}) { |m, (k, v)| m[k.to_sym] = v
+ m }
       end
 
       def sections
@@ -101,13 +102,13 @@ module IDL
         @path = @fullpath = @name = @ext = ''
       end
       @options = {
-        :regenerate => false,
-        :regen_marker_prefix => '//',
-        :regen_marker_postfix => nil,
-        :regen_marker => REGEN_MARKER_DEFAULT,
-        :regen_keep_header => true,
-        :output_file => nil,
-        :create_missing_dir => false
+        regenerate: false,
+        regen_marker_prefix: '//',
+        regen_marker_postfix: nil,
+        regen_marker: REGEN_MARKER_DEFAULT,
+        regen_keep_header: true,
+        output_file: nil,
+        create_missing_dir: false
       }.merge(opts)
       if @options[:regenerate] && File.exist?(@fullpath)
         parse_regeneration_content
@@ -144,7 +145,8 @@ module IDL
         yield # block should yield default content
       elsif default_content = options[:default_content]
         default_content = (Array === default_content) ? default_content : default_content.to_s.split("\n")
-        self << (default_content.collect {|l| (s = indent.dup) << l << "\n"; s }.join) unless default_content.empty?
+        self << (default_content.collect { |l| (s = indent.dup) << l << "\n"
+ s }.join) unless default_content.empty?
       end
       if options[:header]
         self << indent << regen_header_end_marker(sectionid) << "\n"
@@ -155,6 +157,7 @@ module IDL
 
     def save
       return if @options[:output_file]
+
       if @fout
         fgen = @fout
         @fout = nil
@@ -197,6 +200,7 @@ module IDL
 
     def remove
       return if @options[:output_file]
+
       if @fout
         begin
           @fout.close(true)
@@ -225,16 +229,19 @@ module IDL
             case $1
             when 'BEGIN'
               raise "ERROR: Found unterminated regeneration section starting at #{@path}:#{in_section.last}." if in_section
+
               in_section = [$2, linenr]
               section = []
             when 'END'
               raise "ERROR: Found unmatched regeneration end at #{@path}:#{linenr}." unless in_section && ($2 == in_section.first)
+
               sections[$2] = section
               in_section = nil
               section = []
             when 'HEADER_END'
               raise "ERROR: Found illegal header end marker at #{@path}:#{linenr}." unless _keep_header && in_section &&
-                                                                                                         ('HEADER' == in_section.first ) && (0 == in_section.last)
+                                                                                                         ('HEADER' == in_section.first ) && (in_section.last.zero?)
+
               sections[$2] = section
               in_section = nil
               section = []
@@ -249,6 +256,5 @@ module IDL
       sections[in_section.first] = section if in_section
       @content = Content.new(sections)
     end
-
   end
 end

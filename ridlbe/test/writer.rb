@@ -18,15 +18,23 @@ module IDL
       @nest = 0
     end
 
-    def print(str);       @output << str; end
+    def print(str) 
+      @output << str 
+    end
 
-    def println(str="");  @output << str << "\n"; end
+    def println(str = "")  
+      @output << str << "\n" 
+    end
 
-    def printi(str="");   @output << indent << str; end
+    def printi(str = "")   
+      @output << indent << str 
+    end
 
-    def printiln(str=""); @output << indent << str << "\n"; end
+    def printiln(str = "") 
+      @output << indent << str << "\n" 
+    end
 
-    def indent()
+    def indent
       @indent * @nest
     end
 
@@ -61,13 +69,13 @@ module IDL
       super
     end
 
-    def pre_visit(parser)
+    def pre_visit(_parser)
       println(%Q{# -*- Test Client Stub Writer -*-})
       println(%Q{# File: #{@params[:idlfile]}})
       inc_nest
     end
 
-    def post_visit(parser)
+    def post_visit(_parser)
       dec_nest
       println('# -*- END Client Stub Writer -*-')
     end
@@ -96,6 +104,7 @@ module IDL
         end
       end
     end
+
     def leave_module(node)
       dec_nest
       printiln("< module #{node.lm_name}")
@@ -104,10 +113,12 @@ module IDL
     def declare_interface(node)
       println("- interface #{node.lm_name}")
     end
+
     def enter_interface(node)
       printiln("> interface #{node.lm_name}")
       inc_nest
     end
+
     def leave_interface(node)
       dec_nest
       printiln("< interface #{node.lm_name}")
@@ -116,10 +127,12 @@ module IDL
     def declare_valuetype(node)
       println("- valuetype #{node.lm_name}")
     end
+
     def enter_valuetype(node)
       printiln("> valuetype #{node.lm_name}")
       inc_nest
     end
+
     def leave_valuetype(node)
       dec_nest
       printiln("< valueype #{node.lm_name}")
@@ -133,11 +146,11 @@ module IDL
       println("+ const #{node.lm_name} = #{expression_to_s(node.expression)}")
     end
 
-    def visit_operation(node, from_valuetype=false)
+    def visit_operation(node, _from_valuetype = false)
       println("+  op #{node.lm_name}")
     end
 
-    def visit_attribute(node, from_valuetype=false)
+    def visit_attribute(node, _from_valuetype = false)
       println("+  att #{node.lm_name}")
     end
 
@@ -271,6 +284,7 @@ module IDL
       printiln("> exception #{node.lm_name}")
       inc_nest
     end
+
     def leave_exception(node)
       dec_nest
       printiln("< exception #{node.lm_name}")
@@ -279,10 +293,12 @@ module IDL
     def declare_union(node)
       println("- union #{node.lm_name}")
     end
+
     def enter_union(node)
       printiln("> union #{node.lm_name}")
       inc_nest
     end
+
     def leave_union(node)
       dec_nest
       printiln("< union #{node.lm_name}")
@@ -307,13 +323,13 @@ module IDL
       super
     end
 
-    def pre_visit(parser)
+    def pre_visit(_parser)
       println(%Q{# -*- Test Servant Writer -*-})
       println(%Q{# File: #{@params[:idlfile]}})
       inc_nest
     end
 
-    def post_visit(parser)
+    def post_visit(_parser)
       dec_nest
       println('# -*- END Servant Writer -*-')
     end
@@ -336,6 +352,7 @@ module IDL
       printiln("> module #{node.lm_name}")
       inc_nest
     end
+
     def leave_module(node)
       dec_nest
       printiln("< module #{node.lm_name}")
@@ -344,10 +361,12 @@ module IDL
     def declare_interface(node)
       println("- interface #{node.lm_name}")
     end
+
     def enter_interface(node)
       printiln("> interface " + node.lm_name)
       inc_nest
     end
+
     def leave_interface(node)
       dec_nest
       printiln("< interface #{node.lm_name}")
@@ -356,56 +375,44 @@ module IDL
     def declare_valuetype(node)
       println("- valuetype #{node.lm_name}")
     end
+
     def enter_valuetype(node)
       printiln("> valuetype #{node.lm_name}")
       inc_nest
     end
+
     def leave_valuetype(node)
       dec_nest
       printiln("< valueype #{node.lm_name}")
     end
 
-    def visit_valuebox(node)
-    end
+    def visit_valuebox(node); end
 
-    def visit_const(node)
-    end
+    def visit_const(node); end
 
-    def visit_operation(node, from_valuetype = false)
+    def visit_operation(node, _from_valuetype = false)
       println("+  op #{node.lm_name}")
     end
 
-    def visit_attribute(node, from_valuetype = false)
+    def visit_attribute(node, _from_valuetype = false)
       println("+  att #{node.lm_name}")
     end
 
-    def declare_struct(node)
-    end
-    def enter_struct(node)
-    end
-    def leave_struct(node)
-    end
+    def declare_struct(node); end
+    def enter_struct(node); end
+    def leave_struct(node); end
 
-    def enter_exception(node)
-    end
-    def leave_exception(node)
-    end
+    def enter_exception(node); end
+    def leave_exception(node); end
 
-    def declare_union(node)
-    end
-    def enter_union(node)
-    end
-    def leave_union(node)
-    end
+    def declare_union(node); end
+    def enter_union(node); end
+    def leave_union(node); end
 
-    def visit_enum(node)
-    end
+    def visit_enum(node); end
 
-    def visit_enumerator(node)
-    end
+    def visit_enumerator(node); end
 
-    def visit_typedef(node)
-    end
+    def visit_typedef(node); end
   end ## TestServantWriter
-
 end # IDL

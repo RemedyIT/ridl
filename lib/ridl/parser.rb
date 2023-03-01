@@ -648,7 +648,6 @@ end
 require 'ridl/delegate'
 
 module IDL
-
 class Parser < Racc::Parser
 
 module_eval(<<'...end parser.ry/module_eval...', 'parser.ry', 830)
@@ -4247,6 +4246,4 @@ def _reduce_none(val, _values)
 end
 
 end   # class Parser
-
-
 end #of module IDL

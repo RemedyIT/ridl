@@ -18,23 +18,21 @@ require 'ridl/options'
 # -----------------------------------------------------------------------
 
 module IDL
-
   OPTIONS = Options.new({
-      :outputdir       => nil,
-      :includepaths    => [],
-      :xincludepaths   => [],
-      :verbose         => (ENV['RIDL_VERBOSE'] || 0).to_i,
-      :debug           => false,
-      :namespace       => nil,
-      :search_incpath  => false,
-      :backend         => nil,
-      :macros          => {
+      outputdir: nil,
+      includepaths: [],
+      xincludepaths: [],
+      verbose: (ENV['RIDL_VERBOSE'] || 0).to_i,
+      debug: false,
+      namespace: nil,
+      search_incpath: false,
+      backend: nil,
+      macros: {
       }
   })
   CORE_OPTIONS = OPTIONS.keys
 
   class Engine
-
     class ProductionStack
       def initialize
         @stack = []
@@ -56,6 +54,7 @@ module IDL
 
       def pop
         return nil if empty?
+
         id, prod = @stack.shift
         @index.delete(id)
         prod
@@ -63,12 +62,14 @@ module IDL
 
       def peek
         return nil if empty?
+
         id, _ = @stack.first
         id
       end
 
       def remove(id)
         return nil unless has?(id)
+
         i = @index.delete(id.to_sym)
         _, producer = @productionstack.delete(i)
         producer
@@ -129,6 +130,7 @@ module IDL
 
     def push_production(id, producer)
       raise "Producer #{id} already queued" if @productionstack.has?(id)
+
       @productionstack.push(id, producer)
     end
 
@@ -183,9 +185,9 @@ module IDL
         # parse arguments
         begin
           @optparser.parse!(argv)
-        rescue ArgumentError => ex
-          IDL.error(ex.inspect)
-          IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level > 0
+        rescue ArgumentError => e
+          IDL.error(e.inspect)
+          IDL.error(e.backtrace.join("\n")) if IDL.verbose_level.positive?
           return false
         end
 
@@ -231,7 +233,7 @@ module IDL
             # process parse result -> code generation
             IDL.log(2, 'RIDL - processing input')
 
-            GenFile.transaction  do
+            GenFile.transaction do
               begin
 
                 backend.process_input(_parser, _opts)
@@ -250,9 +252,9 @@ module IDL
               rescue Backend::ProcessStop
                 IDL.log(2, "RIDL - processing #{IO === _idlfile ? 'from STDIN' : (StringIO === _idlfile ? 'from string' : _idlfile)} stopped with \"#{$!.message}\"")
 
-              rescue => ex
-                IDL.error(ex)
-                IDL.error(ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+              rescue => e
+                IDL.error(e)
+                IDL.error(e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
                 return false
               end
             end
@@ -272,9 +274,9 @@ module IDL
 
       begin
         _parser.parse(io)
-      rescue => ex
-        IDL.error(ex.inspect)
-        IDL.error(ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+      rescue => e
+        IDL.error(e.inspect)
+        IDL.error(e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
         return nil
       ensure
         io.close unless String === io || io == $stdin
@@ -328,7 +330,7 @@ module IDL
 
     def init_optparser
       script_name = File.basename($0, '.*')
-      if not script_name =~ /ridlc/
+      unless script_name =~ /ridlc/
         script_name = 'ruby ' + $0
       end
 
@@ -398,11 +400,12 @@ module IDL
       opts.separator ""
 
       opts.on('-h', '--help',
-              'Show this help message.') { puts opts; puts; exit }
+              'Show this help message.') { puts opts
+ puts
+ exit }
 
       opts
     end
-
   end
 
   def IDL.engine?
@@ -419,11 +422,13 @@ module IDL
 
   def IDL.pop_input
     return nil unless engine?
+
     Thread.current[:ridl_engine].pop_input
   end
 
   def IDL.peek_input
     return nil unless engine?
+
     Thread.current[:ridl_engine].peek_input
   end
 
@@ -437,11 +442,13 @@ module IDL
 
   def IDL.pop_production
     return nil unless engine?
+
     Thread.current[:ridl_engine].pop_production
   end
 
   def IDL.remove_production(id)
     return nil unless engine?
+
     Thread.current[:ridl_engine].remove_production(id)
   end
 
@@ -455,6 +462,7 @@ module IDL
 
   def IDL.production(id)
     return nil unless engine?
+
     Thread.current[:ridl_engine].production(id)
   end
 
@@ -503,7 +511,7 @@ module IDL
     # add optional search paths for RIDL backends
     options[:be_path] ||= []
     options[:be_path].unshift(*ENV['RIDL_BE_PATH'].split(/#{File::PATH_SEPARATOR}/)) if ENV['RIDL_BE_PATH']
-    options[:be_path].collect! {|p| p.gsub('\\', '/') } # cleanup to prevent mixed path separators
+    options[:be_path].collect! { |p| p.gsub('\\', '/') } # cleanup to prevent mixed path separators
     $:.concat(options[:be_path]) unless options[:be_path].empty?
 
     # check for special bootstrapping switches
@@ -527,5 +535,4 @@ module IDL
       exit(1) unless Thread.current[:ridl_engine].run(argv)
     end
   end # IDL.run
-
 end

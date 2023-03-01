@@ -19,7 +19,6 @@ end
 require './lib/ridl/version'
 
 module RIDL
-
   def self.pkg_root
     File.dirname(File.expand_path(File.dirname(__FILE__)))
   end
@@ -55,7 +54,7 @@ task :gem do
     gem.email = 'info@remedy.nl'
     gem.homepage = "https://www.remedy.nl/opensource/ridl.html"
     gem.authors = ['Martin Corino', 'Johnny Willemsen']
-    gem.files = %w{LICENSE README.rdoc}.concat(Dir.glob('lib/**/*').select {|fnm| File.basename(fnm) != 'orb.pidlc'})
+    gem.files = %w{LICENSE README.rdoc}.concat(Dir.glob('lib/**/*').select { |fnm| File.basename(fnm) != 'orb.pidlc' })
     gem.extensions = []
     gem.extra_rdoc_files = %w{LICENSE README.rdoc}
     gem.rdoc_options << '--main' << 'README.rdoc' << '--exclude' << '\.(idl|pidl|diff|ry)'

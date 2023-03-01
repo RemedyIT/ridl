@@ -14,13 +14,11 @@ require 'ostruct'
 require 'json'
 
 module IDL
-
   RIDLRC = '.ridlrc'
   RIDLRC_GLOBAL = File.expand_path(File.join(ENV['HOME'] || ENV['HOMEPATH'] || '~', RIDLRC))
 
   class Options < OpenStruct
-
-    def initialize(hash=nil, marked=nil)
+    def initialize(hash = nil, marked = nil)
       super(hash)
       @marked = marked
     end
@@ -35,7 +33,7 @@ module IDL
     end
 
     def copy!(from, *keys)
-      keys.flatten.each {|k| self[k] = from[k] }
+      keys.flatten.each { |k| self[k] = from[k] }
       self
     end
 
@@ -67,7 +65,6 @@ module IDL
       self.class.new(_dup_elem(@marked || @table), @marked)
     end
 
-
     def load(rcpath)
       IDL.log(3, "Loading #{RIDLRC} from #{rcpath}")
       _cfg = JSON.parse(IO.read(rcpath))
@@ -94,7 +91,7 @@ module IDL
     protected
 
     def _merge(to, from, *keys)
-      keys = keys.flatten.collect {|k| k.to_sym}
+      keys = keys.flatten.collect { |k| k.to_sym }
       keys = from.keys if keys.empty?
       keys.each do |k|
         if from.has_key?(k)
@@ -122,9 +119,10 @@ module IDL
     def _dup_elem(v)
       case v
       when Array
-        v.collect {|e| _dup_elem(e) }
+        v.collect { |e| _dup_elem(e) }
       when Hash
-        v.inject({}) {|h, (k, e)| h[k] = _dup_elem(e); h }
+        v.inject({}) { |h, (k, e)| h[k] = _dup_elem(e)
+ h }
       when OpenStruct
         v.class.new(_dup_elem(v.__send__(:table)))
       else
@@ -136,12 +134,12 @@ module IDL
 
     def self.load_config(opt)
       # first collect config from known (standard and configured) locations
-      _rc_paths = [ RIDLRC_GLOBAL ]
+      _rc_paths = [RIDLRC_GLOBAL]
       _loaded_rc_paths = []
       (ENV['RIDLRC'] || '').split(/:|;/).each do |p|
         _rc_paths << p unless _rc_paths.include?(p)
       end
-      _rc_paths.collect {|path| File.expand_path(path) }.each do |rcp|
+      _rc_paths.collect { |path| File.expand_path(path) }.each do |rcp|
         IDL.log(3, "Testing rc path #{rcp}")
         if File.readable?(rcp) && !_loaded_rc_paths.include?(rcp)
           opt.load(rcp)
@@ -163,6 +161,7 @@ module IDL
           IDL.log(3, "Ignoring #{File.readable?(_rcp) ? 'already loaded' : 'inaccessible'} rc path #{_rcp}")
         end
         break if /\A(.:(\\|\/)|\.|\/)\Z/ =~ _cwd
+
         _cwd = File.dirname(_cwd)
       end while true
       # now load them in reverse order
@@ -172,5 +171,4 @@ module IDL
       end
     end
   end
-
 end

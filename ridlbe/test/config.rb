@@ -11,14 +11,13 @@
 #--------------------------------------------------------------------
 
 module IDL
-
   module Test
     COPYRIGHT = "Copyright (c) 2007-#{Time.now.year} Remedy IT Expertise BV, The Netherlands".freeze
     TITLE = 'RIDL Test backend'.freeze
     VERSION = {
-        :major => 0,
-        :minor => 1,
-        :release => 0
+        major: 0,
+        minor: 1,
+        release: 0
     }
 
     ## Configure Test backend
@@ -36,7 +35,7 @@ module IDL
         # test specific option switches
 
         optlist.for_switch '--stubs-only',
-                           :description => ["Only generate client stubs, no servant code.",
+                           description: ["Only generate client stubs, no servant code.",
                                             "Default: off"] do |swcfg|
           swcfg.on_exec do |arg, params|
             params[:client_stubs] = true
@@ -44,7 +43,7 @@ module IDL
           end
         end
         optlist.for_switch '--no-stubs',
-                           :description => ["Do not generate client stubs, only servant code.",
+                           description: ["Do not generate client stubs, only servant code.",
                                             "Default: off"] do |swcfg|
           swcfg.on_exec do |arg, params|
             params[:client_stubs] = false
@@ -53,7 +52,7 @@ module IDL
         end
 
         optlist.for_switch '--expand-includes',
-                           :description => ["Generate for included IDL inline.",
+                           description: ["Generate for included IDL inline.",
                                             "Default: off"] do |swcfg|
           swcfg.on_exec do |arg, params|
             params[:expand_includes] = true
@@ -80,16 +79,16 @@ module IDL
       if options[:client_stubs]
         # open output file
         co = outstream || (unless fixed_output
-                             GenFile.new(nil, :output_file => $stdout)
+                             GenFile.new(nil, output_file: $stdout)
                            else
                              GenFile.new(options[:output])
                            end)
         begin
           # process StubWriter
           parser.visit_nodes(::IDL::TestStubWriter.new(co, options))
-        rescue => ex
-          IDL.log(0, ex)
-          IDL.log(0, ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+        rescue => e
+          IDL.log(0, e)
+          IDL.log(0, e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
           exit 1
         end
       end
@@ -99,31 +98,27 @@ module IDL
         so = outstream || (if fixed_output
                              GenFile.new(options[:output])
                            else
-                             GenFile.new(nil, :output_file => $stdout)
+                             GenFile.new(nil, output_file: $stdout)
                            end)
         begin
           # process ServantWriter
           parser.visit_nodes(::IDL::TestServantWriter.new(so, options))
-        rescue => ex
-          IDL.log(0, ex)
-          IDL.log(0, ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+        rescue => e
+          IDL.log(0, e)
+          IDL.log(0, e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
           exit 1
         end
       end
     end
 
     module ScannerMixin
-
       def chk_identifier(ident)
         ident
       end
-
     end # module ScannerMixin
 
     IDL::Scanner.class_eval do
       include ScannerMixin
     end
-
   end # module Ruby
-
 end # module IDL

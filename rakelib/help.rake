@@ -31,4 +31,4 @@ namespace :ridl do
 end
 
 desc 'Provide help description about RIDL build system'
-task :help => 'ridl:help'
+task help: 'ridl:help'

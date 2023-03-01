@@ -11,15 +11,14 @@
 #--------------------------------------------------------------------
 
 module IDL
-
   class Backend
-
     @@backends = {}
 
     class ProcessStop < RuntimeError; end
 
     class Configurator
       attr_reader :backend
+
       def initialize(be_name, root, title, copyright, version)
         @backend = IDL::Backend.new(be_name, root, title, copyright, version)
         @be_ext_klass = class << @backend; self; end
@@ -47,10 +46,10 @@ module IDL
         IDL.log(1, "> loaded RIDL backend :#{be_name} from #{@@backends[be_name.to_sym].root}")
         # return backend
         return @@backends[be_name.to_sym]
-      rescue LoadError => ex
+      rescue LoadError => e
         IDL.error "ERROR: Cannot load RIDL backend [:#{be_name}]"
-        IDL.error ex.inspect
-        IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level > 0
+        IDL.error e.inspect
+        IDL.error(e.backtrace.join("\n")) if IDL.verbose_level.positive?
         exit 1
       end
     end
@@ -62,7 +61,7 @@ module IDL
     end
 
     # stop processing of current input and skip to next or exit RIDL
-    def self.stop_processing(msg='')
+    def self.stop_processing(msg = '')
       raise ProcessStop, msg, caller(1).first
     end
 
@@ -71,7 +70,7 @@ module IDL
       @root = root
       @title = ttl
       @copyright = cpr
-      @version = (Hash === ver ? ver : { :major => ver.to_i, :minor => 0, :release => 0 })
+      @version = (Hash === ver ? ver : { major: ver.to_i, minor: 0, release: 0 })
       @base_backends = []
     end
 
@@ -84,24 +83,25 @@ module IDL
     def print_version
       puts "#{title} #{version}"
       puts copyright
-      @base_backends.each {|be| puts '---'; be.print_version }
+      @base_backends.each { |be| puts '---'
+ be.print_version }
     end
 
     def lookup_path
-      @base_backends.inject([@root]) {|paths, bbe| paths.concat(bbe.lookup_path) }
+      @base_backends.inject([@root]) { |paths, bbe| paths.concat(bbe.lookup_path) }
     end
 
     def setup_be(optlist, idl_options)
       # initialize base backends in reverse order so each dependent BE can overrule its
       # base settings
-      @base_backends.reverse.each {|be| be.setup_be(optlist, idl_options) }
+      @base_backends.reverse.each { |be| be.setup_be(optlist, idl_options) }
       # initialize this backend
       _setup_be(optlist, idl_options) if self.respond_to?(:_setup_be, true)
     end
 
     def process_input(parser, params)
       # process input bottom-up
-      @base_backends.reverse.each {|be| be.process_input(parser, params) }
+      @base_backends.reverse.each { |be| be.process_input(parser, params) }
       _process_input(parser, params) if self.respond_to?(:_process_input, true)
     end
 
@@ -115,6 +115,5 @@ module IDL
         end
       end
     end
-
   end
 end

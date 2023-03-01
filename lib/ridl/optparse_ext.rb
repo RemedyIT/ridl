@@ -47,13 +47,9 @@ end
 
 module IDL
   class OptionList
-
     class Option
-
       class Group
-
         class ParamSet
-
           class Configurator
             def initialize(set)
               @set = set
@@ -70,11 +66,12 @@ module IDL
             end
 
             def without(*params)
-              params.each {|p| @set.params.delete(p.to_sym) }
+              params.each { |p| @set.params.delete(p.to_sym) }
             end
           end
 
           attr_reader :params
+
           def initialize(options)
             @description = Array === options[:description] ? options[:description] : (options[:description] || '').split('\n')
             @all_params = options[:all_params] == true
@@ -108,7 +105,7 @@ module IDL
           end
 
           def description
-            @params.values.inject(@description) {|list, vopt| list.concat(vopt[:description] || []) }
+            @params.values.inject(@description) { |list, vopt| list.concat(vopt[:description] || []) }
           end
 
           def define_params(spec = {})
@@ -116,7 +113,7 @@ module IDL
             when String, Hash
               define_param(spec)
             when Array
-              spec.each {|p| define_param(p) }
+              spec.each { |p| define_param(p) }
             end
           end
 
@@ -124,6 +121,7 @@ module IDL
 
           def to_key(param)
             return param if Symbol === param
+
             # convert empty strings to single space strings before symbolizing
             String === param ? (param.empty? ? ' ' : param).to_sym : nil
           end
@@ -132,18 +130,18 @@ module IDL
             case spec
             when String
               key = to_key(spec)
-              @params[key] = { :option_name => key }
+              @params[key] = { option_name: key }
             when Hash
               spec.each do |k, v|
                 @params[to_key(k)] = (if Hash === v
                   {
-                    :option_name => to_key(v[:option_name] || k),
-                    :option_type => v[:type],
-                    :option_value => v.has_key?(:value) ? v[:value] : true,
-                    :description => Array === v[:description] ? v[:description] : (v[:description] || '').split('\n')
+                    option_name: to_key(v[:option_name] || k),
+                    option_type: v[:type],
+                    option_value: v.has_key?(:value) ? v[:value] : true,
+                    description: Array === v[:description] ? v[:description] : (v[:description] || '').split('\n')
                   }
                 else
-                  { :option_name => to_key(v) }
+                  { option_name: to_key(v) }
                 end)
               end
             end
@@ -164,6 +162,7 @@ module IDL
           def define_param_set(id, options = {}, &block)
             id = id.to_sym
             raise "option parameter set [#{id}] already exists" if @group.sets.has_key?(id)
+
             @group.sets[id] = ParamSet.new(options)
             block.call(ParamSet::Configurator.new(@group.sets[id])) if block_given?
           end
@@ -179,7 +178,7 @@ module IDL
           alias :modify_params :modify_param_set
           alias :with_params :modify_param_set
 
-          def define_param(id, options={}, &block)
+          def define_param(id, options = {}, &block)
             define_param_set("#{id}_set", options) do |pscfg|
               pscfg.with(id)
               pscfg.on_exec(&block)
@@ -193,21 +192,21 @@ module IDL
           end
           alias :without_set :without_param
           alias :without_params :without_param
-
         end # Configurator
 
         attr_reader :sets
+
         def initialize(id, options)
           @test = options[:test] || true
           @description = Array === options[:description] ? options[:description] : (options[:description] || '').split('\n')
           @sets = {}
           if options[:params] && Hash === options[:params]
-            @sets[id] = ParamSet.new(:params => options[:params])
+            @sets[id] = ParamSet.new(params: options[:params])
           end
         end
 
         def description
-          @sets.values.inject(@description.dup) {|desc, a| desc.concat(a.description) }
+          @sets.values.inject(@description.dup) { |desc, a| desc.concat(a.description) }
         end
 
         def run(arg, options)
@@ -215,6 +214,7 @@ module IDL
           if self.respond_to?(:_prepare, true)
             result = _prepare(arg, options)
             return false unless result && !result.empty?
+
             arg = result.shift
             ext_args = result
           else
@@ -232,7 +232,7 @@ module IDL
         private
 
         def handle_sets(param, options, *ext_args)
-          @sets.values.inject(false) {|f, s| s.run(param, options, *ext_args) || f }
+          @sets.values.inject(false) { |f, s| s.run(param, options, *ext_args) || f }
         end
       end # Group
 
@@ -244,6 +244,7 @@ module IDL
         def define_group(id, options = {}, &block)
           id = id.to_sym
           raise "option group [#{id}] already exists" if @option.groups.has_key?(id)
+
           @option.groups[id] = Group.new(id, options)
           block.call(Group::Configurator.new(@option.groups[id])) if block_given?
         end
@@ -254,7 +255,7 @@ module IDL
           parms = options[:params] ? options.delete(:params) : options.delete(:param)
           @option.groups[id] ||= Group.new(id, options)
           grpcfg = Group::Configurator.new(@option.groups[id])
-          grpcfg.modify_param_set(id, :params => parms) if parms
+          grpcfg.modify_param_set(id, params: parms) if parms
           block.call(grpcfg) if block_given?
         end
         alias :with_group :modify_group
@@ -264,23 +265,23 @@ module IDL
         end
 
         def define_param_set(id, options = {}, &block)
-          modify_group :default, {:test => true} do |grpcfg|
+          modify_group :default, {test: true} do |grpcfg|
             grpcfg.define_param_set(id, options, &block)
           end
         end
         alias :for_set :define_param_set
         alias :for_params :define_param_set
 
-        def on_exec(options={}, &block)
-          modify_group :default, {:test => true} do |grpcfg|
-            grpcfg.modify_param_set(:default, options.merge({:all_params => true})) do |pscfg|
+        def on_exec(options = {}, &block)
+          modify_group :default, {test: true} do |grpcfg|
+            grpcfg.modify_param_set(:default, options.merge({all_params: true})) do |pscfg|
               pscfg.on_exec(&block)
             end
           end
         end
 
-        def define_param(id, options={}, &block)
-          modify_group :default, {:test => true} do |grpcfg|
+        def define_param(id, options = {}, &block)
+          modify_group :default, {test: true} do |grpcfg|
             grpcfg.define_param_set("#{id}_set", options) do |pscfg|
               pscfg.with(id)
               pscfg.on_exec(&block)
@@ -300,10 +301,8 @@ module IDL
         alias :without_params :without_param
       end
 
-      attr_reader :switch
-      attr_reader :type
-      attr_reader :separator
-      attr_reader :groups
+      attr_reader :switch, :type, :separator, :groups
+
       def initialize(switch, options)
         @switch = switch
         @type = options[:type] || TrueClass
@@ -313,23 +312,24 @@ module IDL
       end
 
       def description(indent = "")
-        @groups.values.inject(@description.dup) {|desc, h| desc.concat(h.description.collect {|desc| "\r#{indent}  #{desc}"}) }
+        @groups.values.inject(@description.dup) { |desc, h| desc.concat(h.description.collect { |desc| "\r#{indent}  #{desc}" }) }
       end
 
       def run(arg, options)
-        unless @groups.values.inject(false) {|f, h| h.run(arg, options) || f }
+        unless @groups.values.inject(false) { |f, h| h.run(arg, options) || f }
           raise ArgumentError, "unknown option [#{arg}] for switch '#{@switch}'"
         end
       end
     end # Option
 
-    def initialize()
+    def initialize
       @options = {}
     end
 
     def define_switch(switch, options = {}, &block)
       switch = switch.to_s
       raise "switch types mismatch" if @options.has_key?(switch) && options[:type] && options[:type] != @options[switch].type
+
       @options[switch] ||= Option.new(switch, options)
       block.call(Option::Configurator.new(@options[switch])) if block_given?
     end
@@ -351,7 +351,5 @@ module IDL
         optp.separator '' if op.separator
       end
     end
-
   end # OptionList
-
 end # IDL
