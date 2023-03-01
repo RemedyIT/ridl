@@ -1,0 +1,4 @@
+AllCops:
+  Exclude:
+    - 'lib/ridl/parser.rb'
+  NewCops: enable
