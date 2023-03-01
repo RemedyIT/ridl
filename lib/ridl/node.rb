@@ -851,11 +851,11 @@ module IDL::AST
       @scoped_name = @scopes.collect{ |s| s.name }.join("::")
     end
 
-    def is_defined?;
-      @defined;
+    def is_defined?
+      @defined
     end
-    def is_preprocessed?;
-      @preprocessed;
+    def is_preprocessed?
+      @preprocessed
     end
 
     def introduce(node)
@@ -927,7 +927,8 @@ module IDL::AST
         # check if the matched name resulted in multiple different nodes or all the same
         r_one = results.shift
         unless results.all? { |r| r_one == r || (r_one.class == r.class && r_one.scoped_name == r.scoped_name) }
-          s = results.inject([r_one]) { |l, r| l << r unless l.include?(r); l }.collect{ |n| n.scoped_name }.join(", ")
+          s = results.inject([r_one]) { |l, r| l << r unless l.include?(r)
+ l }.collect{ |n| n.scoped_name }.join(", ")
           raise "\"#{_name}\" is ambiguous. " + s
         end
       end
@@ -1003,20 +1004,20 @@ module IDL::AST
       super(instantiation_context, _enclosure, _params)
     end
 
-    def is_abstract?;
-      @abstract;
+    def is_abstract?
+      @abstract
     end
-    def is_local?;
-      @local;
+    def is_local?
+      @local
     end
-    def is_pseudo?;
-      @pseudo;
+    def is_pseudo?
+      @pseudo
     end
-    def is_defined?;
-      @defined;
+    def is_defined?
+      @defined
     end
-    def is_forward?;
-      not @defined;
+    def is_forward?
+      not @defined
     end
 
     def add_bases(inherits_)
@@ -1056,7 +1057,8 @@ module IDL::AST
             rtc.node.walk_members do |m|
               new_op_att_ << m if m.is_a?(IDL::AST::Operation) || m.is_a?(IDL::AST::Attribute)
             end
-            if new_op_att_.any? { |n| n_ = self.search_self(n.name); n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
+            if new_op_att_.any? { |n| n_ = self.search_self(n.name)
+ n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
               raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} because of duplicated operations/attributes"
             end
             # no need to check for duplicate member names; this inheritance is ok
@@ -1236,7 +1238,8 @@ module IDL::AST
             rtc.node.walk_members do |m|
               new_op_att_ << m if m.is_a?(IDL::AST::Operation) || m.is_a?(IDL::AST::Attribute)
             end
-            if new_op_att_.any? { |n| n_ = self.search_self(n.name); n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
+            if new_op_att_.any? { |n| n_ = self.search_self(n.name)
+ n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
               raise "#{typename} #{scoped_lm_name} cannot support #{tc.node.typename} #{tc.node.scoped_lm_name} because of duplicated operations/attributes"
             end
             # no need to check for duplicate member names; this support is ok
@@ -1407,11 +1410,11 @@ module IDL::AST
       super(instantiation_context, _enclosure, {})
     end
 
-    def is_defined?;
-      true;
+    def is_defined?
+      true
     end
-    def is_forward?;
-      false;
+    def is_forward?
+      false
     end
 
     def add_interfaces(intfs)
@@ -1492,11 +1495,11 @@ module IDL::AST
       super(instantiation_context, _enclosure, { forward: self.is_forward? })
     end
 
-    def is_defined?;
-      @defined;
+    def is_defined?
+      @defined
     end
-    def is_forward?;
-      not @defined;
+    def is_forward?
+      not @defined
     end
 
     def set_base(parent)
@@ -1769,28 +1772,28 @@ module IDL::AST
       inst
     end
 
-    def is_abstract?;
-      @abstract;
+    def is_abstract?
+      @abstract
     end
-    def is_custom?;
-      @custom;
+    def is_custom?
+      @custom
     end
-    def is_truncatable?;
-      @truncatable;
+    def is_truncatable?
+      @truncatable
     end
-    def is_defined?;
-      @defined;
+    def is_defined?
+      @defined
     end
-    def defined=(f);
-      @defined = f;
+    def defined=(f)
+      @defined = f
     end
-    def is_forward?;
-      @forward;
+    def is_forward?
+      @forward
     end
-    def is_recursive?;
+    def is_recursive?
       @recursive
     end
-    def recursive=(f);
+    def recursive=(f)
       @recursive = f
     end
 
@@ -2500,19 +2503,19 @@ module IDL::AST
       @idltype = IDL::Type::Struct.new(self)
     end
 
-    def is_defined?;
+    def is_defined?
       @defined
     end
-    def defined=(f);
+    def defined=(f)
       @defined = f
     end
-    def is_forward?;
+    def is_forward?
       @forward
     end
-    def is_recursive?;
+    def is_recursive?
       @recursive
     end
-    def recursive=(f);
+    def recursive=(f)
       @recursive = f
     end
 
@@ -2655,19 +2658,19 @@ module IDL::AST
       @switchtype = _switchtype
     end
 
-    def is_defined?;
-      @defined;
+    def is_defined?
+      @defined
     end
-    def defined=(f);
-      @defined = f;
+    def defined=(f)
+      @defined = f
     end
-    def is_forward?;
-      @forward;
+    def is_forward?
+      @forward
     end
-    def is_recursive?;
+    def is_recursive?
       @recursive
     end
-    def recursive=(f);
+    def recursive=(f)
       @recursive = f
     end
 

@@ -61,8 +61,8 @@ module IDL
 
       # cursor set at last gotten character.
       # ex: after initialization, position is (0,0).
-      def to_s;
-        @src.to_s;
+      def to_s
+        @src.to_s
       end
 
       def lookc
@@ -396,7 +396,8 @@ module IDL
       long manages mirrorport module multiple native Object octet oneway out port porttype primarykey private provides
       public publishes raises readonly setraises sequence short string struct supports switch TRUE truncatable typedef
       typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring
-    ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a; h }
+    ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a
+ h }
 
     LITERALS = [
       :integer_literal,
@@ -756,7 +757,8 @@ module IDL
             # /*...*/ style comment; skip comment
             ch1 = nil
             @in.skipuntil { |ch_|
-              ch0 = ch1; ch1 = ch_
+              ch0 = ch1
+ ch1 = ch_
               ch0 == ?* and ch1 == ?/ #
             }
             if @in.lookc.nil?
@@ -1074,7 +1076,8 @@ module IDL
             @in.skipc # forward stream beyond `/*'
             ch1 = nil
             @in.skipuntil { |ch_|
-              ch0 = ch1; ch1 = ch_
+              ch0 = ch1
+ ch1 = ch_
               ch0 == ?* and ch1 == ?/ #
             }
             if @in.lookc.nil?

@@ -285,8 +285,8 @@ module IDL
 
     class String < Type
       attr_reader :size
-      def length;
-        @size;
+      def length
+        @size
       end
 
       def initialize(size = nil)
@@ -324,8 +324,8 @@ module IDL
     class Sequence < Type
       attr_reader :size, :basetype
       attr_accessor :recursive
-      def length;
-        @size;
+      def length
+        @size
       end
 
       def initialize(t, size)
@@ -434,8 +434,8 @@ module IDL
 
     class WString < Type
       attr_reader :size
-      def length;
-        @size;
+      def length
+        @size
       end
 
       def initialize(size = nil)

@@ -83,7 +83,8 @@ module IDL
     def print_version
       puts "#{title} #{version}"
       puts copyright
-      @base_backends.each { |be| puts '---'; be.print_version }
+      @base_backends.each { |be| puts '---'
+ be.print_version }
     end
 
     def lookup_path

@@ -401,7 +401,9 @@ module IDL
       opts.separator ""
 
       opts.on('-h', '--help',
-              'Show this help message.') { puts opts; puts; exit }
+              'Show this help message.') { puts opts
+ puts
+ exit }
 
       opts
     end
