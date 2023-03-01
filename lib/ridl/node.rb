@@ -75,7 +75,7 @@ module IDL::AST
     end
 
     def concat(anns)
-      anns.each {|_ann| self << _ann } if anns
+      anns.each { |_ann| self << _ann } if anns
     end
   end
 
@@ -117,7 +117,7 @@ module IDL::AST
     end
 
     def scoped_name
-      @scoped_name ||= @scopes.collect{|s| s.name}.join("::").freeze
+      @scoped_name ||= @scopes.collect{ |s| s.name }.join("::").freeze
     end
 
     def scoped_lm_name
@@ -200,7 +200,7 @@ module IDL::AST
         @repo_ver = "1.0" unless @repo_ver
         format("IDL:%s%s:%s",
                 if @prefix.empty? then "" else @prefix + "/" end,
-                self.scopes.collect{|s| s.name}.join("/"),
+                self.scopes.collect{ |s| s.name }.join("/"),
                 @repo_ver)
       else
         @repo_id
@@ -820,7 +820,7 @@ module IDL::AST
       @preprocessed = params[:preprocessed] || false
       #overrule
       @scopes = @enclosure.scopes
-      @scoped_name = @scopes.collect{|s| s.name}.join("::")
+      @scoped_name = @scopes.collect{ |s| s.name }.join("::")
     end
 
     def lm_scopes
@@ -838,7 +838,7 @@ module IDL::AST
       super(vars)
       #overrule
       @scopes = @enclosure.scopes || []
-      @scoped_name = @scopes.collect{|s| s.name}.join("::")
+      @scoped_name = @scopes.collect{ |s| s.name }.join("::")
     end
 
     def is_defined?; @defined; end
@@ -864,7 +864,7 @@ module IDL::AST
       @preprocessed = _template.is_preprocessed?
       #overrule
       @scopes = @enclosure.scopes
-      @scoped_name = @scopes.collect{|s| s.name}.join("::")
+      @scoped_name = @scopes.collect{ |s| s.name }.join("::")
       self
     end
 
@@ -911,8 +911,8 @@ module IDL::AST
       if results.size > 1
         # check if the matched name resulted in multiple different nodes or all the same
         r_one = results.shift
-        unless results.all? {|r| r_one == r || (r_one.class == r.class && r_one.scoped_name == r.scoped_name) }
-          s = results.inject([r_one]) {|l, r| l << r unless l.include?(r); l }.collect{ |n| n.scoped_name }.join(", ")
+        unless results.all? { |r| r_one == r || (r_one.class == r.class && r_one.scoped_name == r.scoped_name) }
+          s = results.inject([r_one]) { |l, r| l << r unless l.include?(r); l }.collect{ |n| n.scoped_name }.join(", ")
           raise "\"#{_name}\" is ambiguous. " + s
         end
       end
@@ -1029,7 +1029,7 @@ module IDL::AST
             rtc.node.walk_members do |m|
               new_op_att_ << m if m.is_a?(IDL::AST::Operation) || m.is_a?(IDL::AST::Attribute)
             end
-            if new_op_att_.any? {|n| n_ = self.search_self(n.name); n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
+            if new_op_att_.any? { |n| n_ = self.search_self(n.name); n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
               raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} because of duplicated operations/attributes"
             end
             # no need to check for duplicate member names; this inheritance is ok
@@ -1205,7 +1205,7 @@ module IDL::AST
             rtc.node.walk_members do |m|
               new_op_att_ << m if m.is_a?(IDL::AST::Operation) || m.is_a?(IDL::AST::Attribute)
             end
-            if new_op_att_.any? {|n| n_ = self.search_self(n.name); n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
+            if new_op_att_.any? { |n| n_ = self.search_self(n.name); n_.is_a?(IDL::AST::Operation) || n_.is_a?(IDL::AST::Attribute) }
               raise "#{typename} #{scoped_lm_name} cannot support #{tc.node.typename} #{tc.node.scoped_lm_name} because of duplicated operations/attributes"
             end
             # no need to check for duplicate member names; this support is ok
@@ -1522,11 +1522,11 @@ module IDL::AST
     end
 
     def ports
-      @children.select {|c| IDL::AST::Port === c}
+      @children.select { |c| IDL::AST::Port === c }
     end
 
     def attributes
-      @children.select {|c| IDL::AST::Attribute === c}
+      @children.select { |c| IDL::AST::Attribute === c }
     end
 
     def instantiate(instantiation_context, _enclosure)
@@ -1591,9 +1591,9 @@ module IDL::AST
     def ports
       case @porttype
       when :port
-        @idltype.resolved_type.node.ports.collect {|p| p.expanded_copy(self.name, self.enclosure) }
+        @idltype.resolved_type.node.ports.collect { |p| p.expanded_copy(self.name, self.enclosure) }
       when :mirrorport
-        @idltype.resolved_type.node.ports.collect {|p| p.expanded_mirror_copy(self.name, self.enclosure) }
+        @idltype.resolved_type.node.ports.collect { |p| p.expanded_mirror_copy(self.name, self.enclosure) }
       else
         [self]
       end
@@ -1602,7 +1602,7 @@ module IDL::AST
     def attributes
       case @porttype
       when :port, :mirrorport
-        @idltype.resolved_type.node.attributes.collect {|att|
+        @idltype.resolved_type.node.attributes.collect { |att|
           exp_a = att.expanded_copy(self.name, self.enclosure)
           exp_a.annotations << Annotation.new(EXTPORTDEF_ANNOTATION, { extended_port_name: self.name, base_name: att.name, mirror: (@porttype == :mirrorport) })
           exp_a # return expanded copy

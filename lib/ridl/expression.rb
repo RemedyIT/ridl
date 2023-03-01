@@ -90,8 +90,8 @@ module IDL
         end
 
         unless _operands.any? { |o| o.is_template? }
-          @idltype = self.class.suite_type(*(_operands.collect{|o| o.idltype.resolved_type}))
-          @value = calculate(*(_operands.collect{|o| o.value}))
+          @idltype = self.class.suite_type(*(_operands.collect{ |o| o.idltype.resolved_type }))
+          @value = calculate(*(_operands.collect{ |o| o.value }))
         else
           @idltype = nil
           @value = nil
@@ -116,7 +116,7 @@ module IDL
         end
 
         ret = nil
-        types = types.collect {|t| t.class }
+        types = types.collect { |t| t.class }
         self::Applicable.each do |t|
           if types.include? t
             ret = t

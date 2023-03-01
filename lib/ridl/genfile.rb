@@ -67,7 +67,7 @@ module IDL
     class Content
       def initialize(sections = {})
         # copy content map transforming all keys to symbols
-        @sections = sections.inject({}) {|m, (k, v)| m[k.to_sym] = v; m }
+        @sections = sections.inject({}) { |m, (k, v)| m[k.to_sym] = v; m }
       end
 
       def sections
@@ -144,7 +144,7 @@ module IDL
         yield # block should yield default content
       elsif default_content = options[:default_content]
         default_content = (Array === default_content) ? default_content : default_content.to_s.split("\n")
-        self << (default_content.collect {|l| (s = indent.dup) << l << "\n"; s }.join) unless default_content.empty?
+        self << (default_content.collect { |l| (s = indent.dup) << l << "\n"; s }.join) unless default_content.empty?
       end
       if options[:header]
         self << indent << regen_header_end_marker(sectionid) << "\n"

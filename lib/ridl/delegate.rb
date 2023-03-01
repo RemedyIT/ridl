@@ -258,7 +258,7 @@ class Delegator
   end
 
   def handle_pragma(pragma_string)
-    unless @@pragma_handlers.values.reduce(false) {|rc, h| h.call(self, @cur, pragma_string) || rc }
+    unless @@pragma_handlers.values.reduce(false) { |rc, h| h.call(self, @cur, pragma_string) || rc }
       IDL.log(1, "RIDL - unrecognized pragma encountered: #{pragma_string}.")
     end
   end
@@ -595,7 +595,7 @@ class Delegator
         Type::Long,
         Type::LongLong,
         Type::ULongLong,
-      ].detect {|t| t::Range === _value }
+      ].detect { |t| t::Range === _value }
       if _type.nil?
         raise "it's not a valid integer: #{v.to_s}"
       end

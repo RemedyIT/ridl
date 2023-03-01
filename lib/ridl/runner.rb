@@ -503,7 +503,7 @@ module IDL
     # add optional search paths for RIDL backends
     options[:be_path] ||= []
     options[:be_path].unshift(*ENV['RIDL_BE_PATH'].split(/#{File::PATH_SEPARATOR}/)) if ENV['RIDL_BE_PATH']
-    options[:be_path].collect! {|p| p.gsub('\\', '/') } # cleanup to prevent mixed path separators
+    options[:be_path].collect! { |p| p.gsub('\\', '/') } # cleanup to prevent mixed path separators
     $:.concat(options[:be_path]) unless options[:be_path].empty?
 
     # check for special bootstrapping switches

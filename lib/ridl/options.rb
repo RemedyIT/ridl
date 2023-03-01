@@ -35,7 +35,7 @@ module IDL
     end
 
     def copy!(from, *keys)
-      keys.flatten.each {|k| self[k] = from[k] }
+      keys.flatten.each { |k| self[k] = from[k] }
       self
     end
 
@@ -94,7 +94,7 @@ module IDL
     protected
 
     def _merge(to, from, *keys)
-      keys = keys.flatten.collect {|k| k.to_sym}
+      keys = keys.flatten.collect { |k| k.to_sym }
       keys = from.keys if keys.empty?
       keys.each do |k|
         if from.has_key?(k)
@@ -122,9 +122,9 @@ module IDL
     def _dup_elem(v)
       case v
       when Array
-        v.collect {|e| _dup_elem(e) }
+        v.collect { |e| _dup_elem(e) }
       when Hash
-        v.inject({}) {|h, (k, e)| h[k] = _dup_elem(e); h }
+        v.inject({}) { |h, (k, e)| h[k] = _dup_elem(e); h }
       when OpenStruct
         v.class.new(_dup_elem(v.__send__(:table)))
       else
@@ -141,7 +141,7 @@ module IDL
       (ENV['RIDLRC'] || '').split(/:|;/).each do |p|
         _rc_paths << p unless _rc_paths.include?(p)
       end
-      _rc_paths.collect {|path| File.expand_path(path) }.each do |rcp|
+      _rc_paths.collect { |path| File.expand_path(path) }.each do |rcp|
         IDL.log(3, "Testing rc path #{rcp}")
         if File.readable?(rcp) && !_loaded_rc_paths.include?(rcp)
           opt.load(rcp)

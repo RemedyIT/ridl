@@ -323,7 +323,7 @@ module IDL
       @ifdef.empty? || @ifdef.last
     end
     def positions
-      @stack.reverse.inject(@in.nil? ? [] : [@in.position]) {|pos_arr, (_, _, _, in_, _)| pos_arr << in_.position }
+      @stack.reverse.inject(@in.nil? ? [] : [@in.position]) { |pos_arr, (_, _, _, in_, _)| pos_arr << in_.position }
     end
     def parse_error(msg, ex = nil)
       e = IDL::ParseError.new(msg, positions)
@@ -494,7 +494,7 @@ module IDL
     end
 
     def skip_spaces
-      @in.skipwhile {|c| SPACES.include?(c) }
+      @in.skipwhile { |c| SPACES.include?(c) }
     end
 
     def next_identifier(first = nil)
@@ -652,17 +652,17 @@ module IDL
     def skipfloat_or_fixed
       if @in.lookc == DOT
         @in.skipc
-        @in.skipwhile {|c| DIGITS.include?(c) }
+        @in.skipwhile { |c| DIGITS.include?(c) }
       end
       if [?e, ?E].include? @in.lookc
         @in.skipc
         @in.skipc if SIGNS.include? @in.lookc
-        @in.skipwhile {|c| DIGITS.include?(c) }
+        @in.skipwhile { |c| DIGITS.include?(c) }
         return :floating_pt_literal
       elsif [?d, ?D].include? @in.lookc
         @in.skipc
         @in.skipc if SIGNS.include? @in.lookc
-        @in.skipwhile {|c| DIGITS.include?(c) }
+        @in.skipwhile { |c| DIGITS.include?(c) }
         return :fixed_pt_literal
       end
       :floating_pt_literal
@@ -785,7 +785,7 @@ module IDL
     end
 
     def parse_directive
-      @in.skipwhile {|c| SPACES.include?(c) }
+      @in.skipwhile { |c| SPACES.include?(c) }
       s = getline
       /^(\w*)\s*/ === s
       s1, s2 = $1, $' #'
@@ -930,7 +930,7 @@ module IDL
     end
 
     def next_token_before_eol
-      @in.skipwhile {|c| SPACES.include?(c)}
+      @in.skipwhile { |c| SPACES.include?(c) }
       LFCR.include?(@in.lookc) ? nil : next_token
     end
 
@@ -952,7 +952,7 @@ module IDL
         end
 
         if WHITESPACE.include? ch
-          @in.skipwhile {|c| WHITESPACE.include?(c) }
+          @in.skipwhile { |c| WHITESPACE.include?(c) }
           next
         end
 
@@ -1065,7 +1065,7 @@ module IDL
                 # return token returned by parse_annotation or parse next token recursively
                 return parse_annotation(true) || next_token
               else
-                @in.skipuntil {|c| LFCR.include?(c) }
+                @in.skipuntil { |c| LFCR.include?(c) }
               end
             end
             str = '' # reset
@@ -1087,7 +1087,7 @@ module IDL
 
         when (?1..?9).include?(ch)
           @in.mark(sign, ch)
-          @in.skipwhile {|c| DIGITS.include?(c) }
+          @in.skipwhile { |c| DIGITS.include?(c) }
           num_type = ([?., ?e, ?E, ?d, ?D].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
 
           r = @in.getregion
@@ -1102,7 +1102,7 @@ module IDL
 
         when ch == DOT #
           @in.mark(ch)
-          @in.skipwhile {|c| DIGITS.include?(c) }
+          @in.skipwhile { |c| DIGITS.include?(c) }
           num_type = (DOT != @in.lookc) ? skipfloat_or_fixed : nil
           s = @in.getregion
           if s == '.'
@@ -1127,10 +1127,10 @@ module IDL
             return [:integer_literal, s.hex]
           else
             dec = false
-            @in.skipwhile {|c| OCTALS.include?(c) }
+            @in.skipwhile { |c| OCTALS.include?(c) }
             if (?8..?9).include? @in.lookc
               dec = TRUE
-              @in.skipwhile {|c| DIGITS.include?(c) }
+              @in.skipwhile { |c| DIGITS.include?(c) }
             end
 
             num_type = ([?., ?e, ?E, ?d, ?D].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal

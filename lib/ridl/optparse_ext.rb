@@ -70,7 +70,7 @@ module IDL
             end
 
             def without(*params)
-              params.each {|p| @set.params.delete(p.to_sym) }
+              params.each { |p| @set.params.delete(p.to_sym) }
             end
           end
 
@@ -108,7 +108,7 @@ module IDL
           end
 
           def description
-            @params.values.inject(@description) {|list, vopt| list.concat(vopt[:description] || []) }
+            @params.values.inject(@description) { |list, vopt| list.concat(vopt[:description] || []) }
           end
 
           def define_params(spec = {})
@@ -116,7 +116,7 @@ module IDL
             when String, Hash
               define_param(spec)
             when Array
-              spec.each {|p| define_param(p) }
+              spec.each { |p| define_param(p) }
             end
           end
 
@@ -207,7 +207,7 @@ module IDL
         end
 
         def description
-          @sets.values.inject(@description.dup) {|desc, a| desc.concat(a.description) }
+          @sets.values.inject(@description.dup) { |desc, a| desc.concat(a.description) }
         end
 
         def run(arg, options)
@@ -232,7 +232,7 @@ module IDL
         private
 
         def handle_sets(param, options, *ext_args)
-          @sets.values.inject(false) {|f, s| s.run(param, options, *ext_args) || f }
+          @sets.values.inject(false) { |f, s| s.run(param, options, *ext_args) || f }
         end
       end # Group
 
@@ -313,11 +313,11 @@ module IDL
       end
 
       def description(indent = "")
-        @groups.values.inject(@description.dup) {|desc, h| desc.concat(h.description.collect {|desc| "\r#{indent}  #{desc}"}) }
+        @groups.values.inject(@description.dup) { |desc, h| desc.concat(h.description.collect { |desc| "\r#{indent}  #{desc}" }) }
       end
 
       def run(arg, options)
-        unless @groups.values.inject(false) {|f, h| h.run(arg, options) || f }
+        unless @groups.values.inject(false) { |f, h| h.run(arg, options) || f }
           raise ArgumentError, "unknown option [#{arg}] for switch '#{@switch}'"
         end
       end

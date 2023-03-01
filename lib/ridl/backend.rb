@@ -84,24 +84,24 @@ module IDL
     def print_version
       puts "#{title} #{version}"
       puts copyright
-      @base_backends.each {|be| puts '---'; be.print_version }
+      @base_backends.each { |be| puts '---'; be.print_version }
     end
 
     def lookup_path
-      @base_backends.inject([@root]) {|paths, bbe| paths.concat(bbe.lookup_path) }
+      @base_backends.inject([@root]) { |paths, bbe| paths.concat(bbe.lookup_path) }
     end
 
     def setup_be(optlist, idl_options)
       # initialize base backends in reverse order so each dependent BE can overrule its
       # base settings
-      @base_backends.reverse.each {|be| be.setup_be(optlist, idl_options) }
+      @base_backends.reverse.each { |be| be.setup_be(optlist, idl_options) }
       # initialize this backend
       _setup_be(optlist, idl_options) if self.respond_to?(:_setup_be, true)
     end
 
     def process_input(parser, params)
       # process input bottom-up
-      @base_backends.reverse.each {|be| be.process_input(parser, params) }
+      @base_backends.reverse.each { |be| be.process_input(parser, params) }
       _process_input(parser, params) if self.respond_to?(:_process_input, true)
     end
 
