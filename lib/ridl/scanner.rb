@@ -1119,7 +1119,7 @@ module IDL
 
         when ('1'..'9').include?(ch)
           @in.mark(sign, ch)
-          @in.skipwhile {|c| DIGITS.include?(c) }
+          @in.skipwhile { |c| DIGITS.include?(c) }
           num_type = (['.', 'e', 'E', 'd', 'D'].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
 
           r = @in.getregion
@@ -1159,7 +1159,7 @@ module IDL
             return [:integer_literal, s.hex]
           else
             dec = false
-            @in.skipwhile {|c| OCTALS.include?(c) }
+            @in.skipwhile { |c| OCTALS.include?(c) }
             if ('8'..'9').include? @in.lookc
               dec = TRUE
               @in.skipwhile { |c| DIGITS.include?(c) }
