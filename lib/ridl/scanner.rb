@@ -61,7 +61,9 @@ module IDL
 
       # cursor set at last gotten character.
       # ex: after initialization, position is (0,0).
-      def to_s; @src.to_s; end
+      def to_s; 
+        @src.to_s; 
+      end
 
       def lookc
         @fwd

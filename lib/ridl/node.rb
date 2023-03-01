@@ -851,8 +851,12 @@ module IDL::AST
       @scoped_name = @scopes.collect{ |s| s.name }.join("::")
     end
 
-    def is_defined?; @defined; end
-    def is_preprocessed?; @preprocessed; end
+    def is_defined?; 
+      @defined; 
+    end
+    def is_preprocessed?; 
+      @preprocessed; 
+    end
 
     def introduce(node)
       @enclosure.introduce(node) unless node == self
@@ -999,11 +1003,21 @@ module IDL::AST
       super(instantiation_context, _enclosure, _params)
     end
 
-    def is_abstract?; @abstract; end
-    def is_local?; @local; end
-    def is_pseudo?; @pseudo; end
-    def is_defined?; @defined; end
-    def is_forward?; not @defined; end
+    def is_abstract?; 
+      @abstract; 
+    end
+    def is_local?; 
+      @local; 
+    end
+    def is_pseudo?; 
+      @pseudo; 
+    end
+    def is_defined?; 
+      @defined; 
+    end
+    def is_forward?; 
+      not @defined; 
+    end
 
     def add_bases(inherits_)
       inherits_.each do |tc|
@@ -1393,8 +1407,12 @@ module IDL::AST
       super(instantiation_context, _enclosure, {})
     end
 
-    def is_defined?; true; end
-    def is_forward?; false; end
+    def is_defined?; 
+      true; 
+    end
+    def is_forward?; 
+      false; 
+    end
 
     def add_interfaces(intfs)
       raise "interface support not allowed for #{typename} #{scoped_lm_name}" if intfs && !intfs.empty?
@@ -1474,8 +1492,12 @@ module IDL::AST
       super(instantiation_context, _enclosure, { forward: self.is_forward? })
     end
 
-    def is_defined?; @defined; end
-    def is_forward?; not @defined; end
+    def is_defined?; 
+      @defined; 
+    end
+    def is_forward?; 
+      not @defined; 
+    end
 
     def set_base(parent)
       unless parent.is_a?(IDL::Type::ScopedName) && parent.is_node?(IDL::AST::TemplateParam)
@@ -1747,14 +1769,30 @@ module IDL::AST
       inst
     end
 
-    def is_abstract?; @abstract; end
-    def is_custom?; @custom; end
-    def is_truncatable?; @truncatable; end
-    def is_defined?; @defined; end
-    def defined=(f); @defined = f; end
-    def is_forward?; @forward; end
-    def is_recursive?; @recursive end
-    def recursive=(f); @recursive = f end
+    def is_abstract?; 
+      @abstract; 
+    end
+    def is_custom?; 
+      @custom; 
+    end
+    def is_truncatable?; 
+      @truncatable; 
+    end
+    def is_defined?; 
+      @defined; 
+    end
+    def defined=(f); 
+      @defined = f; 
+    end
+    def is_forward?; 
+      @forward; 
+    end
+    def is_recursive?; 
+      @recursive 
+    end
+    def recursive=(f); 
+      @recursive = f 
+    end
 
     def is_local?(recurstk = [])
       # not local if forward decl or recursion detected
@@ -2462,11 +2500,21 @@ module IDL::AST
       @idltype = IDL::Type::Struct.new(self)
     end
 
-    def is_defined?; @defined end
-    def defined=(f); @defined = f end
-    def is_forward?; @forward end
-    def is_recursive?; @recursive end
-    def recursive=(f); @recursive = f end
+    def is_defined?; 
+      @defined 
+    end
+    def defined=(f); 
+      @defined = f 
+    end
+    def is_forward?; 
+      @forward 
+    end
+    def is_recursive?; 
+      @recursive 
+    end
+    def recursive=(f); 
+      @recursive = f 
+    end
 
     def walk_members(&block)
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::Member }
@@ -2607,11 +2655,21 @@ module IDL::AST
       @switchtype = _switchtype
     end
 
-    def is_defined?; @defined; end
-    def defined=(f); @defined = f; end
-    def is_forward?; @forward; end
-    def is_recursive?; @recursive end
-    def recursive=(f); @recursive = f end
+    def is_defined?; 
+      @defined; 
+    end
+    def defined=(f); 
+      @defined = f; 
+    end
+    def is_forward?; 
+      @forward; 
+    end
+    def is_recursive?; 
+      @recursive 
+    end
+    def recursive=(f); 
+      @recursive = f 
+    end
 
     def walk_members(&block)
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::UnionMember }

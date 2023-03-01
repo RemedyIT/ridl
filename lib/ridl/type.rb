@@ -285,7 +285,9 @@ module IDL
 
     class String < Type
       attr_reader :size
-      def length; @size; end
+      def length; 
+        @size; 
+      end
 
       def initialize(size = nil)
         @size = size
@@ -322,7 +324,9 @@ module IDL
     class Sequence < Type
       attr_reader :size, :basetype
       attr_accessor :recursive
-      def length; @size; end
+      def length; 
+        @size; 
+      end
 
       def initialize(t, size)
         raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
@@ -430,7 +434,9 @@ module IDL
 
     class WString < Type
       attr_reader :size
-      def length; @size; end
+      def length; 
+        @size; 
+      end
 
       def initialize(size = nil)
         @size = size
