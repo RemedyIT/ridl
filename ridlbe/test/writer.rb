@@ -34,7 +34,7 @@ module IDL
       @output << indent << str << "\n" 
     end
 
-    def indent()
+    def indent
       @indent * @nest
     end
 

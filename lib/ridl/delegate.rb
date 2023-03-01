@@ -223,7 +223,7 @@ class Delegator
     @cur
   end
 
-  def leave_include()
+  def leave_include
     set_last
     @cur = @cur.enclosure
   end

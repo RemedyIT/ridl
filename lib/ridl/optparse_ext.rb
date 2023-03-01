@@ -330,7 +330,7 @@ module IDL
       end
     end # Option
 
-    def initialize()
+    def initialize
       @options = {}
     end
 
