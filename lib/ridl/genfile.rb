@@ -101,13 +101,13 @@ module IDL
         @path = @fullpath = @name = @ext = ''
       end
       @options = {
-        :regenerate => false,
-        :regen_marker_prefix => '//',
-        :regen_marker_postfix => nil,
-        :regen_marker => REGEN_MARKER_DEFAULT,
-        :regen_keep_header => true,
-        :output_file => nil,
-        :create_missing_dir => false
+        regenerate: false,
+        regen_marker_prefix: '//',
+        regen_marker_postfix: nil,
+        regen_marker: REGEN_MARKER_DEFAULT,
+        regen_keep_header: true,
+        output_file: nil,
+        create_missing_dir: false
       }.merge(opts)
       if @options[:regenerate] && File.exist?(@fullpath)
         parse_regeneration_content

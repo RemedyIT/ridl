@@ -20,15 +20,15 @@ require 'ridl/options'
 module IDL
 
   OPTIONS = Options.new({
-      :outputdir       => nil,
-      :includepaths    => [],
-      :xincludepaths   => [],
-      :verbose         => (ENV['RIDL_VERBOSE'] || 0).to_i,
-      :debug           => false,
-      :namespace       => nil,
-      :search_incpath  => false,
-      :backend         => nil,
-      :macros          => {
+      outputdir: nil,
+      includepaths: [],
+      xincludepaths: [],
+      verbose: (ENV['RIDL_VERBOSE'] || 0).to_i,
+      debug: false,
+      namespace: nil,
+      search_incpath: false,
+      backend: nil,
+      macros: {
       }
   })
   CORE_OPTIONS = OPTIONS.keys

@@ -71,7 +71,7 @@ module IDL
       @root = root
       @title = ttl
       @copyright = cpr
-      @version = (Hash === ver ? ver : { :major => ver.to_i, :minor => 0, :release => 0 })
+      @version = (Hash === ver ? ver : { major: ver.to_i, minor: 0, release: 0 })
       @base_backends = []
     end
 

@@ -10,4 +10,4 @@
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
 
-task :default => 'help'
+task default: 'help'

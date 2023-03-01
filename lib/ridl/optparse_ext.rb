@@ -132,18 +132,18 @@ module IDL
             case spec
             when String
               key = to_key(spec)
-              @params[key] = { :option_name => key }
+              @params[key] = { option_name: key }
             when Hash
               spec.each do |k, v|
                 @params[to_key(k)] = (if Hash === v
                   {
-                    :option_name => to_key(v[:option_name] || k),
-                    :option_type => v[:type],
-                    :option_value => v.has_key?(:value) ? v[:value] : true,
-                    :description => Array === v[:description] ? v[:description] : (v[:description] || '').split('\n')
+                    option_name: to_key(v[:option_name] || k),
+                    option_type: v[:type],
+                    option_value: v.has_key?(:value) ? v[:value] : true,
+                    description: Array === v[:description] ? v[:description] : (v[:description] || '').split('\n')
                   }
                 else
-                  { :option_name => to_key(v) }
+                  { option_name: to_key(v) }
                 end)
               end
             end
@@ -202,7 +202,7 @@ module IDL
           @description = Array === options[:description] ? options[:description] : (options[:description] || '').split('\n')
           @sets = {}
           if options[:params] && Hash === options[:params]
-            @sets[id] = ParamSet.new(:params => options[:params])
+            @sets[id] = ParamSet.new(params: options[:params])
           end
         end
 
@@ -254,7 +254,7 @@ module IDL
           parms = options[:params] ? options.delete(:params) : options.delete(:param)
           @option.groups[id] ||= Group.new(id, options)
           grpcfg = Group::Configurator.new(@option.groups[id])
-          grpcfg.modify_param_set(id, :params => parms) if parms
+          grpcfg.modify_param_set(id, params: parms) if parms
           block.call(grpcfg) if block_given?
         end
         alias :with_group :modify_group
@@ -264,7 +264,7 @@ module IDL
         end
 
         def define_param_set(id, options = {}, &block)
-          modify_group :default, {:test => true} do |grpcfg|
+          modify_group :default, {test: true} do |grpcfg|
             grpcfg.define_param_set(id, options, &block)
           end
         end
@@ -272,15 +272,15 @@ module IDL
         alias :for_params :define_param_set
 
         def on_exec(options={}, &block)
-          modify_group :default, {:test => true} do |grpcfg|
-            grpcfg.modify_param_set(:default, options.merge({:all_params => true})) do |pscfg|
+          modify_group :default, {test: true} do |grpcfg|
+            grpcfg.modify_param_set(:default, options.merge({all_params: true})) do |pscfg|
               pscfg.on_exec(&block)
             end
           end
         end
 
         def define_param(id, options={}, &block)
-          modify_group :default, {:test => true} do |grpcfg|
+          modify_group :default, {test: true} do |grpcfg|
             grpcfg.define_param_set("#{id}_set", options) do |pscfg|
               pscfg.with(id)
               pscfg.on_exec(&block)

@@ -210,7 +210,7 @@ class Delegator
   end
 
   def enter_include(s, fullpath)
-    params = { :filename => s, :fullpath => fullpath }
+    params = { filename: s, fullpath: fullpath }
     params[:defined] = true
     params[:preprocessed] = @preprocess
     @cur = @cur.define(IDL::AST::Include, "$INC:" + s, params)
@@ -225,7 +225,7 @@ class Delegator
   end
 
   def declare_include(s)
-    params = { :filename => s, :fullpath => @includes[s].fullpath }
+    params = { filename: s, fullpath: @includes[s].fullpath }
     params[:defined] = false
     params[:preprocessed] = @includes[s].is_preprocessed?
     @cur.define(IDL::AST::Include, "$INC:" + s, params)
@@ -316,7 +316,7 @@ class Delegator
       @template_module_name = nil # reset
       define_template_module(*tmp)
     end
-    params = { :type => type }
+    params = { type: type }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::TemplateParam, name, params))
@@ -330,7 +330,7 @@ class Delegator
     unless template_type.node.is_a?(IDL::AST::TemplateModule)
       raise "invalid module template specification: #{template_type.node.typename} #{template_type.node.scoped_lm_name}"
     end
-    params = { :template => template_type.node, :template_params => parameters }
+    params = { template: template_type.node, template_params: parameters }
     mod_inst = @cur.define(IDL::AST::Module, name, params)
     mod_inst.annotations.concat(@annotation_stack)
     @annotation_stack = IDL::AST::Annotations.new
@@ -521,7 +521,7 @@ class Delegator
   end
 
   def define_valuebox(name, type)
-    params = { :type => type }
+    params = { type: type }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Valuebox, name, params))
@@ -631,7 +631,7 @@ class Delegator
   end
 
   def define_const(_type, _name, _expression)
-    params = { :type => _type, :expression => _expression }
+    params = { type: _type, expression: _expression }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last(@cur.define(IDL::AST::Const, _name, params))
@@ -676,14 +676,14 @@ class Delegator
   end
 
   def declare_struct(_name)
-    params = { :forward => true }
+    params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     set_last
     @cur.define(IDL::AST::Struct, _name, params)
     @cur
   end
   def define_struct(_name)
-    params = { :forward => false }
+    params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
@@ -705,7 +705,7 @@ class Delegator
     ret
   end
   def define_exception(_name)
-    params = { :forward => false }
+    params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
@@ -719,14 +719,14 @@ class Delegator
   end
 
   def declare_union(_name)
-    params = { :forward => true }
+    params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
     set_last
     @cur.define(IDL::AST::Union, _name, params)
     @cur
   end
   def define_union(_name)
-    params = { :forward => false }
+    params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
@@ -766,8 +766,8 @@ class Delegator
   def declare_enumerator(_name)
     n = @cur.enumerators.length
     params = {
-      :value => n,
-      :enum => @cur
+      value: n,
+      enum: @cur
     }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new

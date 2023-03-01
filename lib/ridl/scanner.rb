@@ -359,8 +359,8 @@ module IDL
     FULL_IDCHARS = IDCHARS + DIGITS
 
     ESCTBL = CharRegistry.new({
-      :n => ?\n, :t => ?\t, :v => ?\v, :b => ?\b,
-      :r => ?\r, :f => ?\f, :a => ?\a
+      n: ?\n, t: ?\t, v: ?\v, b: ?\b,
+      r: ?\r, f: ?\f, a: ?\a
     })
 
     KEYWORDS = %w(
@@ -382,8 +382,8 @@ module IDL
       :boolean_literal ]
 
     BOOL_LITERALS = {
-        :false => false,
-        :true => true
+        false: false,
+        true: true
       }
 
     def is_literal?(o)
@@ -439,7 +439,7 @@ module IDL
             token = next_token # ')'  (in case of single value annotation) or '='
             if token.first == ')'
               parse_error 'invalid annotation member' if annotation_body
-              annotation_body = { :value => s1 }
+              annotation_body = { value: s1 }
             else
               parse_error 'invalid annotation member' unless token.first == '='
               token, annotation_value = extract_annotation_value
