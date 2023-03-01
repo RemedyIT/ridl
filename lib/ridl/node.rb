@@ -2619,7 +2619,7 @@ module IDL::AST
             lv = @switchtype.resolved_type.narrow(lbl.value)
             # doubles
             if labelvals.include? lv
-              raise "duplicate case label #{lv.to_s} for #{typename} #{lm_name}"
+              raise "duplicate case label #{lv} for #{typename} #{lm_name}"
             end
             labelvals << lv
           end
