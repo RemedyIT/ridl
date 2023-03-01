@@ -826,7 +826,7 @@ module IDL
         end
         case s1
         when 'else'
-          if @ifnest == 0
+          if @ifnest.zero?
             if @ifskip # true branch has already been parsed
               @ifdef[@ifdef.size - 1] = false
             else
@@ -835,14 +835,14 @@ module IDL
             end
           end
         when 'endif'
-          if @ifnest == 0
+          if @ifnest.zero?
             @ifdef.pop
             @ifskip = @ifdef.last
           else
             @ifnest -= 1
           end
         else
-          if @ifnest == 0
+          if @ifnest.zero?
             if @ifskip || @ifdef[@ifdef.size - 1]
               # true branch has already been parsed so skip from now on
               @ifdef[@ifdef.size - 1] = false

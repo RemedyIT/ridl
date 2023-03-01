@@ -155,7 +155,7 @@ module IDL
           ].each do |t|
             next unless t.include? _t
 
-            return (if _v < 0 then t[0] else t[1] end)
+            return (if _v.negative? then t[0] else t[1] end)
           end
         end
 

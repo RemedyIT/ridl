@@ -237,7 +237,7 @@ module IDL
               section = []
             when 'HEADER_END'
               raise "ERROR: Found illegal header end marker at #{@path}:#{linenr}." unless _keep_header && in_section &&
-                                                                                                         ('HEADER' == in_section.first ) && (0 == in_section.last)
+                                                                                                         ('HEADER' == in_section.first ) && (in_section.last.zero?)
 
               sections[$2] = section
               in_section = nil

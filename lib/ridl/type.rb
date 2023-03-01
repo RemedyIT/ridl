@@ -148,7 +148,7 @@ module IDL
       end
 
       def self.is_unsigned?
-        self::Range.first == 0
+        self::Range.first.zero?
       end
 
       def self.bits

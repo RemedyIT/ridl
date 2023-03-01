@@ -188,7 +188,7 @@ module IDL
           @optparser.parse!(argv)
         rescue ArgumentError => ex
           IDL.error(ex.inspect)
-          IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level > 0
+          IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level.positive?
           return false
         end
 

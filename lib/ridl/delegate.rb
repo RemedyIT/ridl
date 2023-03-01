@@ -637,7 +637,7 @@ class Delegator
     else
       if not ::Integer === _expression.value
         raise "must be integer: #{_expression.value.inspect}"
-      elsif _expression.value < 0
+      elsif _expression.value.negative?
         raise "must be positive integer: #{_expression.value.to_s}"
       end
 
