@@ -2248,7 +2248,9 @@ module IDL::AST
   end # Const
 
   class Parameter < Leaf
-    IN, OUT, INOUT = 0, 1, 2
+    IN = 0
+    OUT = 1
+    INOUT = 2
     ATTRIBUTE_MAP = {
       in: IN,
       out: OUT,

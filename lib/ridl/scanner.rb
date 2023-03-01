@@ -821,7 +821,8 @@ module IDL
       @in.skipwhile { |c| SPACES.include?(c) }
       s = getline
       /^(\w*)\s*/ === s
-      s1, s2 = $1, $' #'
+      s1 = $1
+      s2 = $' #'
 
       if /(else|endif|elif)/ === s1
 

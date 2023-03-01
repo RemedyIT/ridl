@@ -195,7 +195,8 @@ module IDL
           superclass.checktype(*types)
 
           # it's expected that Double, LongDouble is a Float.
-          s1, s2 = IDL::Type::Float, IDL::Type::Fixed
+          s1 = IDL::Type::Float
+          s2 = IDL::Type::Fixed
           if (t1 === s1 && t2 === s2) or (t1 === s2 && t2 === s1)
             raise "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
           end
