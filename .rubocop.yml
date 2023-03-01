@@ -1,4 +1,0 @@
-AllCops:
-  Exclude:
-    - 'lib/ridl/parser.rb'
-  NewCops: disable
