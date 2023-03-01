@@ -69,13 +69,13 @@ module IDL
       super
     end
 
-    def pre_visit(parser)
+    def pre_visit(_parser)
       println(%Q{# -*- Test Client Stub Writer -*-})
       println(%Q{# File: #{@params[:idlfile]}})
       inc_nest
     end
 
-    def post_visit(parser)
+    def post_visit(_parser)
       dec_nest
       println('# -*- END Client Stub Writer -*-')
     end
@@ -146,11 +146,11 @@ module IDL
       println("+ const #{node.lm_name} = #{expression_to_s(node.expression)}")
     end
 
-    def visit_operation(node, from_valuetype = false)
+    def visit_operation(node, _from_valuetype = false)
       println("+  op #{node.lm_name}")
     end
 
-    def visit_attribute(node, from_valuetype = false)
+    def visit_attribute(node, _from_valuetype = false)
       println("+  att #{node.lm_name}")
     end
 
@@ -323,13 +323,13 @@ module IDL
       super
     end
 
-    def pre_visit(parser)
+    def pre_visit(_parser)
       println(%Q{# -*- Test Servant Writer -*-})
       println(%Q{# File: #{@params[:idlfile]}})
       inc_nest
     end
 
-    def post_visit(parser)
+    def post_visit(_parser)
       dec_nest
       println('# -*- END Servant Writer -*-')
     end
@@ -390,11 +390,11 @@ module IDL
 
     def visit_const(node); end
 
-    def visit_operation(node, from_valuetype = false)
+    def visit_operation(node, _from_valuetype = false)
       println("+  op #{node.lm_name}")
     end
 
-    def visit_attribute(node, from_valuetype = false)
+    def visit_attribute(node, _from_valuetype = false)
       println("+  att #{node.lm_name}")
     end
 

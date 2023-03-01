@@ -260,7 +260,7 @@ module IDL::AST
       @introduced.delete(node.intern)
     end
 
-    def redefine(node, params)
+    def redefine(node, _params)
       raise "\"#{node.name}\" is already defined."
     end
 
@@ -777,7 +777,7 @@ module IDL::AST
 
   protected
 
-    def walk_members_for_copy(&block)
+    def walk_members_for_copy()
       @children.each { |c| yield(c) unless c.is_a?(IDL::AST::TemplateParam) }
     end
   end # TemplateModule
@@ -1575,7 +1575,7 @@ module IDL::AST
     DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
     attr_reader :idltype
 
-    def initialize(_name, _enclosure, params)
+    def initialize(_name, _enclosure, _params)
       super(_name, _enclosure)
       @idltype = IDL::Type::Porttype.new(self)
     end
@@ -1934,7 +1934,7 @@ module IDL::AST
       super(_type, _name, *args)
     end
 
-    def walk_members(&block)
+    def walk_members()
       @children.each { |c| yield(c) unless c.is_a?(IDL::AST::StateMember) or
                                            c.is_a?(IDL::AST::Operation) or
                                            c.is_a?(IDL::AST::Attribute) or
@@ -2003,7 +2003,7 @@ module IDL::AST
 
   protected
 
-    def walk_members_for_copy(&block)
+    def walk_members_for_copy()
       @children.each { |c| yield(c) }
     end
 
@@ -2552,7 +2552,7 @@ module IDL::AST
       @recursive = f
     end
 
-    def walk_members(&block)
+    def walk_members()
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::Member }
     end
 
@@ -2593,7 +2593,7 @@ module IDL::AST
 
   protected
 
-    def walk_members_for_copy(&block)
+    def walk_members_for_copy()
       @children.each { |c| yield(c) }
     end
   end # Struct
@@ -2713,7 +2713,7 @@ module IDL::AST
       @recursive = f
     end
 
-    def walk_members(&block)
+    def walk_members()
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::UnionMember }
     end
 
@@ -2807,7 +2807,7 @@ module IDL::AST
 
   protected
 
-      def walk_members_for_copy(&block)
+      def walk_members_for_copy()
         @children.each { |c| yield(c) }
       end
   end # Union
@@ -2845,7 +2845,7 @@ module IDL::AST
   class Enum < Leaf
     attr_reader :idltype
 
-    def initialize(_name, _enclosure, params)
+    def initialize(_name, _enclosure, _params)
       super(_name, _enclosure)
       @enums = []
       @idltype = IDL::Type::Enum.new(self)

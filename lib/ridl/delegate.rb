@@ -294,7 +294,7 @@ class Delegator
     @cur
   end
 
-  def end_module(node)
+  def end_module(_node)
     set_last(@cur)
     @cur = @cur.enclosure # must equals to argument mod
   end
@@ -381,7 +381,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Interface, name, params)
   end
 
-  def end_interface(node)
+  def end_interface(_node)
     set_last(@cur)
     @cur = @cur.enclosure # must equals to argument mod
   end
@@ -398,7 +398,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Home, name, params)
   end
 
-  def end_home(node)
+  def end_home(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -422,7 +422,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Component, name, params)
   end
 
-  def end_component(node)
+  def end_component(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -436,7 +436,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Connector, name, params)
   end
 
-  def end_connector(node)
+  def end_connector(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -449,7 +449,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Porttype, name, params)
   end
 
-  def end_porttype(node)
+  def end_porttype(_node)
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -735,7 +735,7 @@ class Delegator
     @cur = @cur.define(IDL::AST::Exception, _name, params)
   end
 
-  def end_exception(node)
+  def end_exception(_node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure
@@ -805,7 +805,7 @@ class Delegator
     @cur
   end
 
-  def end_enum(node)
+  def end_enum(_node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure

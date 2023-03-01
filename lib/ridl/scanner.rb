@@ -105,7 +105,7 @@ module IDL
       end
       alias skipc getc
 
-      def skipwhile(*chars, &block)
+      def skipwhile(*_chars, &block)
         if block
           until (ch = lookc).nil?
             return ch unless block.call(ch)
@@ -116,7 +116,7 @@ module IDL
         nil
       end
 
-      def skipuntil(*chars, &block)
+      def skipuntil(*_chars, &block)
         if block
           until (ch = lookc).nil?
             return ch if block.call(ch)

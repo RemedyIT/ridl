@@ -31,7 +31,7 @@ module IDL
       true
     end
 
-    def is_local?(recurstk = nil)
+    def is_local?(_recurstk = nil)
       false
     end
 
@@ -39,7 +39,7 @@ module IDL
       false
     end
 
-    def is_node?(node_class)
+    def is_node?(_node_class)
       false
     end
 
@@ -60,7 +60,7 @@ module IDL
     end
 
     class UndefinedType
-      def initialize(*args)
+      def initialize(*_args)
         raise "#{self.class.name}'s not implemented yet."
       end
     end
@@ -81,7 +81,7 @@ module IDL
         @node = node
       end
 
-      def is_local?(recurstk = nil)
+      def is_local?(_recurstk = nil)
         @node.is_local?
       end
 
