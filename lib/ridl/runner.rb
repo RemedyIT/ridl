@@ -185,9 +185,9 @@ module IDL
         # parse arguments
         begin
           @optparser.parse!(argv)
-        rescue ArgumentError => ex
-          IDL.error(ex.inspect)
-          IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level.positive?
+        rescue ArgumentError => e
+          IDL.error(e.inspect)
+          IDL.error(e.backtrace.join("\n")) if IDL.verbose_level.positive?
           return false
         end
 
@@ -252,9 +252,9 @@ module IDL
               rescue Backend::ProcessStop
                 IDL.log(2, "RIDL - processing #{IO === _idlfile ? 'from STDIN' : (StringIO === _idlfile ? 'from string' : _idlfile)} stopped with \"#{$!.message}\"")
 
-              rescue => ex
-                IDL.error(ex)
-                IDL.error(ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+              rescue => e
+                IDL.error(e)
+                IDL.error(e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
                 return false
               end
             end
@@ -274,9 +274,9 @@ module IDL
 
       begin
         _parser.parse(io)
-      rescue => ex
-        IDL.error(ex.inspect)
-        IDL.error(ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+      rescue => e
+        IDL.error(e.inspect)
+        IDL.error(e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
         return nil
       ensure
         io.close unless String === io || io == $stdin

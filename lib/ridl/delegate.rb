@@ -57,8 +57,8 @@ class Delegator
           begin
             @root, @includes = Marshal.load(f)
             @cur = @root
-          rescue Exception => ex
-            IDL.error("RIDL - failed to load ORB pidlc [#{ex}]\n You probably need to rebuild the bootstrap file (compile orb.idl to orb.pidlc).")
+          rescue Exception => e
+            IDL.error("RIDL - failed to load ORB pidlc [#{e}]\n You probably need to rebuild the bootstrap file (compile orb.idl to orb.pidlc).")
             exit(1)
           ensure
             f.close

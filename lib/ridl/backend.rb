@@ -46,10 +46,10 @@ module IDL
         IDL.log(1, "> loaded RIDL backend :#{be_name} from #{@@backends[be_name.to_sym].root}")
         # return backend
         return @@backends[be_name.to_sym]
-      rescue LoadError => ex
+      rescue LoadError => e
         IDL.error "ERROR: Cannot load RIDL backend [:#{be_name}]"
-        IDL.error ex.inspect
-        IDL.error(ex.backtrace.join("\n")) if IDL.verbose_level.positive?
+        IDL.error e.inspect
+        IDL.error(e.backtrace.join("\n")) if IDL.verbose_level.positive?
         exit 1
       end
     end

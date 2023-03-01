@@ -861,9 +861,9 @@ module IDL
                 @ifskip = @ifdef[@ifdef.size - 1]
               rescue IDL::ParseError
                 raise
-              rescue => ex
-                p ex
-                puts ex.backtrace.join("\n")
+              rescue => e
+                p e
+                puts e.backtrace.join("\n")
                 parse_error 'error evaluating #elif'
               end
             end
@@ -897,9 +897,9 @@ module IDL
               @ifskip = @ifdef.last
             rescue IDL::ParseError
               raise
-            rescue => ex
-              p ex
-              puts ex.backtrace.join("\n")
+            rescue => e
+              p e
+              puts e.backtrace.join("\n")
               parse_error 'error evaluating #if'
             end
           else

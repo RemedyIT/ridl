@@ -86,9 +86,9 @@ module IDL
         begin
           # process StubWriter
           parser.visit_nodes(::IDL::TestStubWriter.new(co, options))
-        rescue => ex
-          IDL.log(0, ex)
-          IDL.log(0, ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+        rescue => e
+          IDL.log(0, e)
+          IDL.log(0, e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
           exit 1
         end
       end
@@ -103,9 +103,9 @@ module IDL
         begin
           # process ServantWriter
           parser.visit_nodes(::IDL::TestServantWriter.new(so, options))
-        rescue => ex
-          IDL.log(0, ex)
-          IDL.log(0, ex.backtrace.join("\n")) unless ex.is_a? IDL::ParseError
+        rescue => e
+          IDL.log(0, e)
+          IDL.log(0, e.backtrace.join("\n")) unless e.is_a? IDL::ParseError
           exit 1
         end
       end
