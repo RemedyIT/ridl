@@ -306,10 +306,7 @@ module IDL
         alias :without_params :without_param
       end
 
-      attr_reader :switch
-      attr_reader :type
-      attr_reader :separator
-      attr_reader :groups
+      attr_reader :switch, :type, :separator, :groups
 
       def initialize(switch, options)
         @switch = switch

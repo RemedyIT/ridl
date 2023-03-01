@@ -79,11 +79,8 @@ module IDL::AST
   end
 
   class Leaf
-    attr_reader :name, :intern
+    attr_reader :name, :intern, :scopes, :prefix, :annotations
     attr_accessor :enclosure
-    attr_reader :scopes
-    attr_reader :prefix
-    attr_reader :annotations
 
     def typename
       self.class.name
@@ -966,8 +963,7 @@ module IDL::AST
   class Interface < Derivable
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute,
                  IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
-    attr_reader :bases
-    attr_reader :idltype
+    attr_reader :bases, :idltype
 
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -1155,9 +1151,7 @@ module IDL::AST
 
   class ComponentBase < Derivable
     DEFINABLE = []
-    attr_reader :base
-    attr_reader :interfaces
-    attr_reader :idltype
+    attr_reader :base, :interfaces, :idltype
 
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -1325,8 +1319,7 @@ module IDL::AST
   class Home < ComponentBase
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::Initializer, IDL::AST::Finder,
                  IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
-    attr_reader :component
-    attr_reader :primarykey
+    attr_reader :component, :primarykey
 
     def initialize(_name, _enclosure, params)
       @component = nil
@@ -1597,8 +1590,7 @@ module IDL::AST
     PORTTYPES = [:facet, :receptacle, :emitter, :publisher, :consumer, :port, :mirrorport]
     PORT_MIRRORS = {facet: :receptacle, receptacle: :facet}
     EXTPORTDEF_ANNOTATION = 'ExtendedPortDef'
-    attr_reader :idltype
-    attr_reader :porttype
+    attr_reader :idltype, :porttype
 
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -1713,8 +1705,7 @@ module IDL::AST
   class Valuetype < Derivable
     DEFINABLE = [IDL::AST::Include, IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::StateMember, IDL::AST::Initializer,
                  IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
-    attr_reader :bases, :interfaces
-    attr_reader :idltype
+    attr_reader :bases, :interfaces, :idltype
 
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
@@ -2427,8 +2418,7 @@ module IDL::AST
   end # Operation
 
   class Attribute < Leaf
-    attr_reader :idltype, :readonly
-    attr_reader :get_raises, :set_raises
+    attr_reader :idltype, :readonly, :get_raises, :set_raises
 
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)

@@ -13,8 +13,7 @@ require 'ridl/node'
 
 module IDL
   class Expression
-    attr_reader :idltype
-    attr_reader :value
+    attr_reader :idltype, :value
 
     def typename
       @idltype.typename

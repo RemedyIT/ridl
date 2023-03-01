@@ -212,8 +212,7 @@ module IDL
     # to carry both 'raw' IDL name as well as language mapped
     # name
     class Identifier < DelegateClass(::String)
-      attr_reader :checked_name
-      attr_reader :unescaped_name
+      attr_reader :checked_name, :unescaped_name
 
       def initialize(idl_id, checked_id, unescaped_idl_id = nil)
         super(idl_id)

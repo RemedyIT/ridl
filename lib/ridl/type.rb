@@ -388,8 +388,7 @@ module IDL
     end
 
     class Array < Type
-      attr_reader :basetype
-      attr_reader :sizes
+      attr_reader :basetype, :sizes
 
       def initialize(t, sizes)
         raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
