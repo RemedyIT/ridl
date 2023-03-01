@@ -113,7 +113,7 @@ module IDL::AST
     end
 
     def scoped_name
-      @scoped_name ||= @scopes.collect{ |s| s.name }.join("::").freeze
+      @scoped_name ||= @scopes.collect { |s| s.name }.join("::").freeze
     end
 
     def scoped_lm_name
@@ -196,7 +196,7 @@ module IDL::AST
         @repo_ver = "1.0" unless @repo_ver
         format("IDL:%s%s:%s",
                 if @prefix.empty? then "" else @prefix + "/" end,
-                self.scopes.collect{ |s| s.name }.join("/"),
+                self.scopes.collect { |s| s.name }.join("/"),
                 @repo_ver)
       else
         @repo_id
@@ -831,7 +831,7 @@ module IDL::AST
       @preprocessed = params[:preprocessed] || false
       # overrule
       @scopes = @enclosure.scopes
-      @scoped_name = @scopes.collect{ |s| s.name }.join("::")
+      @scoped_name = @scopes.collect { |s| s.name }.join("::")
     end
 
     def lm_scopes
@@ -849,7 +849,7 @@ module IDL::AST
       super(vars)
       # overrule
       @scopes = @enclosure.scopes || []
-      @scoped_name = @scopes.collect{ |s| s.name }.join("::")
+      @scoped_name = @scopes.collect { |s| s.name }.join("::")
     end
 
     def is_defined?
@@ -880,7 +880,7 @@ module IDL::AST
       @preprocessed = _template.is_preprocessed?
       # overrule
       @scopes = @enclosure.scopes
-      @scoped_name = @scopes.collect{ |s| s.name }.join("::")
+      @scoped_name = @scopes.collect { |s| s.name }.join("::")
       self
     end
 
@@ -930,7 +930,7 @@ module IDL::AST
         r_one = results.shift
         unless results.all? { |r| r_one == r || (r_one.class == r.class && r_one.scoped_name == r.scoped_name) }
           s = results.inject([r_one]) { |l, r| l << r unless l.include?(r)
- l }.collect{ |n| n.scoped_name }.join(", ")
+ l }.collect { |n| n.scoped_name }.join(", ")
           raise "\"#{_name}\" is ambiguous. " + s
         end
       end
