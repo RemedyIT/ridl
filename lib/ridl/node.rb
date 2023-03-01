@@ -2347,7 +2347,7 @@ module IDL::AST
     def instantiate(instantiation_context, _enclosure)
       _params = {
         type: @idltype.instantiate(instantiation_context),
-        oneway: @oneway,
+        oneway: @oneway
       }
       _op = super(instantiation_context, _enclosure, _params)
       _op.raises = self.concrete_raises(instantiation_context)
@@ -2659,7 +2659,7 @@ module IDL::AST
 
     def instantiate(instantiation_context, _enclosure, _params = {})
       _params.merge!({
-        type: @idltype.instantiate(instantiation_context),
+        type: @idltype.instantiate(instantiation_context)
       })
       super(instantiation_context, _enclosure, _params)
     end
@@ -2826,7 +2826,7 @@ module IDL::AST
 
     def instantiate(instantiation_context, _enclosure)
       _params = {
-        labels: @labels.collect { |l| l == :default ? l : l.instantiate(instantiation_context) },
+        labels: @labels.collect { |l| l == :default ? l : l.instantiate(instantiation_context) }
       }
       super(instantiation_context, _enclosure, _params)
     end
