@@ -712,7 +712,7 @@ module IDL
         break if ch.nil?
 
         case
-        when (ch == "\"") #"
+        when (ch == "\"") # "
           s << @in.getc # opening quote
           while true
             if @in.lookc == "\\"
@@ -720,7 +720,7 @@ module IDL
               s << @in.getc
               _, escstr = next_escape_str(true)
               s << escstr
-            elsif @in.lookc == "\"" #"
+            elsif @in.lookc == "\"" # "
               break
             elsif @in.lookc
               # normal character
@@ -730,18 +730,18 @@ module IDL
             end
           end
           s << @in.getc # closing quote
-        when (ch == "\'") #' # quoted character
+        when (ch == "\'") # ' # quoted character
           s << @in.getc # opening quote
           if @in.lookc == "\\"
             # escape sequence
             s << @in.getc
             _, escstr = next_escape_str(true)
             s << escstr
-          elsif @in.lookc && @in.lookc != "\'" #'
+          elsif @in.lookc && @in.lookc != "\'" # '
             # normal character
             s << @in.getc
           end
-          if @in.lookc != "\'" #'
+          if @in.lookc != "\'" # '
             parse_error "character literal must be single character enclosed in \"'\""
           end
           s << @in.getc # closing quote
@@ -820,7 +820,7 @@ module IDL
       s = getline
       /^(\w*)\s*/ === s
       s1 = $1
-      s2 = $' #'
+      s2 = $' # '
 
       if /(else|endif|elif)/ === s1
 
@@ -968,7 +968,7 @@ module IDL
 
     def next_token
       sign = nil
-      str = '' #initialize empty string
+      str = '' # initialize empty string
       while true
         ch = @in.getc
         if ch.nil?
@@ -1024,26 +1024,26 @@ module IDL
 
         when ch == 'L'
           _nxtc = @in.lookc
-          if _nxtc == ?\' #' #single quote, for a character literal.
+          if _nxtc == ?\' # ' #single quote, for a character literal.
             @in.skipc # skip 'L'
             _nxtc = @in.lookc
             ret = if _nxtc == "\\"
               @in.skipc
               next_escape_str
-            elsif _nxtc == "\'" #'
+            elsif _nxtc == "\'" # '
               [ nil, nil ]
             else
               [:char, '' << @in.getc]
             end
 
-            if @in.lookc != "\'" #'
+            if @in.lookc != "\'" # '
               parse_error "wide character literal must be single wide character enclosed in \"'\""
             end
 
             @in.skipc
             return [:wide_character_literal, ret]
 
-          elsif _nxtc == "\"" #" #double quote, for a string literal.
+          elsif _nxtc == "\"" # " #double quote, for a string literal.
             ret = []
             chs = ''
             @in.skipc # skip 'L'
@@ -1054,7 +1054,7 @@ module IDL
                 ret << [:char, chs] unless chs.empty?
                 chs = ''
                 ret << next_escape_str
-              elsif _nxtc == "\"" #"
+              elsif _nxtc == "\"" # "
                 @in.skipc
                 ret << [:char, chs] unless chs.empty?
                 return [:wide_string_literal, ret]
@@ -1180,32 +1180,32 @@ module IDL
             return ret
           end
 
-        when ch == "\'"  #' #single quote, for a character literal.
+        when ch == "\'"  # ' #single quote, for a character literal.
           _nxtc = @in.lookc
           ret = if _nxtc == "\\"
             @in.skipc
             next_escape
-          elsif _nxtc == "\'" #'
+          elsif _nxtc == "\'" # '
             0
           elsif _nxtc
             ('' << @in.getc).unpack('C').first
           end
 
-          if @in.lookc != "\'" #'
+          if @in.lookc != "\'" # '
             parse_error "character literal must be single character enclosed in \"'\""
           end
 
           @in.skipc
           return [:character_literal, ret]
 
-        when ch == "\"" #" #double quote, for a string literal.
+        when ch == "\"" # " #double quote, for a string literal.
           ret = ''
           while true
             _nxtc = @in.lookc
             if _nxtc == "\\"
               @in.skipc
               ret << next_escape
-            elsif _nxtc == "\"" #"
+            elsif _nxtc == "\"" # "
               @in.skipc
               return [:string_literal, ret]
             elsif _nxtc
@@ -1218,10 +1218,10 @@ module IDL
         else
           parse_error 'illegal character [' << ch << ']'
 
-        end #of case
+        end # of case
 
-      end #of while
+      end # of while
       parse_error 'unexcepted error'
-    end #of method next_token
+    end # of method next_token
   end
 end

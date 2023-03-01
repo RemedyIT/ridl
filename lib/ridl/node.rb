@@ -829,7 +829,7 @@ module IDL::AST
       @fullpath = params[:fullpath]
       @defined = params[:defined] || false
       @preprocessed = params[:preprocessed] || false
-      #overrule
+      # overrule
       @scopes = @enclosure.scopes
       @scoped_name = @scopes.collect{ |s| s.name }.join("::")
     end
@@ -847,7 +847,7 @@ module IDL::AST
       @defined = vars.pop
       @filename = vars.pop
       super(vars)
-      #overrule
+      # overrule
       @scopes = @enclosure.scopes || []
       @scoped_name = @scopes.collect{ |s| s.name }.join("::")
     end
@@ -878,7 +878,7 @@ module IDL::AST
       @filename = _template.filename
       @defined = _template.is_defined?
       @preprocessed = _template.is_preprocessed?
-      #overrule
+      # overrule
       @scopes = @enclosure.scopes
       @scoped_name = @scopes.collect{ |s| s.name }.join("::")
       self
@@ -1226,10 +1226,10 @@ module IDL::AST
             raise "#{typename} #{scoped_lm_name} cannot support 'pseudo' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           ## TODO : is this legal?
-          #if tc.node.is_abstract?
+          # if tc.node.is_abstract?
           #  raise RuntimeError,
           #        "'abstract' #{typename} #{scoped_lm_name} cannot support 'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
-          #end
+          # end
           if self.has_support?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot support #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end

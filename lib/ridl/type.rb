@@ -268,7 +268,7 @@ module IDL
       end
 
       def narrow(obj)
-        #typeerror(obj)
+        # typeerror(obj)
         obj
       end
 

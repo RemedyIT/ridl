@@ -140,7 +140,7 @@ module IDL
       class Unary < Operation
         NUMBER_OF_OPERANDS = 1
         Applicable = nil
-      end #of class Unary
+      end # of class Unary
 
       class Integer2 < Operation
         NUMBER_OF_OPERANDS = 2
@@ -301,6 +301,6 @@ module IDL
           lop % rop
         end
       end
-    end #of class Operation
-  end #of class Expression
+    end # of class Operation
+  end # of class Expression
 end
