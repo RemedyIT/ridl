@@ -62,7 +62,7 @@ module IDL
     end
 
     # stop processing of current input and skip to next or exit RIDL
-    def self.stop_processing(msg='')
+    def self.stop_processing(msg = '')
       raise ProcessStop, msg, caller(1).first
     end
 

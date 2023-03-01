@@ -348,7 +348,7 @@ class Delegator
     @cur
   end
 
-  def declare_interface(name, attrib=nil)
+  def declare_interface(name, attrib = nil)
     params = {}
     params[:abstract] = attrib == :abstract
     params[:local] = attrib == :local
@@ -455,7 +455,7 @@ class Delegator
     @cur
   end
 
-  def declare_eventtype(name, attrib=nil)
+  def declare_eventtype(name, attrib = nil)
     params = {}
     params[:abstract] = attrib == :abstract
     params[:forward] = true
@@ -465,7 +465,7 @@ class Delegator
     @cur
   end
 
-  def define_eventtype(name, attrib, inherits={})
+  def define_eventtype(name, attrib, inherits = {})
     params = {}
     params[:abstract] = attrib == :abstract
     params[:custom] = attrib == :custom
@@ -478,7 +478,7 @@ class Delegator
     @cur
   end
 
-  def declare_valuetype(name, attrib=nil)
+  def declare_valuetype(name, attrib = nil)
     params = {}
     params[:abstract] = attrib == :abstract
     params[:forward] = true
@@ -488,7 +488,7 @@ class Delegator
     @cur
   end
 
-  def define_valuetype(name, attrib, inherits={})
+  def define_valuetype(name, attrib, inherits = {})
     params = {}
     params[:abstract] = attrib == :abstract
     params[:custom] = attrib == :custom
@@ -666,7 +666,7 @@ class Delegator
     @cur = @cur.enclosure
   end
 
-  def declare_attribute(_type, _name, _readonly=false)
+  def declare_attribute(_type, _name, _readonly = false)
     params = Hash.new
     params[:type] = _type
     params[:readonly] = _readonly

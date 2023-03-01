@@ -222,7 +222,7 @@ module IDL
     class LongDouble < Float; end
     class Fixed < Type
       attr_reader :digits, :scale
-      def initialize(digits=nil, scale=nil)
+      def initialize(digits = nil, scale = nil)
         raise "significant digits for Fixed should be in the range 0-31" unless digits.nil? || (0..31) === digits.to_i
         @digits = digits.nil? ? digits : digits.to_i
         @scale = scale.nil? ? scale : scale.to_i

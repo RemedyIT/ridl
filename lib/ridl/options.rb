@@ -20,7 +20,7 @@ module IDL
 
   class Options < OpenStruct
 
-    def initialize(hash=nil, marked=nil)
+    def initialize(hash = nil, marked = nil)
       super(hash)
       @marked = marked
     end

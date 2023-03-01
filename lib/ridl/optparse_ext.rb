@@ -179,7 +179,7 @@ module IDL
           alias :modify_params :modify_param_set
           alias :with_params :modify_param_set
 
-          def define_param(id, options={}, &block)
+          def define_param(id, options = {}, &block)
             define_param_set("#{id}_set", options) do |pscfg|
               pscfg.with(id)
               pscfg.on_exec(&block)
@@ -271,7 +271,7 @@ module IDL
         alias :for_set :define_param_set
         alias :for_params :define_param_set
 
-        def on_exec(options={}, &block)
+        def on_exec(options = {}, &block)
           modify_group :default, {test: true} do |grpcfg|
             grpcfg.modify_param_set(:default, options.merge({all_params: true})) do |pscfg|
               pscfg.on_exec(&block)
@@ -279,7 +279,7 @@ module IDL
           end
         end
 
-        def define_param(id, options={}, &block)
+        def define_param(id, options = {}, &block)
           modify_group :default, {test: true} do |grpcfg|
             grpcfg.define_param_set("#{id}_set", options) do |pscfg|
               pscfg.with(id)

@@ -1048,13 +1048,13 @@ module IDL::AST
       @resolved_bases
     end
 
-    def operations(include_bases=false, traversed=nil)
+    def operations(include_bases = false, traversed = nil)
       ops = @children.find_all { |c| c.is_a?(IDL::AST::Operation) }
       ops.concat(base_operations(traversed || [])) if include_bases
       ops
     end
 
-    def attributes(include_bases=false, traversed=nil)
+    def attributes(include_bases = false, traversed = nil)
       atts = @children.find_all { |c| c.is_a?(IDL::AST::Attribute) }
       atts.concat(base_attributes(traversed || [])) if include_bases
       atts
@@ -1338,13 +1338,13 @@ module IDL::AST
       @primarykey = key.node if key
     end
 
-    def operations(include_bases=false, traversed=nil)
+    def operations(include_bases = false, traversed = nil)
       ops = @children.find_all { |c| c.is_a?(IDL::AST::Operation) }
       ops.concat(base_operations(traversed || [])) if include_bases
       ops
     end
 
-    def attributes(include_bases=false, traversed=nil)
+    def attributes(include_bases = false, traversed = nil)
       atts = @children.find_all { |c| c.is_a?(IDL::AST::Attribute) }
       atts.concat(base_attributes(traversed || [])) if include_bases
       atts
@@ -1393,7 +1393,7 @@ module IDL::AST
       @base = parent.node
     end
 
-    def ports(include_bases=false, traversed=nil)
+    def ports(include_bases = false, traversed = nil)
       ports = @children.inject([]) do |lst, c|
         lst.concat(c.ports) if IDL::AST::Port === c
         lst
@@ -1402,7 +1402,7 @@ module IDL::AST
       ports
     end
 
-    def attributes(include_bases=false, traversed=nil)
+    def attributes(include_bases = false, traversed = nil)
       atts = @children.inject([]) do |lst, c|
         if IDL::AST::Port === c
           lst.concat(c.attributes)
@@ -1472,7 +1472,7 @@ module IDL::AST
       @base = parent.node
     end
 
-    def ports(include_bases=false, traversed=nil)
+    def ports(include_bases = false, traversed = nil)
       ports = @children.inject([]) do |lst, c|
         lst.concat(c.ports) if IDL::AST::Port === c
         lst
@@ -1481,11 +1481,11 @@ module IDL::AST
       ports
     end
 
-    def operations(include_bases=false, traversed=nil)
+    def operations(include_bases = false, traversed = nil)
       include_bases ? base_operations(traversed || []) : []
     end
 
-    def attributes(include_bases=false, traversed=nil)
+    def attributes(include_bases = false, traversed = nil)
       atts = @children.inject([]) do |lst, c|
         if IDL::AST::Port === c
           lst.concat(c.attributes)
