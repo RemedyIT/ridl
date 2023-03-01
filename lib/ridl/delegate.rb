@@ -606,7 +606,7 @@ class Delegator
         Type::Short,
         Type::Long,
         Type::LongLong,
-        Type::ULongLong,
+        Type::ULongLong
       ].detect { |t| t::Range === _value }
       if _type.nil?
         raise "it's not a valid integer: #{v.to_s}"
