@@ -135,7 +135,7 @@ module IDL
 
     def self.load_config(opt)
       # first collect config from known (standard and configured) locations
-      _rc_paths = [ RIDLRC_GLOBAL ]
+      _rc_paths = [RIDLRC_GLOBAL]
       _loaded_rc_paths = []
       (ENV['RIDLRC'] || '').split(/:|;/).each do |p|
         _rc_paths << p unless _rc_paths.include?(p)

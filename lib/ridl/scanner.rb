@@ -358,8 +358,8 @@ module IDL
       raise e
     end
 
-    LFCR = [ (?\n), (?\r) ]
-    SPACES = [ (?\ ), (?\t) ]
+    LFCR = [(?\n), (?\r)]
+    SPACES = [(?\ ), (?\t)]
     WHITESPACE = SPACES + LFCR
 
     ANNOTATION = ?@
@@ -370,9 +370,9 @@ module IDL
       ?^, ?~,
       ?*, ?%, ?&, ?|,
       ?<, ?=, ?>,
-      ?,, ?; ]
+      ?,, ?;]
 
-    SHIFTCHARS = [ ?<, ?> ]
+    SHIFTCHARS = [?<, ?>]
 
     DIGITS = (?0..?9).to_a
     ALPHA_LC = (?a..?z).to_a
@@ -382,7 +382,7 @@ module IDL
     SIGNS = [?-, ?+]
     DOT = ?.
 
-    IDCHARS = [?_ ] + ALPHA_LC + ALPHA_UC
+    IDCHARS = [?_] + ALPHA_LC + ALPHA_UC
     FULL_IDCHARS = IDCHARS + DIGITS
 
     ESCTBL = CharRegistry.new({
@@ -407,7 +407,7 @@ module IDL
       # :wide_character_literal,
       :fixed_pt_literal,
       :floating_pt_literal,
-      :boolean_literal ]
+      :boolean_literal]
 
     BOOL_LITERALS = {
         false: false,
@@ -507,9 +507,9 @@ module IDL
       if token&.first == :identifier
         # keyword check
         if (a = KEYWORDS.assoc(token.last.to_s)).nil?
-          token = [ :identifier, Identifier.new(token.last.to_s, chk_identifier(token.last.to_s), token.last.unescaped_name) ]
+          token = [:identifier, Identifier.new(token.last.to_s, chk_identifier(token.last.to_s), token.last.unescaped_name)]
         elsif token.last == a[1]
-          token = [ a[1], nil ]
+          token = [a[1], nil]
         else
           parse_error "'#{token.last}' collides with a keyword '#{a[1]}'"
         end
@@ -557,15 +557,15 @@ module IDL
       # keyword check
       elsif @in_annotation
         if BOOL_LITERALS.has_key?(s1)
-          [ :boolean_literal, BOOL_LITERALS[s1] ]
+          [:boolean_literal, BOOL_LITERALS[s1]]
         else
-          [ :identifier, Identifier.new(s2, s2, s0) ]
+          [:identifier, Identifier.new(s2, s2, s0)]
         end
       elsif (a = KEYWORDS.assoc(s1)).nil?
         # check for language mapping keyword
-        [ :identifier, Identifier.new(s2, chk_identifier(s2), s0) ]
+        [:identifier, Identifier.new(s2, chk_identifier(s2), s0)]
       elsif s0 == a[1]
-        [ a[1], nil ]
+        [a[1], nil]
       else
         parse_error "'#{s0}' collides with IDL keyword '#{a[1]}'"
       end
@@ -638,7 +638,7 @@ module IDL
           end
           @in.skipc
         }
-        ret = [ :oct, ret ]
+        ret = [:oct, ret]
       when ?x # i'm not sure '\x' should be 0 or 'x'. currently returns 0.
         ret = ''
         ret << ch if keep_type_ch
@@ -651,7 +651,7 @@ module IDL
           end
           @in.skipc
         }
-        ret = [ :hex2, ret ]
+        ret = [:hex2, ret]
       when ?u
         ret = ''
         ret << ch if keep_type_ch
@@ -664,15 +664,15 @@ module IDL
           end
           @in.skipc
         }
-        ret = [ :hex4, ret ]
+        ret = [:hex4, ret]
       when ?n, ?t, ?v, ?b, ?r, ?f, ?a
         ret = ''
         ret << ch
-        ret = [ :esc, ret ]
+        ret = [:esc, ret]
       else
         ret = ''
         ret << ch
-        ret = [ :esc_ch, ch ]
+        ret = [:esc_ch, ch]
       end
       ret
     end
@@ -1030,9 +1030,9 @@ module IDL
               @in.skipc
               next_escape_str
             elsif _nxtc == ?\' #'
-              [ nil, nil ]
+              [nil, nil]
             else
-              [ :char, '' << @in.getc ]
+              [:char, '' << @in.getc]
             end
 
             if @in.lookc != ?\' #'
@@ -1040,7 +1040,7 @@ module IDL
             end
 
             @in.skipc
-            return [ :wide_character_literal, ret ]
+            return [:wide_character_literal, ret]
 
           elsif _nxtc == ?\" #" #double quote, for a string literal.
             ret = []
@@ -1056,7 +1056,7 @@ module IDL
               elsif _nxtc == ?\" #"
                 @in.skipc
                 ret << [:char, chs] unless chs.empty?
-                return [ :wide_string_literal, ret ]
+                return [:wide_string_literal, ret]
               else
                 chs << @in.getc
               end
@@ -1196,7 +1196,7 @@ module IDL
           end
 
           @in.skipc
-          return [ :character_literal, ret ]
+          return [:character_literal, ret]
 
         when ch == ?\" #" #double quote, for a string literal.
           ret = ''
@@ -1207,7 +1207,7 @@ module IDL
               ret << next_escape
             elsif _nxtc == ?\" #"
               @in.skipc
-              return [ :string_literal, ret ]
+              return [:string_literal, ret]
             elsif _nxtc
               ret << @in.getc
             else

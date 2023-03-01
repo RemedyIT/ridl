@@ -2779,7 +2779,7 @@ module IDL::AST
       super(_name, _enclosure, params)
       ## if any of the labels is 'default' forget about the others
       if params[:labels].include?(:default)
-        @labels = [ :default ]
+        @labels = [:default]
       else
         @labels = params[:labels]
       end
