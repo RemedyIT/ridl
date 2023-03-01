@@ -15,6 +15,7 @@ module IDL
   class Expression
     attr_reader :idltype
     attr_reader :value
+
     def typename
       @idltype.typename
     end
@@ -36,6 +37,7 @@ module IDL
 
     class ScopedName < Expression
       attr_reader :node
+
       def initialize(node)
         if $DEBUG
           unless IDL::AST::Const === node || (IDL::AST::TemplateParam === node && node.idltype.is_a?(IDL::Type::Const))
@@ -71,6 +73,7 @@ module IDL
 
     class Enumerator < Expression
       attr_reader :node
+
       def initialize(node)
         if $DEBUG
           unless IDL::AST::Enumerator === node
@@ -87,6 +90,7 @@ module IDL
       NUMBER_OF_OPERANDS = nil
 
       attr_reader :operands
+
       def initialize(*_operands)
         n = self.class::NUMBER_OF_OPERANDS
 

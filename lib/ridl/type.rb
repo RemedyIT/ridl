@@ -74,6 +74,7 @@ module IDL
 
     class NodeType < Type
       attr_reader :node
+
       def initialize(node)
         raise node.inspect if node && !node.is_a?(IDL::AST::Leaf)
 
@@ -258,6 +259,7 @@ module IDL
 
     class Fixed < Type
       attr_reader :digits, :scale
+
       def initialize(digits = nil, scale = nil)
         raise "significant digits for Fixed should be in the range 0-31" unless digits.nil? || (0..31) === digits.to_i
 
@@ -285,6 +287,7 @@ module IDL
 
     class String < Type
       attr_reader :size
+
       def length
         @size
       end
@@ -324,6 +327,7 @@ module IDL
     class Sequence < Type
       attr_reader :size, :basetype
       attr_accessor :recursive
+
       def length
         @size
       end
@@ -386,6 +390,7 @@ module IDL
     class Array < Type
       attr_reader :basetype
       attr_reader :sizes
+
       def initialize(t, sizes)
         raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
 
@@ -434,6 +439,7 @@ module IDL
 
     class WString < Type
       attr_reader :size
+
       def length
         @size
       end
@@ -577,6 +583,7 @@ module IDL
 
     class Const < Type
       attr_reader :type
+
       def initialize(t)
         @type = t
         @typename = "const #{t.typename}"

@@ -19,6 +19,7 @@ module IDL
 
     class Configurator
       attr_reader :backend
+
       def initialize(be_name, root, title, copyright, version)
         @backend = IDL::Backend.new(be_name, root, title, copyright, version)
         @be_ext_klass = class << @backend; self; end

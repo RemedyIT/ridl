@@ -393,6 +393,7 @@ module IDL::AST
       IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector
     ]
     attr_reader :anchor, :next, :template, :template_params
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @anchor = params[:anchor]
@@ -638,6 +639,7 @@ module IDL::AST
 
   class TemplateParam < Leaf
     attr_reader :idltype, :concrete
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = params[:type]
@@ -698,6 +700,7 @@ module IDL::AST
       IDL::AST::TemplateParam, IDL::AST::TemplateModuleReference
     ]
     attr_reader :idltype
+
     def initialize(_name, _enclosure, _params)
       super(_name, _enclosure, {})
       @idltype = IDL::Type::TemplateModule.new(self)
@@ -822,6 +825,7 @@ module IDL::AST
 
   class Include < Module
     attr_reader :filename, :fullpath
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure, params)
       @filename = params[:filename]
@@ -1570,6 +1574,7 @@ module IDL::AST
   class Porttype < Node
     DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
     attr_reader :idltype
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = IDL::Type::Porttype.new(self)
@@ -1594,6 +1599,7 @@ module IDL::AST
     EXTPORTDEF_ANNOTATION = 'ExtendedPortDef'
     attr_reader :idltype
     attr_reader :porttype
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype  = params[:type]
@@ -1670,6 +1676,7 @@ module IDL::AST
 
   class Valuebox < Leaf
     attr_reader :idltype, :boxed_type
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = IDL::Type::Valuebox.new(self)
@@ -2028,6 +2035,7 @@ module IDL::AST
 
   class StateMember < Leaf
     attr_reader :idltype, :visibility
+
     def initialize(_name, _enclosure, params)
       @is_recursive = false
       @has_incomplete_type = false
@@ -2136,6 +2144,7 @@ module IDL::AST
 
   class Initializer < Leaf
     attr_reader :raises, :params
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @params = (params[:params] || []).collect do |(ptype, pname)|
@@ -2198,6 +2207,7 @@ module IDL::AST
 
   class Const < Leaf
     attr_reader :idltype, :expression, :value
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = params[:type]
@@ -2245,6 +2255,7 @@ module IDL::AST
       inout: INOUT
     }
     attr_reader :idltype
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = params[:type]
@@ -2416,6 +2427,7 @@ module IDL::AST
   class Attribute < Leaf
     attr_reader :idltype, :readonly
     attr_reader :get_raises, :set_raises
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = params[:type]
@@ -2509,6 +2521,7 @@ module IDL::AST
   class Struct < Node
     DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
     attr_reader :idltype
+
     def initialize(_name, _enclosure, params)
       @defined = false
       @recursive = false
@@ -2593,6 +2606,7 @@ module IDL::AST
 
   class Member < Leaf
     attr_reader :idltype
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = params[:type]
@@ -2663,6 +2677,7 @@ module IDL::AST
     DEFINABLE = [IDL::AST::UnionMember, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
     attr_reader :idltype
     attr_accessor :switchtype
+
     def initialize(_name, _enclosure, params)
       @defined = false
       @recursive = false
@@ -2797,6 +2812,7 @@ module IDL::AST
 
   class UnionMember < Member
     attr_reader :labels
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure, params)
       ## if any of the labels is 'default' forget about the others
@@ -2826,6 +2842,7 @@ module IDL::AST
 
   class Enum < Leaf
     attr_reader :idltype
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @enums = []
@@ -2858,6 +2875,7 @@ module IDL::AST
 
   class Enumerator < Leaf
     attr_reader :idltype, :enum, :value
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = IDL::Type::ULong.new
@@ -2888,6 +2906,7 @@ module IDL::AST
 
   class Typedef < Leaf
     attr_reader :idltype
+
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = params[:type]

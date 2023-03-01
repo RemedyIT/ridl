@@ -14,6 +14,7 @@ require 'delegate'
 module IDL
   class ParseError < StandardError
     attr_reader :positions
+
     def initialize(msg, positions)
       super(msg)
       @positions = positions
@@ -213,6 +214,7 @@ module IDL
     class Identifier < DelegateClass(::String)
       attr_reader :checked_name
       attr_reader :unescaped_name
+
       def initialize(idl_id, checked_id, unescaped_idl_id = nil)
         super(idl_id)
         @checked_name = checked_id

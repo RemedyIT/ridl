@@ -75,6 +75,7 @@ module IDL
           end
 
           attr_reader :params
+
           def initialize(options)
             @description = Array === options[:description] ? options[:description] : (options[:description] || '').split('\n')
             @all_params = options[:all_params] == true
@@ -199,6 +200,7 @@ module IDL
         end # Configurator
 
         attr_reader :sets
+
         def initialize(id, options)
           @test = options[:test] || true
           @description = Array === options[:description] ? options[:description] : (options[:description] || '').split('\n')
@@ -308,6 +310,7 @@ module IDL
       attr_reader :type
       attr_reader :separator
       attr_reader :groups
+
       def initialize(switch, options)
         @switch = switch
         @type = options[:type] || TrueClass
