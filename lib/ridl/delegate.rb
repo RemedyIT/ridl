@@ -693,29 +693,29 @@ class Delegator
     set_last(@cur.define(IDL::AST::Attribute, _name, params))
   end
 
-  def declare_struct(_name)
+  def declare_struct(name)
     params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
 
     set_last
-    @cur.define(IDL::AST::Struct, _name, params)
+    @cur.define(IDL::AST::Struct, name, params)
     @cur
   end
 
-  def define_struct(_name)
+  def define_struct(name)
     params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
-    @cur = @cur.define(IDL::AST::Struct, _name, params)
+    @cur = @cur.define(IDL::AST::Struct, name, params)
   end
 
-  def declare_member(_type, _name)
+  def declare_member(_type, name)
     params = {}
     params[:type] = _type
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
-    set_last(@cur.define(IDL::AST::Member, _name, params))
+    set_last(@cur.define(IDL::AST::Member, name, params))
     @cur
   end
 
@@ -727,12 +727,12 @@ class Delegator
     ret
   end
 
-  def define_exception(_name)
+  def define_exception(name)
     params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
-    @cur = @cur.define(IDL::AST::Exception, _name, params)
+    @cur = @cur.define(IDL::AST::Exception, name, params)
   end
 
   def end_exception(_node)
@@ -742,21 +742,21 @@ class Delegator
     ret
   end
 
-  def declare_union(_name)
+  def declare_union(name)
     params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
 
     set_last
-    @cur.define(IDL::AST::Union, _name, params)
+    @cur.define(IDL::AST::Union, name, params)
     @cur
   end
 
-  def define_union(_name)
+  def define_union(name)
     params = { forward: false }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
-    @cur = @cur.define(IDL::AST::Union, _name, params)
+    @cur = @cur.define(IDL::AST::Union, name, params)
   end
 
   def define_union_switchtype(union_node, switchtype)
