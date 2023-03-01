@@ -353,5 +353,4 @@ module IDL
     end
 
   end # OptionList
-
 end # IDL

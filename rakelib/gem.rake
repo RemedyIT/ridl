@@ -19,7 +19,6 @@ end
 require './lib/ridl/version'
 
 module RIDL
-
   def self.pkg_root
     File.dirname(File.expand_path(File.dirname(__FILE__)))
   end

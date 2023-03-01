@@ -1192,5 +1192,4 @@ module IDL
       parse_error 'unexcepted error'
     end #of method next_token
   end
-
 end

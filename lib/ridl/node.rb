@@ -10,7 +10,6 @@
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
 module IDL::AST
-
   REPO_ID_XCHARS = ['.', '-', '_']
   REPO_ID_RE = /^[#{('a'..'z').to_a.join}#{('A'..'Z').to_a.join}#{('0'..'9').to_a.join}\.\-_\/]+$/
 

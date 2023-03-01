@@ -14,7 +14,6 @@ require 'ostruct'
 require 'json'
 
 module IDL
-
   RIDLRC = '.ridlrc'
   RIDLRC_GLOBAL = File.expand_path(File.join(ENV['HOME'] || ENV['HOMEPATH'] || '~', RIDLRC))
 
@@ -172,5 +171,4 @@ module IDL
       end
     end
   end
-
 end

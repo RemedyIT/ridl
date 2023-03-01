@@ -18,7 +18,6 @@ require 'ridl/options'
 # -----------------------------------------------------------------------
 
 module IDL
-
   OPTIONS = Options.new({
       outputdir: nil,
       includepaths: [],
@@ -527,5 +526,4 @@ module IDL
       exit(1) unless Thread.current[:ridl_engine].run(argv)
     end
   end # IDL.run
-
 end

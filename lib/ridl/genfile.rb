@@ -13,7 +13,6 @@ require 'tempfile'
 require 'fileutils'
 
 module IDL
-
   class GenFile
 
     self.singleton_class.class_eval do

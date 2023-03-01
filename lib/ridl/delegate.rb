@@ -13,7 +13,6 @@ require 'ridl/node'
 require 'ridl/expression'
 
 module IDL
-
 ORB_PIDL = 'orb.pidlc'.freeze
 
 class Delegator

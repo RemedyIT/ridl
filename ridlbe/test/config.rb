@@ -11,7 +11,6 @@
 #--------------------------------------------------------------------
 
 module IDL
-
   module Test
     COPYRIGHT = "Copyright (c) 2007-#{Time.now.year} Remedy IT Expertise BV, The Netherlands".freeze
     TITLE = 'RIDL Test backend'.freeze
@@ -113,17 +112,13 @@ module IDL
     end
 
     module ScannerMixin
-
       def chk_identifier(ident)
         ident
       end
-
     end # module ScannerMixin
 
     IDL::Scanner.class_eval do
       include ScannerMixin
     end
-
   end # module Ruby
-
 end # module IDL

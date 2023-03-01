@@ -407,5 +407,4 @@ module IDL
     def visit_typedef(node)
     end
   end ## TestServantWriter
-
 end # IDL
