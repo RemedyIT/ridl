@@ -1180,7 +1180,7 @@ module IDL
             return ret
           end
 
-        when ch == "\'"  # ' #single quote, for a character literal.
+        when ch == "\'" # ' #single quote, for a character literal.
           _nxtc = @in.lookc
           ret = if _nxtc == "\\"
             @in.skipc
