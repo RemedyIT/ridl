@@ -307,7 +307,7 @@ module IDL
       # make sure to close the input source
       @in.close
       # check if we have any previous source still stacked up
-      if !@stack.empty?
+      unless @stack.empty?
         if @stack.last[0] == :include
           @xincludepaths.pop # remove directory of finished include
           @directiver.leave_include

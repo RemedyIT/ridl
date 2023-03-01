@@ -40,7 +40,7 @@ class Delegator
     @preprocout = params[:output] if @preprocess
     @ignore_pidl = params[:ignore_pidl] || false
     @root_namespace = nil
-    if not params[:namespace].nil?
+    unless params[:namespace].nil?
       @root_namespace = IDL::AST::Module.new(params[:namespace], nil, {})
     end
   end
@@ -99,7 +99,7 @@ class Delegator
   def walk_member(m, w)
     case m
     when IDL::AST::Include
-      if !m.is_preprocessed?
+      unless m.is_preprocessed?
         if @expand_includes
           if m.is_defined?
             w.enter_include(m)
@@ -658,7 +658,7 @@ class Delegator
   def declare_op_footer(_raises, instantiation_context)
     @cur.raises = _raises || []
     @cur.context = instantiation_context
-    if not @cur.context.nil?
+    unless @cur.context.nil?
       raise "context phrase's not supported"
     end
     set_last(@cur)

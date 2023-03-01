@@ -67,7 +67,7 @@ module IDL
       attr_reader :node
       def initialize(node)
         if $DEBUG
-          if not IDL::AST::Enumerator === node
+          unless IDL::AST::Enumerator === node
             raise "#{node.scoped_name} must be enumerator: #{node.class.name}."
           end
         end
@@ -110,7 +110,7 @@ module IDL
 
       def Operation.suite_type(*types)
         types.each do |t|
-          if not self::Applicable.include? t.class
+          unless self::Applicable.include? t.class
             raise "#{self.name} cannot be applicable for #{t.typename}"
           end
         end
@@ -230,7 +230,7 @@ module IDL
       class Shift < Integer2
       protected
         def check_rop(rop)
-          if not (0...64) === rop
+          unless (0...64) === rop
             raise "right operand for shift must be in the range 0 <= right operand < 64: #{rop}."
           end
         end

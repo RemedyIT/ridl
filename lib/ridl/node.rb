@@ -271,7 +271,7 @@ module IDL::AST
     end
 
     def define(_type, _name, params = Hash.new)
-      if not is_definable?(_type)
+      unless is_definable?(_type)
         raise "#{_type.to_s} is not definable in #{self.typename}."
       end
       node = search_self(_name)
@@ -1003,7 +1003,7 @@ module IDL::AST
           if rtc.node.has_ancestor?(self)
             raise "circular inheritance detected for #{typename} #{scoped_lm_name}: #{tc.node.scoped_lm_name} is descendant"
           end
-          if not rtc.node.is_defined?
+          unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if rtc.node.is_local? and not self.is_local?
@@ -1179,7 +1179,7 @@ module IDL::AST
             raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{tc.typename}"
           end
           rtc = tc.resolved_type
-          if not rtc.node.is_defined?
+          unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot support forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           ## TODO : is this legal?
@@ -1461,7 +1461,7 @@ module IDL::AST
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
         @resolved_base = parent.resolved_type.node
-        if not @resolved_base.is_defined?
+        unless @resolved_base.is_defined?
           raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{parent.node.typename} #{parent.node.scoped_lm_name}"
         end
         if @resolved_base.has_base?(self)
@@ -1773,14 +1773,14 @@ module IDL::AST
     def add_bases(inherits_)
       inherits_.each do |tc|
         unless tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::TemplateParam)
-          if not (tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::Valuetype))
+          unless (tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::Valuetype))
             raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{tc.typename}"
           end
           rtc = tc.resolved_type
           if rtc.node.has_ancestor?(self)
             raise "circular inheritance detected for #{typename} #{scoped_lm_name}: #{tc.node.scoped_lm_name} is descendant"
           end
-          if not rtc.node.is_defined?
+          unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if self.is_abstract? and not rtc.node.is_abstract?
@@ -1805,7 +1805,7 @@ module IDL::AST
     def add_interfaces(iflist_)
       iflist_.each do |if_|
         unless if_.is_a?(IDL::Type::ScopedName) && if_.is_node?(IDL::AST::TemplateParam)
-          if not (if_.is_a?(IDL::Type::ScopedName) && if_.is_node?(IDL::AST::Interface))
+          unless (if_.is_a?(IDL::Type::ScopedName) && if_.is_node?(IDL::AST::Interface))
             raise "invalid support identifier for #{typename} #{scoped_lm_name}: #{if_.typename}"
           end
           rif_ = if_.resolved_type
@@ -1950,7 +1950,7 @@ module IDL::AST
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if params[:type].is_anonymous?
         ## check for use of incomplete types
-        if !@idltype.is_complete?
+        unless @idltype.is_complete?
           ## verify type is used in sequence
           if @idltype.resolved_type.is_a?(IDL::Type::Sequence)
             ## find the (non-sequence) elementtype
@@ -1964,7 +1964,7 @@ module IDL::AST
             if mtype.is_a? IDL::Type::ScopedName
               case mtype.resolved_type
               when IDL::Type::Struct, IDL::Type::Union, IDL::Type::Valuetype
-                if !mtype.node.is_defined?
+                unless mtype.node.is_defined?
                   ## check if incomplete struct/union/valuetype is contained within definition of self
                   enc = _enclosure
                   while enc.is_a?(IDL::AST::Struct) || enc.is_a?(IDL::AST::Union) || enc.is_a?(IDL::AST::Valuetype)
@@ -2116,7 +2116,7 @@ module IDL::AST
       @value = nil
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
-        raise "Incomplete type #{@idltype.typename} not allowed here!" if !@idltype.is_complete?
+        raise "Incomplete type #{@idltype.typename} not allowed here!" unless @idltype.is_complete?
         unless @expression.is_a?(IDL::Expression::ScopedName) && @expression.is_node?(IDL::AST::TemplateParam)
           @value = @idltype.narrow(@expression.value)
         end
@@ -2171,7 +2171,7 @@ module IDL::AST
           end
           ## IDL_Valuetype: no problem as valuetype operations are local
         end
-        if !@idltype.is_complete?
+        unless @idltype.is_complete?
           if _enclosure.enclosure.is_a?(IDL::AST::Interface)
             raise "Incomplete type #{@idltype.typename} not allowed here!"
           end
@@ -2224,7 +2224,7 @@ module IDL::AST
           end
           ## IDL_Valuetype: no problem as valuetype operations are local
         end
-        if !@idltype.is_complete?
+        unless @idltype.is_complete?
           if _enclosure.is_a?(IDL::AST::Interface)
             raise "Incomplete type #{@idltype.typename} not allowed here!"
           end
@@ -2334,7 +2334,7 @@ module IDL::AST
           end
           ## IDL_Valuetype: no problem as valuetype operations are local
         end
-        if !@idltype.is_complete?
+        unless @idltype.is_complete?
           if _enclosure.is_a?(IDL::AST::Interface)
             raise "Incomplete type #{@idltype.typename} not allowed here!"
           end
@@ -2427,7 +2427,7 @@ module IDL::AST
     def recursive=(f); @recursive = f end
 
     def walk_members(&block)
-      @children.each { |m| yield(m) if not m.is_a? IDL::AST::Member }
+      @children.each { |m| yield(m) unless m.is_a? IDL::AST::Member }
     end
 
     def members
@@ -2488,7 +2488,7 @@ module IDL::AST
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
         raise "Exception #{@idltype.typename} is not allowed as member!" if @idltype.is_node?(IDL::AST::Exception)
         ## check for use of incomplete types
-        if !@idltype.is_complete?
+        unless @idltype.is_complete?
           ## verify type is used in sequence
           if @idltype.resolved_type.is_a? IDL::Type::Sequence
             ## find the (non-sequence) elementtype
@@ -2502,7 +2502,7 @@ module IDL::AST
             if mtype.is_a? IDL::Type::ScopedName
               case mtype.resolved_type
               when IDL::Type::Struct, IDL::Type::Union, IDL::Type::Valuetype
-                if !mtype.node.is_defined?
+                unless mtype.node.is_defined?
                   ## check if incomplete struct/union is contained within definition of self
                   enc = _enclosure
                   while enc.is_a?(IDL::AST::Struct) || enc.is_a?(IDL::AST::Union) || enc.is_a?(IDL::AST::Valuetype)
@@ -2570,7 +2570,7 @@ module IDL::AST
     def recursive=(f); @recursive = f end
 
     def walk_members(&block)
-      @children.each { |m| yield(m) if not m.is_a? IDL::AST::UnionMember }
+      @children.each { |m| yield(m) unless m.is_a? IDL::AST::UnionMember }
     end
 
     def members

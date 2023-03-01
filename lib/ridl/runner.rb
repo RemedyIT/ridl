@@ -327,7 +327,7 @@ module IDL
 
     def init_optparser
       script_name = File.basename($0, '.*')
-      if not script_name =~ /ridlc/
+      unless script_name =~ /ridlc/
         script_name = 'ruby ' + $0
       end
 
