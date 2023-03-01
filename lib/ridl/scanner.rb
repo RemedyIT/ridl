@@ -387,8 +387,8 @@ module IDL
     FULL_IDCHARS = IDCHARS + DIGITS
 
     ESCTBL = CharRegistry.new({
-      :n => "\n", :t => "\t", :v => "\v", :b => "\b",
-      :r => "\r", :f => "\f", :a => "\a"
+      n: "\n", t: "\t", v: "\v", b: "\b",
+      r: "\r", f: "\f", a: "\a"
     })
 
     KEYWORDS = %w(
