@@ -66,6 +66,7 @@ module IDL
       attr_reader :node
       def initialize(node)
         raise node.inspect if node && !node.is_a?(IDL::AST::Leaf)
+
         @node = node
       end
       def is_local?(recurstk = nil)
@@ -224,6 +225,7 @@ module IDL
       attr_reader :digits, :scale
       def initialize(digits = nil, scale = nil)
         raise "significant digits for Fixed should be in the range 0-31" unless digits.nil? || (0..31) === digits.to_i
+
         @digits = digits.nil? ? digits : digits.to_i
         @scale = scale.nil? ? scale : scale.to_i
       end
@@ -279,6 +281,7 @@ module IDL
       def length; @size; end
       def initialize(t, size)
         raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
+
         @basetype = t
         @size = size
         @typename = format("sequence<%s%s>", t.typename,
@@ -327,6 +330,7 @@ module IDL
       attr_reader :sizes
       def initialize(t, sizes)
         raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
+
         @basetype = t
         if sizes.nil?
           @sizes = []

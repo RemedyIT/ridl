@@ -55,6 +55,7 @@ module IDL
 
       def pop
         return nil if empty?
+
         id, prod = @stack.shift
         @index.delete(id)
         prod
@@ -62,12 +63,14 @@ module IDL
 
       def peek
         return nil if empty?
+
         id, _ = @stack.first
         id
       end
 
       def remove(id)
         return nil unless has?(id)
+
         i = @index.delete(id.to_sym)
         _, producer = @productionstack.delete(i)
         producer
@@ -128,6 +131,7 @@ module IDL
 
     def push_production(id, producer)
       raise "Producer #{id} already queued" if @productionstack.has?(id)
+
       @productionstack.push(id, producer)
     end
 
@@ -418,11 +422,13 @@ module IDL
 
   def IDL.pop_input
     return nil unless engine?
+
     Thread.current[:ridl_engine].pop_input
   end
 
   def IDL.peek_input
     return nil unless engine?
+
     Thread.current[:ridl_engine].peek_input
   end
 
@@ -436,11 +442,13 @@ module IDL
 
   def IDL.pop_production
     return nil unless engine?
+
     Thread.current[:ridl_engine].pop_production
   end
 
   def IDL.remove_production(id)
     return nil unless engine?
+
     Thread.current[:ridl_engine].remove_production(id)
   end
 
@@ -454,6 +462,7 @@ module IDL
 
   def IDL.production(id)
     return nil unless engine?
+
     Thread.current[:ridl_engine].production(id)
   end
 

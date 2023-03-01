@@ -101,6 +101,7 @@ module IDL
         if block
           until (ch = lookc).nil?
             return ch unless block.call(ch)
+
             skipc
           end
         end
@@ -111,6 +112,7 @@ module IDL
         if block
           until (ch = lookc).nil?
             return ch if block.call(ch)
+
             skipc
           end
         end
@@ -681,6 +683,7 @@ module IDL
       while true
         ch = @in.lookc
         break if ch.nil?
+
         case
         when (ch == ?\") #"
           s << @in.getc # opening quote
@@ -759,6 +762,7 @@ module IDL
 
     def resolve_define(id, stack = [])
       return id if %w(true false).include?(id)
+
       IDL.log(3, "*** RIDL - resolve_define(#{id})")
       if @defined.has_key?(id)
         define_ = @defined[id]

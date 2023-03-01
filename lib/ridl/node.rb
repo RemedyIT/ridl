@@ -274,6 +274,7 @@ module IDL::AST
       unless is_definable?(_type)
         raise "#{_type.to_s} is not definable in #{self.typename}."
       end
+
       node = search_self(_name)
       if node.nil?
         node = _type.new(_name, self, params)
@@ -285,6 +286,7 @@ module IDL::AST
         if _type != node.class
           raise "#{_name} is already defined as a type of #{node.typename}"
         end
+
         node = redefine(node, params)
       end
       node
@@ -324,6 +326,7 @@ module IDL::AST
       if not node.nil? and node.name != _name
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
+
       node
     end
 
@@ -409,6 +412,7 @@ module IDL::AST
 
     def template_param(param)
       return nil unless @template
+
       param = param.to_s if ::Symbol === param
       if ::String === param
         @template.params.each_with_index do |tp, ix|
@@ -577,6 +581,7 @@ module IDL::AST
         cp = IDL::AST::TemplateParam.concrete_param(instantiation_context, _template.anchor)
         # concrete param must be a IDL::Type::NodeType and it's node a Module (should never fail)
         raise "Invalid concrete anchor found" unless cp.is_a?(IDL::Type::NodeType) && cp.node.is_a?(IDL::AST::Module)
+
         @anchor = cp.node
         # link our self into module chain
         @anchor.find_last.set_next(self)
@@ -607,6 +612,7 @@ module IDL::AST
       if not node.nil? and node.name != _name
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
+
       if node.nil? && @next
         node = @next.search_links(_name)
       end
@@ -676,6 +682,7 @@ module IDL::AST
           ctxelem.is_a?(IDL::AST::Const) ? ctxelem.expression : ctxelem.idltype
         end
         raise "cannot resolve concrete node for template #{tpl_elem.typename} #{tpl_elem.scoped_lm_name}" unless celem
+
         celem
       else
         tpl_elem.idltype # just return the element's idltype if not from the template scope
@@ -715,6 +722,7 @@ module IDL::AST
       # process concrete parameters
       @template_params.each_with_index do |_tp, _ix|
         raise "missing template parameter for #{typename} #{scoped_lm_name}: #{_tp.name}" unless _ix < _module_instance.template_params.size
+
         _cp = _module_instance.template_params[_ix]
         if _cp.is_a?(IDL::Type)
           raise "anonymous type definitions are not allowed!" if _cp.is_anonymous?
@@ -722,6 +730,7 @@ module IDL::AST
           unless _tp.idltype.is_a?(IDL::Type::Any) || _tp.idltype.class === _cp.resolved_type
             raise "mismatched instantiation parameter \##{_ix} #{_cp.typename} for #{typename} #{scoped_lm_name}: expected #{_tp.idltype.typename} for #{_tp.name}"
           end
+
           # verify concrete parameter
           case _tp.idltype
             when IDL::Type::Any # 'typename'
@@ -750,6 +759,7 @@ module IDL::AST
           unless _tp.idltype.is_a?(IDL::Type::Const)
             raise "unexpected expression as instantiation parameter for #{typename} #{scoped_lm_name}: expected #{_tp.idltype.typename} for #{_tp.name}"
           end
+
           # match constant type
           _tp.idltype.narrow(_cp.value)
         else
@@ -775,6 +785,7 @@ module IDL::AST
       unless _params[:tpl_type].is_a?(IDL::Type::ScopedName) && _params[:tpl_type].is_node?(IDL::AST::TemplateModule)
         raise "templated module reference type required for #{typename} #{scoped_lm_name}: got #{_params[:tpl_type].typename}"
       end
+
       @template = _params[:tpl_type].resolved_type.node
       _params[:tpl_params].each do |p|
         unless (p.is_a?(IDL::Type::ScopedName) || p.is_a?(IDL::Expression::ScopedName)) && p.is_node?(IDL::AST::TemplateParam)
@@ -894,6 +905,7 @@ module IDL::AST
     def each_ancestors(visited = [], &block)
       resolved_bases.each do |p|
         next if visited.include? p
+
         yield(p)
         visited.push p
         p.each_ancestors(visited, &block)
@@ -999,6 +1011,7 @@ module IDL::AST
           unless (tc.is_a?(IDL::Type::NodeType) && tc.is_node?(IDL::AST::Interface))
             raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{tc.typename}"
           end
+
           rtc = tc.resolved_type
           if rtc.node.has_ancestor?(self)
             raise "circular inheritance detected for #{typename} #{scoped_lm_name}: #{tc.node.scoped_lm_name} is descendant"
@@ -1021,6 +1034,7 @@ module IDL::AST
           if self.has_base?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
+
           # check if we indirectly derive from this base multiple times (which is ok; no further need to check)
           unless @resolved_bases.any? { |b| b.has_ancestor?(rtc.node) }
             # this is a new base so we need to check for member redefinition/ambiguity
@@ -1066,6 +1080,7 @@ module IDL::AST
           if node.is_defined?
             raise "#{node.typename} \"#{node.name}\" is already defined."
           end
+
           node.annotations.concat(params[:annotations])
 
           _new_node = node.class.new(node.name, self, params)
@@ -1159,6 +1174,7 @@ module IDL::AST
         if parent.resolved_type.node.has_base?(self)
           raise "circular inheritance detected for #{typename} #{scoped_lm_name}: #{parent.node.scoped_lm_name} is descendant"
         end
+
         @resolved_base = parent.resolved_type.node
       end
       @base = parent.node
@@ -1178,6 +1194,7 @@ module IDL::AST
           unless (tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::Interface))
             raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{tc.typename}"
           end
+
           rtc = tc.resolved_type
           unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot support forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
@@ -1197,6 +1214,7 @@ module IDL::AST
           if self.has_support?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot support #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
+
           # check if we indirectly support this base multiple times (which is ok; no further need to check)
           unless @resolved_interfaces.any? { |b| b.has_ancestor?(rtc.node) }
             # this is a new support interface so we need to check for member redefinition/ambiguity
@@ -1230,6 +1248,7 @@ module IDL::AST
           if node.is_defined?
             raise "#{node.typename} \"#{node.name}\" is already defined."
           end
+
           node.annotations.concat(params[:annotations])
 
           _new_node = node.class.new(node.name, self, params)
@@ -1324,6 +1343,7 @@ module IDL::AST
         unless comp.resolved_type.node.is_defined?
           raise "#{scoped_lm_name}: #{comp.typename} cannot manage forward declared component #{comp.node.scoped_lm_name}"
         end
+
         @resolved_comp = comp.resolved_type.node
       end
       unless key&.is_a?(IDL::Type::ScopedName) && key.is_node?(IDL::AST::TemplateParam)
@@ -1331,6 +1351,7 @@ module IDL::AST
         unless key.nil? || (key.is_a?(IDL::Type::ScopedName) && key.is_node?(IDL::AST::Valuetype))
           raise "invalid primary key for #{typename} #{scoped_lm_name}: #{key.typename}"
         end
+
         @resolved_pk = key.resolved_type.node if key
       end
       @component = comp.node
@@ -1384,6 +1405,7 @@ module IDL::AST
         unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
+
         @resolved_base = parent.resolved_type.node
         if @resolved_base.has_base?(self)
           raise "circular inheritance detected for #{typename} #{scoped_lm_name}: #{parent.node.scoped_lm_name} is descendant"
@@ -1460,6 +1482,7 @@ module IDL::AST
         unless (parent.is_a?(IDL::Type::NodeType) && parent.is_node?(self.class))
           raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{parent.typename}"
         end
+
         @resolved_base = parent.resolved_type.node
         unless @resolved_base.is_defined?
           raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{parent.node.typename} #{parent.node.scoped_lm_name}"
@@ -1544,6 +1567,7 @@ module IDL::AST
       @idltype  = params[:type]
       @porttype = params[:porttype]
       raise "unknown porttype for  #{typename} #{scoped_lm_name}: #{@porttype}" unless PORTTYPES.include?(@porttype)
+
       case @porttype
       when :facet, :receptacle
         unless @idltype.is_a?(IDL::Type::Object) ||
@@ -1676,6 +1700,7 @@ module IDL::AST
         if @custom && @truncatable
             raise "'truncatable' attribute *not* allowed for 'custom' #{typename} #{scoped_lm_name}"
         end
+
         add_bases(_base[:list] || [])
         add_interfaces(_inherits[:supports] || [])
       end
@@ -1734,6 +1759,7 @@ module IDL::AST
     def is_local?(recurstk = [])
       # not local if forward decl or recursion detected
       return false if is_forward? || recurstk.include?(self)
+
       recurstk.push self   # track root node to detect recursion
       ret = state_members.any? { |m| m.is_local?(recurstk) }
       recurstk.pop
@@ -1776,6 +1802,7 @@ module IDL::AST
           unless (tc.is_a?(IDL::Type::ScopedName) && tc.is_node?(IDL::AST::Valuetype))
             raise "invalid inheritance identifier for #{typename} #{scoped_lm_name}: #{tc.typename}"
           end
+
           rtc = tc.resolved_type
           if rtc.node.has_ancestor?(self)
             raise "circular inheritance detected for #{typename} #{scoped_lm_name}: #{tc.node.scoped_lm_name} is descendant"
@@ -1792,6 +1819,7 @@ module IDL::AST
           if @resolved_bases.include?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
+
           if (not rtc.node.is_abstract?) and !@bases.empty?
             raise "concrete basevalue #{tc.node.typename} #{tc.node.scoped_lm_name} MUST " +
                   "be first and only non-abstract in inheritance list for #{typename} #{scoped_lm_name}"
@@ -1808,6 +1836,7 @@ module IDL::AST
           unless (if_.is_a?(IDL::Type::ScopedName) && if_.is_node?(IDL::AST::Interface))
             raise "invalid support identifier for #{typename} #{scoped_lm_name}: #{if_.typename}"
           end
+
           rif_ = if_.resolved_type
           ### @@TODO@@ further validation
           if (not rif_.node.is_abstract?) and !@interfaces.empty?
@@ -1816,6 +1845,7 @@ module IDL::AST
           if (not rif_.node.is_abstract?) && (not is_interface_compatible?(rif_.node))
             raise "#{typename} #{scoped_lm_name} cannot support concrete interface #{rif_.node.scoped_lm_name} because it does not derive from inherited concrete interfaces"
           end
+
           @resolved_interfaces << rif_.node
         end
         @interfaces << if_.node
@@ -1838,6 +1868,7 @@ module IDL::AST
       if self.is_abstract? && [IDL::AST::StateMember, IDL::AST::Initializer].include?(_type)
         raise "cannot define statemember #{_name} on abstract #{typename} #{scoped_lm_name}"
       end
+
       super(_type, _name, *args)
     end
 
@@ -1875,6 +1906,7 @@ module IDL::AST
           if node.is_defined?
             raise "#{node.typename} \"#{node.name}\" is already defined."
           end
+
           node.annotations.concat(params[:annotations])
 
           _new_node = node.class.new(node.name, self, params)
@@ -1949,6 +1981,7 @@ module IDL::AST
       @visibility = (params[:visibility] == :public ? :public : :private)
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if params[:type].is_anonymous?
+
         ## check for use of incomplete types
         unless @idltype.is_complete?
           ## verify type is used in sequence
@@ -2063,6 +2096,7 @@ module IDL::AST
                   (extype.is_node?(IDL::AST::Exception) || extype.is_node?(IDL::AST::TemplateParam) || extype.resolved_type.is_a?(IDL::Type::Native))
           raise 'Only IDL Exception types allowed in raises declaration.'
         end
+
         @raises << extype
       end
     end
@@ -2117,6 +2151,7 @@ module IDL::AST
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
         raise "Incomplete type #{@idltype.typename} not allowed here!" unless @idltype.is_complete?
+
         unless @expression.is_a?(IDL::Expression::ScopedName) && @expression.is_node?(IDL::AST::TemplateParam)
           @value = @idltype.narrow(@expression.value)
         end
@@ -2162,9 +2197,11 @@ module IDL::AST
       unless ATTRIBUTE_MAP.has_key?(@attribute)
         raise "invalid attribute for parameter: #{params[:attribute]}"
       end
+
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if params[:type].is_anonymous?
         raise "Exception #{@idltype.typename} is not allowed in an argument of an operation!" if @idltype.is_node?(IDL::AST::Exception)
+
         if @idltype.is_local?
           if _enclosure.enclosure.is_a?(IDL::AST::Interface) && !_enclosure.enclosure.is_local?
             raise "Local type #{@idltype.typename} not allowed for operation on unrestricted interface"
@@ -2218,6 +2255,7 @@ module IDL::AST
       @context = nil
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if params[:type].is_anonymous?
+
         if @idltype.is_local?
           if _enclosure.is_a?(IDL::AST::Interface) && !_enclosure.is_local?
             raise "Local type #{@idltype.typename} not allowed for operation on unrestricted interface"
@@ -2264,6 +2302,7 @@ module IDL::AST
                 (extype.is_node?(IDL::AST::Exception) || extype.is_node?(IDL::AST::TemplateParam) || extype.resolved_type.is_a?(IDL::Type::Native))
           raise 'Only IDL Exception or Native types allowed in raises declaration.'
         end
+
         @raises << extype
       end
     end
@@ -2328,6 +2367,7 @@ module IDL::AST
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
         raise "Exception #{@idltype.typename} is not allowed as an attribute!" if @idltype.is_node?(IDL::AST::Exception)
+
         if @idltype.is_local?
           if _enclosure.is_a?(IDL::AST::Interface) && !_enclosure.is_local?
             raise "Local type #{@idltype.typename} not allowed for operation on unrestricted interface"
@@ -2437,6 +2477,7 @@ module IDL::AST
     def is_local?(recurstk = [])
       # not local if forward decl or recursion detected
       return false if is_forward? || recurstk.include?(self)
+
       recurstk.push self   # track root node to detect recursion
       ret = members.any? { |m| m.is_local?(recurstk) }
       recurstk.pop
@@ -2487,6 +2528,7 @@ module IDL::AST
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
         raise "Exception #{@idltype.typename} is not allowed as member!" if @idltype.is_node?(IDL::AST::Exception)
+
         ## check for use of incomplete types
         unless @idltype.is_complete?
           ## verify type is used in sequence
@@ -2580,6 +2622,7 @@ module IDL::AST
     def is_local?(recurstk = [])
       # not local if forward decl or recursion detected
       return false if is_forward? || recurstk.include?(self)
+
       recurstk.push self   # track root node to detect recursion
       ret = members.any? { |m| m.is_local?(recurstk) }
       recurstk.pop
@@ -2598,6 +2641,7 @@ module IDL::AST
       while swtype.in_range?(def_lbl)
         return IDL::Expression::Value.new(@switchtype, def_lbl) unless lbls.include?(def_lbl)
         return nil if def_lbl == swtype.max
+
         def_lbl = swtype.next(def_lbl)
       end
       nil
@@ -2605,6 +2649,7 @@ module IDL::AST
 
     def validate_labels
       return if self.is_template?
+
       labelvals = []
       default_ = false
       members.each { |m|
@@ -2612,6 +2657,7 @@ module IDL::AST
         m.labels.each { |lbl|
           if lbl == :default
             raise "duplicate case label 'default' for #{typename} #{lm_name}" if default_
+
             default_ = true
           else
             # correct type
@@ -2620,6 +2666,7 @@ module IDL::AST
             if labelvals.include? lv
               raise "duplicate case label #{lv.to_s} for #{typename} #{lm_name}"
             end
+
             labelvals << lv
           end
         }
@@ -2749,6 +2796,7 @@ module IDL::AST
       # find already instantiated Enum parent
       _enum = _enclosure.resolve(@enum.name)
       raise "Unable to resolve instantiated Enum scope for enumerator #{@enum.name}::#{name} instantiation" unless _enum
+
       super(instantiation_context, _enclosure, { enum: _enum, value: @value })
     end
   end # Enumerator

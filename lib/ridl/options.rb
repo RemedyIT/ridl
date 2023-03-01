@@ -162,6 +162,7 @@ module IDL
           IDL.log(3, "Ignoring #{File.readable?(_rcp) ? 'already loaded' : 'inaccessible'} rc path #{_rcp}")
         end
         break if /\A(.:(\\|\/)|\.|\/)\Z/ =~ _cwd
+
         _cwd = File.dirname(_cwd)
       end while true
       # now load them in reverse order

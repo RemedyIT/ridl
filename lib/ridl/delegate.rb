@@ -25,6 +25,7 @@ class Delegator
 
   def self.add_pragma_handler(key, h = nil, &block)
     raise 'add_pragma_handler requires a callable object or a block' unless h&.respond_to?(:call) || block_given?
+
     @@pragma_handlers[key] = block_given? ? block : h
   end
 
@@ -130,6 +131,7 @@ class Delegator
       _te = w.respond_to?(:enter_home)
       _tl = w.respond_to?(:leave_home)
       return unless _te || _tl
+
       w.enter_home(m) if _te
       m.walk_members { |cm| walk_member(cm, w) }
       w.leave_home(m) if _tl
@@ -140,6 +142,7 @@ class Delegator
         _te = w.respond_to?(:enter_component)
         _tl = w.respond_to?(:leave_component)
         return unless _te || _tl
+
         w.enter_component(m) if _te
         m.walk_members { |cm| walk_member(cm, w) }
         w.leave_component(m) if _tl
@@ -148,6 +151,7 @@ class Delegator
       _te = w.respond_to?(:enter_connector)
       _tl = w.respond_to?(:leave_connector)
       return unless _te || _tl
+
       w.enter_connector(m) if _te
       m.walk_members { |cm| walk_member(cm, w) }
       w.leave_connector(m) if _tl
@@ -301,6 +305,7 @@ class Delegator
     if global || names.size > 1
       raise "no scoped identifier allowed for template module: #{(global ? '::' : '') + names.join('::')}"
     end
+
     @cur = @cur.define(IDL::AST::TemplateModule, names[0])
     @cur.annotations.concat(@annotation_stack)
     @annotation_stack = IDL::AST::Annotations.new
@@ -329,6 +334,7 @@ class Delegator
     unless template_type.node.is_a?(IDL::AST::TemplateModule)
       raise "invalid module template specification: #{template_type.node.typename} #{template_type.node.scoped_lm_name}"
     end
+
     params = { template: template_type.node, template_params: parameters }
     mod_inst = @cur.define(IDL::AST::Module, name, params)
     mod_inst.annotations.concat(@annotation_stack)
@@ -354,6 +360,7 @@ class Delegator
     params[:forward] = true
     params[:pseudo] = false
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     @cur.define(IDL::AST::Interface, name, params)
     set_last
     @cur
@@ -397,6 +404,7 @@ class Delegator
     params = {}
     params[:forward] = true
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Component, name, params)
   end
@@ -459,6 +467,7 @@ class Delegator
     params[:abstract] = attrib == :abstract
     params[:forward] = true
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Eventtype, name, params)
     @cur
@@ -482,6 +491,7 @@ class Delegator
     params[:abstract] = attrib == :abstract
     params[:forward] = true
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Valuetype, name, params)
     @cur
@@ -555,6 +565,7 @@ class Delegator
       if n.nil?
         raise "cannot find type name '#{nm}' in scope '#{node.scoped_name}'"
       end
+
       node = n
       first = node if first.nil?
     end
@@ -598,6 +609,7 @@ class Delegator
       if _type.nil?
         raise "it's not a valid integer: #{v.to_s}"
       end
+
       k.new(_type.new, _value)
     when :string
       k.new(Type::String.new, _value)
@@ -625,6 +637,7 @@ class Delegator
       elsif _expression.value < 0
         raise "must be positive integer: #{_expression.value.to_s}"
       end
+
       _expression.value
     end
   end
@@ -661,6 +674,7 @@ class Delegator
     unless @cur.context.nil?
       raise "context phrase's not supported"
     end
+
     set_last(@cur)
     @cur = @cur.enclosure
   end
@@ -677,6 +691,7 @@ class Delegator
   def declare_struct(_name)
     params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Struct, _name, params)
     @cur
@@ -720,6 +735,7 @@ class Delegator
   def declare_union(_name)
     params = { forward: true }
     raise "annotations with forward declaration of #{name} not allowed" unless @annotation_stack.empty?
+
     set_last
     @cur.define(IDL::AST::Union, _name, params)
     @cur

@@ -154,6 +154,7 @@ module IDL
 
     def save
       return if @options[:output_file]
+
       if @fout
         fgen = @fout
         @fout = nil
@@ -196,6 +197,7 @@ module IDL
 
     def remove
       return if @options[:output_file]
+
       if @fout
         begin
           @fout.close(true)
@@ -224,16 +226,19 @@ module IDL
             case $1
             when 'BEGIN'
               raise "ERROR: Found unterminated regeneration section starting at #{@path}:#{in_section.last}." if in_section
+
               in_section = [$2, linenr]
               section = []
             when 'END'
               raise "ERROR: Found unmatched regeneration end at #{@path}:#{linenr}." unless in_section && ($2 == in_section.first)
+
               sections[$2] = section
               in_section = nil
               section = []
             when 'HEADER_END'
               raise "ERROR: Found illegal header end marker at #{@path}:#{linenr}." unless _keep_header && in_section &&
                                                                                                          ('HEADER' == in_section.first ) && (0 == in_section.last)
+
               sections[$2] = section
               in_section = nil
               section = []

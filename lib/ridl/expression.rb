@@ -148,6 +148,7 @@ module IDL
             [IDL::Type::Short,    IDL::Type::UShort]
           ].each do |t|
             next unless t.include? _t
+
             return (if _v < 0 then t[0] else t[1] end)
           end
         end
