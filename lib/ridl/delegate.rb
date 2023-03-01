@@ -73,6 +73,7 @@ class Delegator
     @last = nil
     @last_pos = nil
   end
+
   def post_parse
     if @preprocess
       Marshal.dump([@root, @includes], @preprocout)
@@ -292,6 +293,7 @@ class Delegator
     set_last
     @cur
   end
+
   def end_module(node)
     set_last(@cur)
     @cur = @cur.enclosure # must equals to argument mod
@@ -378,6 +380,7 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Interface, name, params)
   end
+
   def end_interface(node)
     set_last(@cur)
     @cur = @cur.enclosure # must equals to argument mod
@@ -659,6 +662,7 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Operation, _name, params)
   end
+
   def declare_op_parameter(_attribute, _type, _name)
     params = Hash.new
     params[:attribute] = _attribute
@@ -668,6 +672,7 @@ class Delegator
     set_last(@cur.define(IDL::AST::Parameter, _name, params))
     @cur
   end
+
   def declare_op_footer(_raises, instantiation_context)
     @cur.raises = _raises || []
     @cur.context = instantiation_context
@@ -696,6 +701,7 @@ class Delegator
     @cur.define(IDL::AST::Struct, _name, params)
     @cur
   end
+
   def define_struct(_name)
     params = { forward: false }
     params[:annotations] = @annotation_stack
@@ -703,6 +709,7 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Struct, _name, params)
   end
+
   def declare_member(_type, _name)
     params = Hash.new
     params[:type] = _type
@@ -711,6 +718,7 @@ class Delegator
     set_last(@cur.define(IDL::AST::Member, _name, params))
     @cur
   end
+
   def end_struct(node)
     node.defined = true
     set_last(@cur)
@@ -718,6 +726,7 @@ class Delegator
     @cur = @cur.enclosure
     ret
   end
+
   def define_exception(_name)
     params = { forward: false }
     params[:annotations] = @annotation_stack
@@ -725,6 +734,7 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Exception, _name, params)
   end
+
   def end_exception(node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
@@ -740,6 +750,7 @@ class Delegator
     @cur.define(IDL::AST::Union, _name, params)
     @cur
   end
+
   def define_union(_name)
     params = { forward: false }
     params[:annotations] = @annotation_stack
@@ -747,12 +758,14 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Union, _name, params)
   end
+
   def define_union_switchtype(union_node, switchtype)
     union_node.set_switchtype(switchtype)
     union_node.annotations.concat(@annotation_stack)
     @annotation_stack = IDL::AST::Annotations.new
     union_node
   end
+
   def define_case(_labels, _type, _name)
     params = Hash.new
     params[:type] = _type
@@ -762,6 +775,7 @@ class Delegator
     set_last(@cur.define(IDL::AST::UnionMember, _name, params))
     @cur
   end
+
   def end_union(node)
     node.validate_labels
     node.defined = true
@@ -778,6 +792,7 @@ class Delegator
     set_last
     @cur = @cur.define(IDL::AST::Enum, _name, params)
   end
+
   def declare_enumerator(_name)
     n = @cur.enumerators.length
     params = {
@@ -789,6 +804,7 @@ class Delegator
     set_last(@cur.enclosure.define(IDL::AST::Enumerator, _name, params))
     @cur
   end
+
   def end_enum(node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)

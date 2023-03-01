@@ -2324,9 +2324,11 @@ module IDL::AST
     def in_params
       @in
     end
+
     def out_params
       @out
     end
+
     def params
       self.children
     end

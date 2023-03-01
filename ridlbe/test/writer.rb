@@ -96,6 +96,7 @@ module IDL
         end
       end
     end
+
     def leave_module(node)
       dec_nest
       printiln("< module #{node.lm_name}")
@@ -104,10 +105,12 @@ module IDL
     def declare_interface(node)
       println("- interface #{node.lm_name}")
     end
+
     def enter_interface(node)
       printiln("> interface #{node.lm_name}")
       inc_nest
     end
+
     def leave_interface(node)
       dec_nest
       printiln("< interface #{node.lm_name}")
@@ -116,10 +119,12 @@ module IDL
     def declare_valuetype(node)
       println("- valuetype #{node.lm_name}")
     end
+
     def enter_valuetype(node)
       printiln("> valuetype #{node.lm_name}")
       inc_nest
     end
+
     def leave_valuetype(node)
       dec_nest
       printiln("< valueype #{node.lm_name}")
@@ -271,6 +276,7 @@ module IDL
       printiln("> exception #{node.lm_name}")
       inc_nest
     end
+
     def leave_exception(node)
       dec_nest
       printiln("< exception #{node.lm_name}")
@@ -279,10 +285,12 @@ module IDL
     def declare_union(node)
       println("- union #{node.lm_name}")
     end
+
     def enter_union(node)
       printiln("> union #{node.lm_name}")
       inc_nest
     end
+
     def leave_union(node)
       dec_nest
       printiln("< union #{node.lm_name}")
@@ -336,6 +344,7 @@ module IDL
       printiln("> module #{node.lm_name}")
       inc_nest
     end
+
     def leave_module(node)
       dec_nest
       printiln("< module #{node.lm_name}")
@@ -344,10 +353,12 @@ module IDL
     def declare_interface(node)
       println("- interface #{node.lm_name}")
     end
+
     def enter_interface(node)
       printiln("> interface " + node.lm_name)
       inc_nest
     end
+
     def leave_interface(node)
       dec_nest
       printiln("< interface #{node.lm_name}")
@@ -356,10 +367,12 @@ module IDL
     def declare_valuetype(node)
       println("- valuetype #{node.lm_name}")
     end
+
     def enter_valuetype(node)
       printiln("> valuetype #{node.lm_name}")
       inc_nest
     end
+
     def leave_valuetype(node)
       dec_nest
       printiln("< valueype #{node.lm_name}")

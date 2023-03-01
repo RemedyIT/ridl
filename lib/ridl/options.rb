@@ -66,7 +66,6 @@ module IDL
       self.class.new(_dup_elem(@marked || @table), @marked)
     end
 
-
     def load(rcpath)
       IDL.log(3, "Loading #{RIDLRC} from #{rcpath}")
       _cfg = JSON.parse(IO.read(rcpath))

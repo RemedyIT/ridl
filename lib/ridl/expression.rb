@@ -44,9 +44,11 @@ module IDL
         @idltype = node.idltype
         @value = @idltype.narrow(node.value) unless node.is_template?
       end
+
       def is_template?
         @node.is_template?
       end
+
       def instantiate(instantiation_context)
         if self.is_template?
           cp = IDL::AST::TemplateParam.concrete_param(instantiation_context, @node)
@@ -55,9 +57,11 @@ module IDL
           self
         end
       end
+
       def is_node?(node_class)
         @node.is_a?(node_class)
       end
+
       def resolved_node
         @node
       end
@@ -125,6 +129,7 @@ module IDL
         end
         ret
       end
+
       def set_type; end
 
       class Unary < Operation
@@ -197,15 +202,18 @@ module IDL
           op
         end
       end
+
       class UnaryMinus < Unary
         Applicable = Float2::Applicable
         def calculate(op)
           -op
         end
+
         def set_type
           @idltype = Integer2.suite_sign(@idltype, @value)
         end
       end
+
       class UnaryNot < Unary
         Applicable = Integer2::Applicable
         def calculate(op)
@@ -220,9 +228,11 @@ module IDL
       class Or < Boolean2
         def calculate(lop, rop); lop | rop; end
       end
+
       class And < Boolean2
         def calculate(lop, rop); lop & rop; end
       end
+
       class Xor < Boolean2
         def calculate(lop, rop); lop ^ rop; end
       end
@@ -235,12 +245,14 @@ module IDL
           end
         end
       end
+
       class LShift < Shift
         def calculate(lop, rop)
           check_rop(rop)
           lop << rop
         end
       end
+
       class RShift < Shift
         def calculate(lop, rop)
           check_rop(rop)
@@ -251,15 +263,19 @@ module IDL
       class Add < Float2
         def calculate(lop, rop); lop + rop; end
       end
+
       class Minus < Float2
         def calculate(lop, rop); lop - rop; end
       end
+
       class Mult < Float2
         def calculate(lop, rop); lop * rop; end
       end
+
       class Div < Float2
         def calculate(lop, rop); lop / rop; end
       end
+
       class Mod < Integer2
         def calculate(lop, rop); lop % rop; end
       end

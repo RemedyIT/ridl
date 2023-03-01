@@ -18,6 +18,7 @@ module IDL
       super(msg)
       @positions = positions
     end
+
     def inspect
       puts "#{self.class.name}: #{message}"
       @positions.each { |pos|
@@ -35,6 +36,7 @@ module IDL
       def to_s
         format('%s: line %d, column %d', name.to_s, line, column)
       end
+
       def inspect
         to_s
       end
@@ -48,12 +50,15 @@ module IDL
         @pos = Position.new(name, line, column)
         @mark = nil
       end
+
       def position
         @pos
       end
+
       def column
         @pos.column
       end
+
       # cursor set at last gotten character.
       # ex: after initialization, position is (0,0).
       def to_s; @src.to_s; end
@@ -150,14 +155,17 @@ module IDL
         @src = src
         @ix = 0
       end
+
       def to_s
         @src
       end
+
       def getc
         ch = @src[@ix]
         @ix += 1
         ch
       end
+
       def close
         @ix = 0
       end
@@ -167,15 +175,19 @@ module IDL
       def [](key)
         super(::Symbol === key ? key : key.to_s.to_sym)
       end
+
       def []=(key, val)
         super(::Symbol === key ? key : key.to_s.to_sym, val.to_s)
       end
+
       def has_key?(key)
         super(::Symbol === key ? key : key.to_s.to_sym)
       end
+
       def delete(key)
         super(::Symbol === key ? key : key.to_s.to_sym)
       end
+
       def assoc(key)
         k_ = (::Symbol === key ? key : key.to_s.to_sym)
         self.has_key?(k_) ? [k_, self[k_]] : nil
@@ -186,6 +198,7 @@ module IDL
       def initialize(table_)
         @table = table_
       end
+
       def [](key)
         key = (::Integer === key) ? key.chr.to_sym : key.to_sym
         @table[key]
@@ -243,6 +256,7 @@ module IDL
       @scan_comment = false # true if parsing commented annotation
       @in_annotation = false # true if parsing annotation
     end
+
     def find_include(fname, all = true)
       if File.file?(fname) && File.readable?(fname)
         File.expand_path(fname)
@@ -263,6 +277,7 @@ module IDL
         fp
       end
     end
+
     def check_include(path, fname)
       fp = path + fname
       File.file?(fp) && File.readable?(fp)
@@ -290,21 +305,26 @@ module IDL
         @directiver.pragma_prefix(nil)
       end
     end
+
     def enter_expansion(src, define)
       IDL.log(2, "** RIDL - enter_expansion > #{define} = #{src}")
       @stack << [:define, nil, nil, @in, nil]
       @expansions << define
       @in = In.new(StrIStream.new(src), @in.position.name, @in.position.line, @in.position.column)
     end
+
     def is_expanded?(define)
       @expansions.include?(define)
     end
+
     def more_source?
       !@stack.empty?
     end
+
     def in_expansion?
       more_source? and @stack.last[0] == :define
     end
+
     def leave_source
       # make sure to close the input source
       @in.close
@@ -321,12 +341,15 @@ module IDL
         end
       end
     end
+
     def do_parse?
       @ifdef.empty? || @ifdef.last
     end
+
     def positions
       @stack.reverse.inject(@in.nil? ? [] : [@in.position]) { |pos_arr, (_, _, _, in_, _)| pos_arr << in_.position }
     end
+
     def parse_error(msg, ex = nil)
       e = IDL::ParseError.new(msg, positions)
       e.set_backtrace(ex.backtrace) unless ex.nil?
