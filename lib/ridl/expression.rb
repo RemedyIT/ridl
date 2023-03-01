@@ -125,8 +125,7 @@ module IDL
         end
         ret
       end
-      def set_type
-      end
+      def set_type; end
 
       class Unary < Operation
         NUMBER_OF_OPERANDS = 1

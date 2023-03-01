@@ -365,11 +365,9 @@ module IDL
       printiln("< valueype #{node.lm_name}")
     end
 
-    def visit_valuebox(node)
-    end
+    def visit_valuebox(node); end
 
-    def visit_const(node)
-    end
+    def visit_const(node); end
 
     def visit_operation(node, from_valuetype = false)
       println("+  op #{node.lm_name}")
@@ -379,32 +377,21 @@ module IDL
       println("+  att #{node.lm_name}")
     end
 
-    def declare_struct(node)
-    end
-    def enter_struct(node)
-    end
-    def leave_struct(node)
-    end
+    def declare_struct(node); end
+    def enter_struct(node); end
+    def leave_struct(node); end
 
-    def enter_exception(node)
-    end
-    def leave_exception(node)
-    end
+    def enter_exception(node); end
+    def leave_exception(node); end
 
-    def declare_union(node)
-    end
-    def enter_union(node)
-    end
-    def leave_union(node)
-    end
+    def declare_union(node); end
+    def enter_union(node); end
+    def leave_union(node); end
 
-    def visit_enum(node)
-    end
+    def visit_enum(node); end
 
-    def visit_enumerator(node)
-    end
+    def visit_enumerator(node); end
 
-    def visit_typedef(node)
-    end
+    def visit_typedef(node); end
   end ## TestServantWriter
 end # IDL
