@@ -66,8 +66,8 @@ module IDL
         cur = @fwd
         @fwd = @src.getc unless @src.nil?
         @mark << cur unless @mark.nil?
-        if [nil, ?\n, ?\r].include? @bwd
-          if @bwd == ?\r and cur == ?\n
+        if [nil, "\n", "\r"].include? @bwd
+          if @bwd == "\r" and cur == "\n"
           else
             @pos.line += 1
             @pos.column = 1
@@ -89,8 +89,8 @@ module IDL
         return nil if @fwd.nil?
 
         s = ''
-        s << getc until [nil, ?\n, ?\r].include? lookc
-        s << getc while [?\n, ?\r].include? lookc
+        s << getc until [nil, "\n", "\r"].include? lookc
+        s << getc while ["\n", "\r"].include? lookc
 
         @mark << s unless @mark.nil?
         s
@@ -331,36 +331,36 @@ module IDL
       raise e
     end
 
-    LFCR = [ (?\n), (?\r) ]
-    SPACES = [ (?\ ), (?\t) ]
+    LFCR = [ ("\n"), ("\r") ]
+    SPACES = [ ("\ "), ("\t") ]
     WHITESPACE = SPACES + LFCR
 
-    ANNOTATION = ?@
+    ANNOTATION = '@'
     ANNOTATION_STR = '@'
 
     BREAKCHARS = [
-      ?(, ?), ?[, ?], ?{, ?},
-      ?^, ?~,
-      ?*, ?%, ?&, ?|,
-      ?<, ?=, ?>,
-      ?,, ?; ]
+      '(', ')', '[', ']', '{', '}',
+      '^', '~',
+      '*', '%', '&', '|',
+      '<', '=', '>',
+      ',', ';' ]
 
-    SHIFTCHARS = [ ?<, ?> ]
+    SHIFTCHARS = [ '<', '>' ]
 
-    DIGITS = (?0..?9).to_a
-    ALPHA_LC = (?a..?z).to_a
-    ALPHA_UC = (?A..?Z).to_a
-    OCTALS = (?0..?7).to_a
-    HEXCHARS = DIGITS + (?a..?f).to_a + (?A..?F).to_a
-    SIGNS = [?-, ?+]
-    DOT = ?.
+    DIGITS = ('0'..'9').to_a
+    ALPHA_LC = ('a'..'z').to_a
+    ALPHA_UC = ('A'..'Z').to_a
+    OCTALS = ('0'..'7').to_a
+    HEXCHARS = DIGITS + ('a'..'f').to_a + ('A'..'F').to_a
+    SIGNS = ['-', '+']
+    DOT = '.'
 
-    IDCHARS = [?_ ] + ALPHA_LC + ALPHA_UC
+    IDCHARS = ['_' ] + ALPHA_LC + ALPHA_UC
     FULL_IDCHARS = IDCHARS + DIGITS
 
     ESCTBL = CharRegistry.new({
-      :n => ?\n, :t => ?\t, :v => ?\v, :b => ?\b,
-      :r => ?\r, :f => ?\f, :a => ?\a
+      :n => "\n", :t => "\t", :v => "\v", :b => "\b",
+      :r => "\r", :f => "\f", :a => "\a"
     })
 
     KEYWORDS = %w(
@@ -514,7 +514,7 @@ module IDL
       if s2.empty?
         parse_error 'identifier expected!'
       else
-        if s2[0] == ?_
+        if s2[0] == '_'
           s2.slice!(0) ## if starts with CORBA IDL escape => remove
         end
         parse_error "identifier must begin with alphabet character: #{s2}" unless ALPHA_LC.include?(s2[0]) || ALPHA_UC.include?(s2[0])
@@ -548,12 +548,12 @@ module IDL
       case (ch = @in.getc)
       when nil
         parse_error 'illegal escape sequence'
-      when ?0..?7
+      when '0'..'7'
         ret = ''
         ret << ch
         1.upto(2) {
           ch = @in.lookc
-          if (?0..?7).include? ch
+          if ('0'..'7').include? ch
             ret << ch
           else
             break
@@ -561,7 +561,7 @@ module IDL
           @in.skipc
         }
         ret = ret.oct
-      when ?x # i'm not sure '\x' should be 0 or 'x'. currently returns 0.
+      when 'x' # i'm not sure '\x' should be 0 or 'x'. currently returns 0.
         ret = ''
         1.upto(2) {
           ch = @in.lookc
@@ -573,7 +573,7 @@ module IDL
           @in.skipc
         }
         ret = ret.hex
-      when ?u
+      when 'u'
         ret = ''
         1.upto(4) {
           ch = @in.lookc
@@ -585,7 +585,7 @@ module IDL
           @in.skipc
         }
         ret = ret.hex
-      when ?n, ?t, ?v, ?b, ?r, ?f, ?a
+      when 'n', 't', 'v', 'b', 'r', 'f', 'a'
         ret = ESCTBL[ch]
       else
         ret = ('' << ch).unpack('C').first
@@ -598,12 +598,12 @@ module IDL
       case (ch = @in.getc)
       when nil
         parse_error 'illegal escape sequence'
-      when ?0..?7
+      when '0'..'7'
         ret = ''
         ret << ch
         1.upto(2) {
           ch = @in.lookc
-          if (?0..?7).include? ch
+          if ('0'..'7').include? ch
             ret << ch
           else
             break
@@ -611,7 +611,7 @@ module IDL
           @in.skipc
         }
         ret = [ :oct, ret ]
-      when ?x # i'm not sure '\x' should be 0 or 'x'. currently returns 0.
+      when 'x' # i'm not sure '\x' should be 0 or 'x'. currently returns 0.
         ret = ''
         ret << ch if keep_type_ch
         1.upto(2) {
@@ -624,7 +624,7 @@ module IDL
           @in.skipc
         }
         ret = [ :hex2, ret ]
-      when ?u
+      when 'u'
         ret = ''
         ret << ch if keep_type_ch
         1.upto(4) {
@@ -637,7 +637,7 @@ module IDL
           @in.skipc
         }
         ret = [ :hex4, ret ]
-      when ?n, ?t, ?v, ?b, ?r, ?f, ?a
+      when 'n', 't', 'v', 'b', 'r', 'f', 'a'
         ret = ''
         ret << ch
         ret = [ :esc, ret ]
@@ -654,12 +654,12 @@ module IDL
         @in.skipc
         @in.skipwhile {|c| DIGITS.include?(c) }
       end
-      if [?e, ?E].include? @in.lookc
+      if ['e', 'E'].include? @in.lookc
         @in.skipc
         @in.skipc if SIGNS.include? @in.lookc
         @in.skipwhile {|c| DIGITS.include?(c) }
         return :floating_pt_literal
-      elsif [?d, ?D].include? @in.lookc
+      elsif ['d', 'D'].include? @in.lookc
         @in.skipc
         @in.skipc if SIGNS.include? @in.lookc
         @in.skipwhile {|c| DIGITS.include?(c) }
@@ -672,7 +672,7 @@ module IDL
       while true
         s = @in.gets
         until s.chomp!.nil?; end
-        break unless s[s.length - 1] == ?\\
+        break unless s[s.length - 1] == "\\"
       end
     end
 
@@ -682,15 +682,15 @@ module IDL
         ch = @in.lookc
         break if ch.nil?
         case
-        when (ch == ?\") #"
+        when (ch == "\"") #"
           s << @in.getc # opening quote
           while true
-            if @in.lookc == ?\\
+            if @in.lookc == "\\"
               # escape sequence
               s << @in.getc
               _, escstr = next_escape_str(true)
               s << escstr
-            elsif @in.lookc == ?\" #"
+            elsif @in.lookc == "\"" #"
               break
             elsif @in.lookc
               # normal character
@@ -700,36 +700,36 @@ module IDL
             end
           end
           s << @in.getc # closing quote
-        when (ch == ?\') #' # quoted character
+        when (ch == "\'") #' # quoted character
           s << @in.getc # opening quote
-          if @in.lookc == ?\\
+          if @in.lookc == "\\"
             # escape sequence
             s << @in.getc
             _, escstr = next_escape_str(true)
             s << escstr
-          elsif @in.lookc && @in.lookc != ?\' #'
+          elsif @in.lookc && @in.lookc != "\'" #'
             # normal character
             s << @in.getc
           end
-          if @in.lookc != ?\' #'
+          if @in.lookc != "\'" #'
             parse_error "character literal must be single character enclosed in \"'\""
           end
           s << @in.getc # closing quote
         when LFCR.include?(ch)
           @in.skipwhile { |ch_| LFCR.include? ch_ }
           break
-        when ch == ?/
+        when ch == '/'
           @in.skipc
-          if @in.lookc == ?/
+          if @in.lookc == '/'
             # //-style comment; skip till eol
             @in.gets
             break
-          elsif @in.lookc == ?*
+          elsif @in.lookc == '*'
             # /*...*/ style comment; skip comment
             ch1 = nil
             @in.skipuntil { |ch_|
               ch0 = ch1; ch1 = ch_
-              ch0 == ?* and ch1 == ?/ #
+              ch0 == '*' and ch1 == '/' #
             }
             if @in.lookc.nil?
               parse_error "cannot find comment closing brace (\'*/\'). "
@@ -738,7 +738,7 @@ module IDL
           else
             s << ch
           end
-        when ch == ?\\
+        when ch == "\\"
           @in.skipc
           if LFCR.include?(@in.lookc)
             # line continuation
@@ -956,7 +956,7 @@ module IDL
           next
         end
 
-        if str.empty? && ch == ?\#
+        if str.empty? && ch == "\#"
           parse_directive
           next
         end
@@ -982,47 +982,47 @@ module IDL
             return parse_annotation || next_token
           end
 
-        when ch == ?: #
-          if @in.lookc == ?: #
+        when ch == ':' #
+          if @in.lookc == ':' #
             @in.skipc
             return %w(:: ::)
           else
             return %w(: :)
           end
 
-        when ch == ?L
+        when ch == 'L'
           _nxtc = @in.lookc
-          if _nxtc == ?\'  #' #single quote, for a character literal.
+          if _nxtc == "\'"  #' #single quote, for a character literal.
             @in.skipc # skip 'L'
             _nxtc = @in.lookc
-            ret = if _nxtc == ?\\
+            ret = if _nxtc == "\\"
               @in.skipc
               next_escape_str
-            elsif _nxtc == ?\' #'
+            elsif _nxtc == "\'" #'
               [ nil, nil ]
             else
               [ :char, '' << @in.getc ]
             end
 
-            if @in.lookc != ?\' #'
+            if @in.lookc != "\'" #'
               parse_error "wide character literal must be single wide character enclosed in \"'\""
             end
 
             @in.skipc
             return [ :wide_character_literal, ret ]
 
-          elsif _nxtc == ?\" #" #double quote, for a string literal.
+          elsif _nxtc == "\"" #" #double quote, for a string literal.
             ret = []
             chs = ''
             @in.skipc # skip 'L'
             while true
               _nxtc = @in.lookc
-              if _nxtc == ?\\
+              if _nxtc == "\\"
                 @in.skipc
                 ret << [:char, chs] unless chs.empty?
                 chs = ''
                 ret << next_escape_str
-              elsif _nxtc == ?\" #"
+              elsif _nxtc == "\"" #"
                 @in.skipc
                 ret << [:char, chs] unless chs.empty?
                 return [ :wide_string_literal, ret ]
@@ -1038,15 +1038,15 @@ module IDL
         when IDCHARS.include?(ch)
           return next_identifier(ch)
 
-        when ch == ?/ #
+        when ch == '/' #
           _nxtc = @in.lookc
-          if _nxtc == ?*
+          if _nxtc == '*'
             # skip comment like a `/* ... */'
             @in.skipc # forward stream beyond `/*'
             ch1 = nil
             @in.skipuntil { |ch_|
               ch0 = ch1; ch1 = ch_
-              ch0 == ?* and ch1 == ?/ #
+              ch0 == '*' and ch1 == '/' #
             }
             if @in.lookc.nil?
               parse_error "cannot find comment closing brace (\'*/\'). "
@@ -1055,7 +1055,7 @@ module IDL
             str = '' # reset
             next
 
-          elsif _nxtc == ?/
+          elsif _nxtc == '/'
             # skip comment like a `// ...\n'
             @in.skipc
             unless @scan_comment  # scan_comment will be true when parsing commented annotations
@@ -1085,10 +1085,10 @@ module IDL
             return [str, str]
           end
 
-        when (?1..?9).include?(ch)
+        when ('1'..'9').include?(ch)
           @in.mark(sign, ch)
           @in.skipwhile {|c| DIGITS.include?(c) }
-          num_type = ([?., ?e, ?E, ?d, ?D].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
+          num_type = (['.', 'e', 'E', 'd', 'D'].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
 
           r = @in.getregion
 
@@ -1116,11 +1116,11 @@ module IDL
             parse_error 'invalid floating point constant.'
           end
 
-        when ch == ?0
+        when ch == '0'
           @in.mark(sign, ch)
 
           _nxtc = @in.lookc
-          if _nxtc == ?x || _nxtc == ?X
+          if _nxtc == 'x' || _nxtc == 'X'
             @in.skipc
             @in.skipwhile { |ch_| HEXCHARS.include? ch_ }
             s = @in.getregion
@@ -1128,12 +1128,12 @@ module IDL
           else
             dec = false
             @in.skipwhile {|c| OCTALS.include?(c) }
-            if (?8..?9).include? @in.lookc
+            if ('8'..'9').include? @in.lookc
               dec = TRUE
               @in.skipwhile {|c| DIGITS.include?(c) }
             end
 
-            num_type = ([?., ?e, ?E, ?d, ?D].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
+            num_type = (['.', 'e', 'E', 'd', 'D'].include?(@in.lookc)) ? skipfloat_or_fixed : :integer_literal
 
             s = @in.getregion
             ret = if num_type == :floating_pt_literal
@@ -1148,32 +1148,32 @@ module IDL
             return ret
           end
 
-        when ch == ?\'  #' #single quote, for a character literal.
+        when ch == "\'"  #' #single quote, for a character literal.
           _nxtc = @in.lookc
-          ret = if _nxtc == ?\\
+          ret = if _nxtc == "\\"
             @in.skipc
             next_escape
-          elsif _nxtc == ?\' #'
+          elsif _nxtc == "\'" #'
             0
           elsif _nxtc
             ('' << @in.getc).unpack('C').first
           end
 
-          if @in.lookc != ?\' #'
+          if @in.lookc != "\'" #'
             parse_error "character literal must be single character enclosed in \"'\""
           end
 
           @in.skipc
           return [ :character_literal, ret ]
 
-        when ch == ?\" #" #double quote, for a string literal.
+        when ch == "\"" #" #double quote, for a string literal.
           ret = ''
           while true
             _nxtc = @in.lookc
-            if _nxtc == ?\\
+            if _nxtc == "\\"
               @in.skipc
               ret << next_escape
-            elsif _nxtc == ?\" #"
+            elsif _nxtc == "\"" #"
               @in.skipc
               return [ :string_literal, ret ]
             elsif _nxtc
