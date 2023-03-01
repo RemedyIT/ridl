@@ -1024,7 +1024,7 @@ module IDL
 
         when ch == 'L'
           _nxtc = @in.lookc
-          if _nxtc == ?\' # ' #single quote, for a character literal.
+          if _nxtc == "\'" # ' #single quote, for a character literal.
             @in.skipc # skip 'L'
             _nxtc = @in.lookc
             ret = if _nxtc == "\\"
