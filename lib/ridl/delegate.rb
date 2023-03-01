@@ -16,7 +16,6 @@ module IDL
 ORB_PIDL = 'orb.pidlc'.freeze
 
 class Delegator
-
   # #pragma handler registry
   # each keyed entry a callable object:
   # - responds to #call(delegator, cur_node, pragma_string)

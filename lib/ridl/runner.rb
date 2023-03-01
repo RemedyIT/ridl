@@ -33,7 +33,6 @@ module IDL
   CORE_OPTIONS = OPTIONS.keys
 
   class Engine
-
     class ProductionStack
       def initialize
         @stack = []
@@ -407,7 +406,6 @@ module IDL
 
       opts
     end
-
   end
 
   def IDL.engine?

@@ -14,7 +14,6 @@ require 'fileutils'
 
 module IDL
   class GenFile
-
     self.singleton_class.class_eval do
       private
 
@@ -257,6 +256,5 @@ module IDL
       sections[in_section.first] = section if in_section
       @content = Content.new(sections)
     end
-
   end
 end

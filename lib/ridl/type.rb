@@ -628,6 +628,5 @@ module IDL
         super && self.type.resolved_type.matches?(idltype.type.resolved_type)
       end
     end
-
   end
 end

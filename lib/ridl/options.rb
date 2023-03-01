@@ -18,7 +18,6 @@ module IDL
   RIDLRC_GLOBAL = File.expand_path(File.join(ENV['HOME'] || ENV['HOMEPATH'] || '~', RIDLRC))
 
   class Options < OpenStruct
-
     def initialize(hash = nil, marked = nil)
       super(hash)
       @marked = marked

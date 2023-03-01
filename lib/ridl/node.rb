@@ -890,7 +890,6 @@ module IDL::AST
   end # Include
 
   class Derivable < Node
-
     alias :search_self_before_derived :search_self
     def search_self(_name)
       node = search_self_before_derived(_name)
@@ -1388,7 +1387,6 @@ module IDL::AST
       atts.concat(base_attributes(traversed || [])) if include_bases
       atts
     end
-
   end # Home
 
   class Connector < ComponentBase
@@ -1472,7 +1470,6 @@ module IDL::AST
       end
       ports
     end
-
   end # Connector
 
   class Component < ComponentBase
@@ -1561,7 +1558,6 @@ module IDL::AST
       end
       ports
     end
-
   end # Component
 
   class Porttype < Node
@@ -2190,7 +2186,6 @@ module IDL::AST
                              type: parm.idltype.instantiate(instantiation_context) })
       end
     end
-
   end # Initializer
 
   class Finder < Initializer
@@ -2862,7 +2857,6 @@ module IDL::AST
     def instantiate(instantiation_context, _enclosure)
       super(instantiation_context, _enclosure, {})
     end
-
   end # Enum
 
   class Enumerator < Leaf

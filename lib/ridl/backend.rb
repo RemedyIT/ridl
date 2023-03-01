@@ -12,7 +12,6 @@
 
 module IDL
   class Backend
-
     @@backends = {}
 
     class ProcessStop < RuntimeError; end
@@ -116,6 +115,5 @@ module IDL
         end
       end
     end
-
   end
 end

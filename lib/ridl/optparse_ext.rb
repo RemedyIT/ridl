@@ -47,13 +47,9 @@ end
 
 module IDL
   class OptionList
-
     class Option
-
       class Group
-
         class ParamSet
-
           class Configurator
             def initialize(set)
               @set = set
@@ -196,7 +192,6 @@ module IDL
           end
           alias :without_set :without_param
           alias :without_params :without_param
-
         end # Configurator
 
         attr_reader :sets
@@ -356,6 +351,5 @@ module IDL
         optp.separator '' if op.separator
       end
     end
-
   end # OptionList
 end # IDL
