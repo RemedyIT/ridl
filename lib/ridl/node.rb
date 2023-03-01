@@ -851,11 +851,11 @@ module IDL::AST
       @scoped_name = @scopes.collect{ |s| s.name }.join("::")
     end
 
-    def is_defined?; 
-      @defined; 
+    def is_defined?;
+      @defined;
     end
-    def is_preprocessed?; 
-      @preprocessed; 
+    def is_preprocessed?;
+      @preprocessed;
     end
 
     def introduce(node)
@@ -1003,20 +1003,20 @@ module IDL::AST
       super(instantiation_context, _enclosure, _params)
     end
 
-    def is_abstract?; 
-      @abstract; 
+    def is_abstract?;
+      @abstract;
     end
-    def is_local?; 
-      @local; 
+    def is_local?;
+      @local;
     end
-    def is_pseudo?; 
-      @pseudo; 
+    def is_pseudo?;
+      @pseudo;
     end
-    def is_defined?; 
-      @defined; 
+    def is_defined?;
+      @defined;
     end
-    def is_forward?; 
-      not @defined; 
+    def is_forward?;
+      not @defined;
     end
 
     def add_bases(inherits_)
@@ -1407,11 +1407,11 @@ module IDL::AST
       super(instantiation_context, _enclosure, {})
     end
 
-    def is_defined?; 
-      true; 
+    def is_defined?;
+      true;
     end
-    def is_forward?; 
-      false; 
+    def is_forward?;
+      false;
     end
 
     def add_interfaces(intfs)
@@ -1492,11 +1492,11 @@ module IDL::AST
       super(instantiation_context, _enclosure, { forward: self.is_forward? })
     end
 
-    def is_defined?; 
-      @defined; 
+    def is_defined?;
+      @defined;
     end
-    def is_forward?; 
-      not @defined; 
+    def is_forward?;
+      not @defined;
     end
 
     def set_base(parent)
@@ -1769,29 +1769,29 @@ module IDL::AST
       inst
     end
 
-    def is_abstract?; 
-      @abstract; 
+    def is_abstract?;
+      @abstract;
     end
-    def is_custom?; 
-      @custom; 
+    def is_custom?;
+      @custom;
     end
-    def is_truncatable?; 
-      @truncatable; 
+    def is_truncatable?;
+      @truncatable;
     end
-    def is_defined?; 
-      @defined; 
+    def is_defined?;
+      @defined;
     end
-    def defined=(f); 
-      @defined = f; 
+    def defined=(f);
+      @defined = f;
     end
-    def is_forward?; 
-      @forward; 
+    def is_forward?;
+      @forward;
     end
-    def is_recursive?; 
-      @recursive 
+    def is_recursive?;
+      @recursive
     end
-    def recursive=(f); 
-      @recursive = f 
+    def recursive=(f);
+      @recursive = f
     end
 
     def is_local?(recurstk = [])
@@ -2500,20 +2500,20 @@ module IDL::AST
       @idltype = IDL::Type::Struct.new(self)
     end
 
-    def is_defined?; 
-      @defined 
+    def is_defined?;
+      @defined
     end
-    def defined=(f); 
-      @defined = f 
+    def defined=(f);
+      @defined = f
     end
-    def is_forward?; 
-      @forward 
+    def is_forward?;
+      @forward
     end
-    def is_recursive?; 
-      @recursive 
+    def is_recursive?;
+      @recursive
     end
-    def recursive=(f); 
-      @recursive = f 
+    def recursive=(f);
+      @recursive = f
     end
 
     def walk_members(&block)
@@ -2655,20 +2655,20 @@ module IDL::AST
       @switchtype = _switchtype
     end
 
-    def is_defined?; 
-      @defined; 
+    def is_defined?;
+      @defined;
     end
-    def defined=(f); 
-      @defined = f; 
+    def defined=(f);
+      @defined = f;
     end
-    def is_forward?; 
-      @forward; 
+    def is_forward?;
+      @forward;
     end
-    def is_recursive?; 
-      @recursive 
+    def is_recursive?;
+      @recursive
     end
-    def recursive=(f); 
-      @recursive = f 
+    def recursive=(f);
+      @recursive = f
     end
 
     def walk_members(&block)

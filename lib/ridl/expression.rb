@@ -15,8 +15,8 @@ module IDL
   class Expression
     attr_reader :idltype
     attr_reader :value
-    def typename; 
-      @idltype.typename; 
+    def typename;
+      @idltype.typename;
     end
 
     def is_template?
@@ -228,20 +228,20 @@ module IDL
       end
 
       class Or < Boolean2
-        def calculate(lop, rop); 
-          lop | rop; 
+        def calculate(lop, rop);
+          lop | rop;
         end
       end
 
       class And < Boolean2
-        def calculate(lop, rop); 
-          lop & rop; 
+        def calculate(lop, rop);
+          lop & rop;
         end
       end
 
       class Xor < Boolean2
-        def calculate(lop, rop); 
-          lop ^ rop; 
+        def calculate(lop, rop);
+          lop ^ rop;
         end
       end
 
@@ -269,32 +269,32 @@ module IDL
       end
 
       class Add < Float2
-        def calculate(lop, rop); 
-          lop + rop; 
+        def calculate(lop, rop);
+          lop + rop;
         end
       end
 
       class Minus < Float2
-        def calculate(lop, rop); 
-          lop - rop; 
+        def calculate(lop, rop);
+          lop - rop;
         end
       end
 
       class Mult < Float2
-        def calculate(lop, rop); 
-          lop * rop; 
+        def calculate(lop, rop);
+          lop * rop;
         end
       end
 
       class Div < Float2
-        def calculate(lop, rop); 
-          lop / rop; 
+        def calculate(lop, rop);
+          lop / rop;
         end
       end
 
       class Mod < Integer2
-        def calculate(lop, rop); 
-          lop % rop; 
+        def calculate(lop, rop);
+          lop % rop;
         end
       end
     end #of class Operation
