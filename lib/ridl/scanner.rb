@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: false
 require 'delegate'
 
 module IDL
@@ -75,7 +76,7 @@ module IDL
         @fwd = @src.getc unless @src.nil?
         @mark << cur unless @mark.nil?
         if [nil, "\n", "\r"].include? @bwd
-          if @bwd == "\r" and cur == "\n"
+          if (@bwd == "\r") && (cur == "\n")
           else
             @pos.line += 1
             @pos.column = 1
@@ -85,7 +86,7 @@ module IDL
         end
 
         if false
-          if not @bwd.nil? or cur.nil? or @fwd.nil?
+          if !@bwd.nil? || cur.nil? || @fwd.nil?
           printf("%c(%02x), %c(%02x), %c(%02x) @(l:%d,c:%d)\n",
                 @bwd, @bwd, cur, cur, @fwd, @fwd, @pos.line, @pos.column)
           end
@@ -359,29 +360,29 @@ module IDL
       raise e
     end
 
-    LFCR = [ ("\n"), ("\r") ]
-    SPACES = [ ("\ "), ("\t") ]
+    LFCR = [ ("\n"), ("\r") ].freeze
+    SPACES = [ ("\ "), ("\t") ].freeze
     WHITESPACE = SPACES + LFCR
 
-    ANNOTATION = '@'
-    ANNOTATION_STR = '@'
+    ANNOTATION = '@'.freeze
+    ANNOTATION_STR = '@'.freeze
 
     BREAKCHARS = [
       '(', ')', '[', ']', '{', '}',
       '^', '~',
       '*', '%', '&', '|',
       '<', '=', '>',
-      ',', ';' ]
+      ',', ';' ].freeze
 
-    SHIFTCHARS = [ '<', '>' ]
+    SHIFTCHARS = [ '<', '>' ].freeze
 
     DIGITS = ('0'..'9').to_a
     ALPHA_LC = ('a'..'z').to_a
     ALPHA_UC = ('A'..'Z').to_a
     OCTALS = ('0'..'7').to_a
     HEXCHARS = DIGITS + ('a'..'f').to_a + ('A'..'F').to_a
-    SIGNS = ['-', '+']
-    DOT = '.'
+    SIGNS = ['-', '+'].freeze
+    DOT = '.'.freeze
 
     IDCHARS = ['_' ] + ALPHA_LC + ALPHA_UC
     FULL_IDCHARS = IDCHARS + DIGITS
@@ -408,12 +409,12 @@ module IDL
       # :wide_character_literal,
       :fixed_pt_literal,
       :floating_pt_literal,
-      :boolean_literal]
+      :boolean_literal].freeze
 
     BOOL_LITERALS = {
         false: false,
         true: true
-      }
+      }.freeze
 
     def is_literal?(o)
       LITERALS.include?(o)
@@ -461,7 +462,7 @@ module IDL
           # identifier or value (in case of single value annotation) expected
           token = next_token
           if token.first == ')' # marker annotation; leave body empty
-            annotation_body = { }
+            annotation_body = {}
           else
             parse_error 'annotation member expected!' unless token.first == :identifier || is_literal?(token.first)
             s1 = token.last
@@ -550,7 +551,7 @@ module IDL
       end
 
       # preprocessor check
-      if @defined.has_key?(s2) and !is_expanded?(s2)
+      if @defined.has_key?(s2) && !is_expanded?(s2)
         # enter expansion as new source
         enter_expansion(@defined[s2], s2)
         # call next_token to parse expanded source
@@ -972,7 +973,7 @@ module IDL
       while true
         ch = @in.getc
         if ch.nil?
-          if !@ifdef.empty? and !in_expansion?
+          if !@ifdef.empty? && !in_expansion?
             parse_error 'mismatched #if/#endif'
           end
           if more_source?

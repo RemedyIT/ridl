@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: true
 
 module IDL
   module Test
@@ -18,7 +19,7 @@ module IDL
         major: 0,
         minor: 1,
         release: 0
-    }
+    }.freeze
 
     ## Configure Test backend
     #

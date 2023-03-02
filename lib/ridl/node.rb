@@ -9,9 +9,10 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: true
 module IDL::AST
-  REPO_ID_XCHARS = ['.', '-', '_']
-  REPO_ID_RE = /^[#{('a'..'z').to_a.join}#{('A'..'Z').to_a.join}#{('0'..'9').to_a.join}\.\-_\/]+$/
+  REPO_ID_XCHARS = ['.', '-', '_'].freeze
+  REPO_ID_RE = /^[#{('a'..'z').to_a.join}#{('A'..'Z').to_a.join}#{('0'..'9').to_a.join}\.\-_\/]+$/.freeze
 
   class Annotation
     def initialize(id, fields = {})
@@ -147,7 +148,7 @@ module IDL::AST
       end
       id_arr = id.split(':')
       if @repo_ver
-        if id_arr.first != 'IDL' or id_arr.last != @repo_ver
+        if (id_arr.first != 'IDL') || (id_arr.last != @repo_ver)
           raise "supplied repository ID (#{id}) does not match previously assigned repository version for #{self.scoped_name} = #{@repo_ver}"
         end
       end
@@ -155,7 +156,7 @@ module IDL::AST
       if id_arr.first == 'IDL'
         id_arr.shift
         id_str = id_arr.shift.to_s
-        raise 'ID identifiers should not start or end with \'/\'' if id_str[0, 1] == '/' or id_str[-1, 1] == '/'
+        raise 'ID identifiers should not start or end with \'/\'' if (id_str[0, 1] == '/') || (id_str[-1, 1] == '/')
         raise "ID identifiers should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(id_str[0, 1])
         raise 'Invalid ID! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed for identifiers' unless REPO_ID_RE =~ id_str
       end
@@ -180,7 +181,7 @@ module IDL::AST
 
     def prefix=(pfx)
       unless pfx.to_s.empty?
-        raise 'ID prefix should not start or end with \'/\'' if pfx[0, 1] == '/' or pfx[-1, 1] == '/'
+        raise 'ID prefix should not start or end with \'/\'' if (pfx[0, 1] == '/') || (pfx[-1, 1] == '/')
         raise "ID prefix should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(pfx[0, 1])
         raise 'Invalid ID prefix! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed' unless REPO_ID_RE =~ pfx
       end
@@ -195,7 +196,7 @@ module IDL::AST
       if @repo_id.nil?
         @repo_ver = "1.0" unless @repo_ver
         format("IDL:%s%s:%s",
-                if @prefix.empty? then "" else @prefix + "/" end,
+                if @prefix.empty? then "" else "#{@prefix}/" end,
                 self.scopes.collect { |s| s.name }.join("/"),
                 @repo_ver)
       else
@@ -313,14 +314,12 @@ module IDL::AST
     end
 
   protected
-    def children
-      @children
-    end
+    attr_reader :children
 
     def search_self(_name)
       key = _name.downcase.intern
       node = @introduced[key]
-      if not node.nil? and node.name != _name
+      if !node.nil? && (node.name != _name)
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
 
@@ -329,7 +328,7 @@ module IDL::AST
 
     def search_enclosure(_name)
       node = search_self(_name)
-      if node.nil? and not @enclosure.nil?
+      if node.nil? && !@enclosure.nil?
         node = @enclosure.search_enclosure(_name)
       end
       node
@@ -388,7 +387,7 @@ module IDL::AST
       IDL::AST::Module, IDL::AST::Interface, IDL::AST::Valuebox, IDL::AST::Valuetype, IDL::AST::Const, IDL::AST::Struct,
       IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef, IDL::AST::Include,
       IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector
-    ]
+    ].freeze
     attr_reader :anchor, :next, :template, :template_params
 
     def initialize(_name, _enclosure, params)
@@ -607,7 +606,7 @@ module IDL::AST
     def search_links(_name)
       _key = _name.downcase.intern
       node = @introduced[_key]
-      if not node.nil? and node.name != _name
+      if !node.nil? && (node.name != _name)
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
 
@@ -695,7 +694,7 @@ module IDL::AST
       IDL::AST::Const, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef,
       IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector,
       IDL::AST::TemplateParam, IDL::AST::TemplateModuleReference
-    ]
+    ].freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, _params)
@@ -961,7 +960,7 @@ module IDL::AST
 
   class Interface < Derivable
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute,
-                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
+                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :bases, :idltype
 
     def initialize(_name, _enclosure, params)
@@ -1021,7 +1020,7 @@ module IDL::AST
     end
 
     def is_forward?
-      not @defined
+      !@defined
     end
 
     def add_bases(inherits_)
@@ -1038,16 +1037,16 @@ module IDL::AST
           unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if rtc.node.is_local? and not self.is_local?
+          if rtc.node.is_local? && !self.is_local?
             raise "#{typename} #{scoped_lm_name} cannot inherit from 'local' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if rtc.node.is_pseudo? and not self.is_pseudo?
+          if rtc.node.is_pseudo? && !self.is_pseudo?
             raise "#{typename} #{scoped_lm_name} cannot inherit from 'pseudo' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_abstract? and not rtc.node.is_abstract?
+          if self.is_abstract? && !rtc.node.is_abstract?
             raise "'abstract' #{typename} #{scoped_lm_name} cannot inherit from non-'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_local? and rtc.node.is_abstract?
+          if self.is_local? && rtc.node.is_abstract?
             raise "'local' #{typename} #{scoped_lm_name} cannot inherit from 'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if self.has_base?(rtc.node)
@@ -1143,13 +1142,11 @@ module IDL::AST
       end
     end
 
-    def resolved_bases
-      @resolved_bases
-    end
+    attr_reader :resolved_bases
   end # Interface
 
   class ComponentBase < Derivable
-    DEFINABLE = []
+    DEFINABLE = [].freeze
     attr_reader :base, :interfaces, :idltype
 
     def initialize(_name, _enclosure, params)
@@ -1317,7 +1314,7 @@ module IDL::AST
 
   class Home < ComponentBase
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::Initializer, IDL::AST::Finder,
-                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
+                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :component, :primarykey
 
     def initialize(_name, _enclosure, params)
@@ -1390,7 +1387,7 @@ module IDL::AST
   end # Home
 
   class Connector < ComponentBase
-    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
+    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port].freeze
 
     def initialize(_name, _enclosure, params)
       @idltype = IDL::Type::Component.new(self)
@@ -1473,7 +1470,7 @@ module IDL::AST
   end # Connector
 
   class Component < ComponentBase
-    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
+    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port].freeze
 
     def initialize(_name, _enclosure, params)
       @idltype = IDL::Type::Component.new(self)
@@ -1500,7 +1497,7 @@ module IDL::AST
     end
 
     def is_forward?
-      not @defined
+      !@defined
     end
 
     def set_base(parent)
@@ -1561,7 +1558,7 @@ module IDL::AST
   end # Component
 
   class Porttype < Node
-    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
+    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port].freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, _params)
@@ -1583,8 +1580,8 @@ module IDL::AST
   end # Porttype
 
   class Port < Leaf
-    PORTTYPES = [:facet, :receptacle, :emitter, :publisher, :consumer, :port, :mirrorport]
-    PORT_MIRRORS = {facet: :receptacle, receptacle: :facet}
+    PORTTYPES = [:facet, :receptacle, :emitter, :publisher, :consumer, :port, :mirrorport].freeze
+    PORT_MIRRORS = { facet: :receptacle, receptacle: :facet }.freeze
     EXTPORTDEF_ANNOTATION = 'ExtendedPortDef'
     attr_reader :idltype, :porttype
 
@@ -1626,13 +1623,13 @@ module IDL::AST
     end
 
     def expanded_copy(name_pfx, enc)
-      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, {type: @idltype, porttype: @porttype})
+      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, { type: @idltype, porttype: @porttype })
       p.annotations << Annotation.new(EXTPORTDEF_ANNOTATION, { extended_port_name: name_pfx, base_name: self.name, mirror: false })
       p # return expanded copy
     end
 
     def expanded_mirror_copy(name_pfx, enc)
-      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, {type: @idltype, porttype: PORT_MIRRORS[@porttype]})
+      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, { type: @idltype, porttype: PORT_MIRRORS[@porttype] })
       p.annotations << Annotation.new(EXTPORTDEF_ANNOTATION, { extended_port_name: name_pfx, base_name: self.name, mirror: true })
       p # return expanded copy
     end
@@ -1700,7 +1697,7 @@ module IDL::AST
 
   class Valuetype < Derivable
     DEFINABLE = [IDL::AST::Include, IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::StateMember, IDL::AST::Initializer,
-                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
+                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :bases, :interfaces, :idltype
 
     def initialize(_name, _enclosure, params)
@@ -1789,9 +1786,7 @@ module IDL::AST
       @defined
     end
 
-    def defined=(f)
-      @defined = f
-    end
+    attr_writer :defined, :recursive
 
     def is_forward?
       @forward
@@ -1799,10 +1794,6 @@ module IDL::AST
 
     def is_recursive?
       @recursive
-    end
-
-    def recursive=(f)
-      @recursive = f
     end
 
     def is_local?(recurstk = [])
@@ -1828,7 +1819,7 @@ module IDL::AST
     end
 
     def has_concrete_base?
-      (not @resolved_bases.empty?) and (not @resolved_bases.first.is_abstract?)
+      (!@resolved_bases.empty?) and (!@resolved_bases.first.is_abstract?)
     end
 
     def supports_concrete_interface?
@@ -1859,17 +1850,17 @@ module IDL::AST
           unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_abstract? and not rtc.node.is_abstract?
+          if self.is_abstract? && !rtc.node.is_abstract?
             raise "'abstract' #{typename} #{scoped_lm_name} cannot inherit from non-'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if (not self.is_custom?) and rtc.node.is_custom?
+          if (!self.is_custom?) && rtc.node.is_custom?
             raise "non-'custom' #{typename} #{scoped_lm_name} cannot inherit from 'custom' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if @resolved_bases.include?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
 
-          if (not rtc.node.is_abstract?) and !@bases.empty?
+          if (!rtc.node.is_abstract?) && !@bases.empty?
             raise "concrete basevalue #{tc.node.typename} #{tc.node.scoped_lm_name} MUST " +
                   "be first and only non-abstract in inheritance list for #{typename} #{scoped_lm_name}"
           end
@@ -1888,10 +1879,10 @@ module IDL::AST
 
           rif_ = if_.resolved_type
           ### @@TODO@@ further validation
-          if (not rif_.node.is_abstract?) and !@interfaces.empty?
+          if (!rif_.node.is_abstract?) && !@interfaces.empty?
             raise "concrete interface '#{rif_.node.scoped_lm_name}' inheritance not allowed for #{typename} #{scoped_lm_name}. Valuetypes can only inherit (support) a single concrete interface."
           end
-          if (not rif_.node.is_abstract?) && (not is_interface_compatible?(rif_.node))
+          if (!rif_.node.is_abstract?) && (!is_interface_compatible?(rif_.node))
             raise "#{typename} #{scoped_lm_name} cannot support concrete interface #{rif_.node.scoped_lm_name} because it does not derive from inherited concrete interfaces"
           end
 
@@ -1922,9 +1913,9 @@ module IDL::AST
     end
 
     def walk_members
-      @children.each { |c| yield(c) unless c.is_a?(IDL::AST::StateMember) or
-                                           c.is_a?(IDL::AST::Operation) or
-                                           c.is_a?(IDL::AST::Attribute) or
+      @children.each { |c| yield(c) unless c.is_a?(IDL::AST::StateMember) ||
+                                           c.is_a?(IDL::AST::Operation) ||
+                                           c.is_a?(IDL::AST::Attribute) ||
                                            c.is_a?(IDL::AST::Initializer)
       }
     end
@@ -1994,9 +1985,7 @@ module IDL::AST
       @children.each { |c| yield(c) }
     end
 
-    def resolved_bases
-      @resolved_bases
-    end
+    attr_reader :resolved_bases
 
     def concrete_bases(instantiation_context)
       # collect all bases and resolve any template param types
@@ -2135,7 +2124,7 @@ module IDL::AST
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @params = (params[:params] || []).collect do |(ptype, pname)|
-        IDL::AST::Parameter.new(pname, self, {attribute: :in, type: ptype})
+        IDL::AST::Parameter.new(pname, self, { attribute: :in, type: ptype })
       end
       @raises = []
       self.raises = params[:raises]
@@ -2241,7 +2230,7 @@ module IDL::AST
       in: IN,
       out: OUT,
       inout: INOUT
-    }
+    }.freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, params)
@@ -2295,7 +2284,7 @@ module IDL::AST
   end # Parameter
 
   class Operation < Node
-    DEFINABLE = [IDL::AST::Parameter]
+    DEFINABLE = [IDL::AST::Parameter].freeze
     attr_reader :idltype, :oneway, :raises
     attr_accessor :context
 
@@ -2484,7 +2473,7 @@ module IDL::AST
     end
 
     def expanded_copy(name_pfx, enc)
-      att = IDL::AST::Attribute.new("#{name_pfx}_#{self.name}", enc, {type: @idltype, readonly: @readonly})
+      att = IDL::AST::Attribute.new("#{name_pfx}_#{self.name}", enc, { type: @idltype, readonly: @readonly })
       att.get_raises = @get_raises unless @get_raises.empty?
       att.set_raises = @set_raises unless @set_raises.empty?
       att
@@ -2506,7 +2495,7 @@ module IDL::AST
   end # Attribute
 
   class Struct < Node
-    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
+    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, params)
@@ -2521,9 +2510,7 @@ module IDL::AST
       @defined
     end
 
-    def defined=(f)
-      @defined = f
-    end
+    attr_writer :defined, :recursive
 
     def is_forward?
       @forward
@@ -2531,10 +2518,6 @@ module IDL::AST
 
     def is_recursive?
       @recursive
-    end
-
-    def recursive=(f)
-      @recursive = f
     end
 
     def walk_members
@@ -2584,7 +2567,7 @@ module IDL::AST
   end # Struct
 
   class Exception < IDL::AST::Struct
-    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
+    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure, params)
       @idltype = IDL::Type::Exception.new(self)
@@ -2661,7 +2644,7 @@ module IDL::AST
   end # Member
 
   class Union < Node
-    DEFINABLE = [IDL::AST::UnionMember, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
+    DEFINABLE = [IDL::AST::UnionMember, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :idltype
     attr_accessor :switchtype
 
@@ -2682,9 +2665,7 @@ module IDL::AST
       @defined
     end
 
-    def defined=(f)
-      @defined = f
-    end
+    attr_writer :defined, :recursive
 
     def is_forward?
       @forward
@@ -2692,10 +2673,6 @@ module IDL::AST
 
     def is_recursive?
       @recursive
-    end
-
-    def recursive=(f)
-      @recursive = f
     end
 
     def walk_members

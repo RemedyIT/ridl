@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: true
 module IDL
   class Type
     def typename
@@ -192,7 +193,7 @@ module IDL
     LongLong  = Integer.newclass(-0x8000000000000000...0x8000000000000000, 64)
 
     class Boolean < Type
-      Range = [true, false]
+      Range = [true, false].freeze
       def narrow(obj)
         typeerror(obj) unless [TrueClass, FalseClass].include? obj.class
         obj
@@ -325,7 +326,7 @@ module IDL
     end
 
     class Sequence < Type
-      attr_reader :size, :basetype
+      attr_reader :size, :basetype, :typename
       attr_accessor :recursive
 
       def length
@@ -344,10 +345,6 @@ module IDL
                               ", #{IDL::Expression::ScopedName === size ? size.node.name : size.to_s}"
                            end)
         @recursive = false
-      end
-
-      def typename
-        @typename
       end
 
       def narrow(obj)
@@ -388,7 +385,7 @@ module IDL
     end
 
     class Array < Type
-      attr_reader :basetype, :sizes
+      attr_reader :basetype, :sizes, :typename
 
       def initialize(t, sizes)
         raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
@@ -396,15 +393,11 @@ module IDL
         @basetype = t
         if sizes.nil?
           @sizes = []
-          @typename = t.typename + "[]"
+          @typename = "#{t.typename}[]"
         else
           @sizes = sizes
           @typename = t.typename + sizes.collect { |s| "[#{IDL::Expression::ScopedName === s ? s.node.name : s.to_s}]" }.join
         end
-      end
-
-      def typename
-        @typename
       end
 
       def narrow(obj)
@@ -581,15 +574,11 @@ module IDL
     end
 
     class Const < Type
-      attr_reader :type
+      attr_reader :type, :typename
 
       def initialize(t)
         @type = t
         @typename = "const #{t.typename}"
-      end
-
-      def typename
-        @typename
       end
 
       def narrow(obj)
