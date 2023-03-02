@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: true
 require 'stringio'
 require 'ridl/optparse_ext'
 require 'ridl/genfile'

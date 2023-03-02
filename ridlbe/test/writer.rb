@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: true
 module IDL
   class TestWriterBase
     def initialize(output = STDOUT, params = {}, indent = "  ")

@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: true
 require 'optparse'
 
 # Customize OptionParser RequiredArgument switch class to support

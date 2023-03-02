@@ -9,6 +9,7 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
+# frozen_string_literal: true
 require 'ridl/version'
 require 'ridl/scanner'
 require 'ridl/type'
