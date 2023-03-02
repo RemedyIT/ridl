@@ -9,7 +9,6 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 module IDL
   class TestWriterBase
     def initialize(output = STDOUT, params = {}, indent = "  ")
@@ -19,20 +18,20 @@ module IDL
       @nest = 0
     end
 
-    def print(str)
-      @output << str
+    def print(str) 
+      @output << str 
     end
 
-    def println(str = "")
-      @output << str << "\n"
+    def println(str = "")  
+      @output << str << "\n" 
     end
 
-    def printi(str = "")
-      @output << indent << str
+    def printi(str = "")   
+      @output << indent << str 
     end
 
-    def printiln(str = "")
-      @output << indent << str << "\n"
+    def printiln(str = "") 
+      @output << indent << str << "\n" 
     end
 
     def indent
@@ -233,31 +232,31 @@ module IDL
       when Expression::Operation::UnaryPlus
         s = expression_to_s(op[0])
       when Expression::Operation::UnaryMinus
-        s = "-#{expression_to_s(op[0])}"
+        s = "-" + expression_to_s(op[0])
       when Expression::Operation::UnaryNot
-        s = "~#{expression_to_s(op[0])}"
+        s = "~" + expression_to_s(op[0])
       when Expression::Operation::Or
-        s = "#{expression_to_s(op[0])} | #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " | " + expression_to_s(op[1])
       when Expression::Operation::And
-        s = "#{expression_to_s(op[0])} & #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " & " + expression_to_s(op[1])
       when Expression::Operation::LShift
-        s = "#{expression_to_s(op[0])} << #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " << " + expression_to_s(op[1])
       when Expression::Operation::RShift
-        s = "#{expression_to_s(op[0])} >> #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " >> " + expression_to_s(op[1])
       when Expression::Operation::Add
-        s = "#{expression_to_s(op[0])} + #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " + " + expression_to_s(op[1])
       when Expression::Operation::Minus
-        s = "#{expression_to_s(op[0])} - #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " - " + expression_to_s(op[1])
       when Expression::Operation::Mult
-        s = "#{expression_to_s(op[0])} * #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " * " + expression_to_s(op[1])
       when Expression::Operation::Div
-        s = "#{expression_to_s(op[0])} / #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " / " + expression_to_s(op[1])
       when Expression::Operation::Mod
-        s = "#{expression_to_s(op[0])} % #{expression_to_s(op[1])}"
+        s = expression_to_s(op[0]) + " % " + expression_to_s(op[1])
       else
         raise "unknown operation: #{exp.type.name}"
       end
-      "(#{s})"
+      "(" + s + ")"
     end
 
     def declare_struct(node)
@@ -265,7 +264,7 @@ module IDL
     end
 
     def enter_struct(node)
-      printiln("> struct #{node.lm_name}")
+      printiln("> struct " + node.lm_name)
       inc_nest
       node.members.each do |m|
         if IDL::Type::NodeType === m.idltype
@@ -364,7 +363,7 @@ module IDL
     end
 
     def enter_interface(node)
-      printiln("> interface #{node.lm_name}")
+      printiln("> interface " + node.lm_name)
       inc_nest
     end
 

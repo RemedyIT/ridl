@@ -9,6 +9,5 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 
 task default: 'help'

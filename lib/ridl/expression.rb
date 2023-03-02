@@ -9,7 +9,6 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 require 'ridl/node'
 
 module IDL
@@ -150,7 +149,7 @@ module IDL
           IDL::Type::Long, IDL::Type::ULong,
           IDL::Type::Short, IDL::Type::UShort,
           IDL::Type::Octet
-        ].freeze
+        ]
 
         def Integer2.suite_sign(_t, _v)
           [[IDL::Type::LongLong, IDL::Type::ULongLong],
@@ -179,7 +178,7 @@ module IDL
           superclass.checktype(*types)
 
           t = IDL::Type::Boolean
-          if (t1 == t && t2 != t) || (t1 != t && t2 == t)
+          if (t1 == t && t2 != t) or (t1 != t && t2 == t)
             raise "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
           end
         end
@@ -197,7 +196,7 @@ module IDL
           # it's expected that Double, LongDouble is a Float.
           s1 = IDL::Type::Float
           s2 = IDL::Type::Fixed
-          if (t1 === s1 && t2 === s2) || (t1 === s2 && t2 === s1)
+          if (t1 === s1 && t2 === s2) or (t1 === s2 && t2 === s1)
             raise "#{self.name} about #{t1.typename} and #{t2.typename} is illegal."
           end
         end
