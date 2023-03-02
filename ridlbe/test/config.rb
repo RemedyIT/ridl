@@ -19,7 +19,7 @@ module IDL
         major: 0,
         minor: 1,
         release: 0
-    }
+    }.freeze
 
     ## Configure Test backend
     #

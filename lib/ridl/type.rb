@@ -193,7 +193,7 @@ module IDL
     LongLong  = Integer.newclass(-0x8000000000000000...0x8000000000000000, 64)
 
     class Boolean < Type
-      Range = [true, false]
+      Range = [true, false].freeze
       def narrow(obj)
         typeerror(obj) unless [TrueClass, FalseClass].include? obj.class
         obj

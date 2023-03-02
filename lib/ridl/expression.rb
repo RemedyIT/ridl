@@ -150,7 +150,7 @@ module IDL
           IDL::Type::Long, IDL::Type::ULong,
           IDL::Type::Short, IDL::Type::UShort,
           IDL::Type::Octet
-        ]
+        ].freeze
 
         def Integer2.suite_sign(_t, _v)
           [[IDL::Type::LongLong, IDL::Type::ULongLong],

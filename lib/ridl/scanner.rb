@@ -360,29 +360,29 @@ module IDL
       raise e
     end
 
-    LFCR = [ ("\n"), ("\r") ]
-    SPACES = [ ("\ "), ("\t") ]
+    LFCR = [ ("\n"), ("\r") ].freeze
+    SPACES = [ ("\ "), ("\t") ].freeze
     WHITESPACE = SPACES + LFCR
 
-    ANNOTATION = '@'
-    ANNOTATION_STR = '@'
+    ANNOTATION = '@'.freeze
+    ANNOTATION_STR = '@'.freeze
 
     BREAKCHARS = [
       '(', ')', '[', ']', '{', '}',
       '^', '~',
       '*', '%', '&', '|',
       '<', '=', '>',
-      ',', ';' ]
+      ',', ';' ].freeze
 
-    SHIFTCHARS = [ '<', '>' ]
+    SHIFTCHARS = [ '<', '>' ].freeze
 
     DIGITS = ('0'..'9').to_a
     ALPHA_LC = ('a'..'z').to_a
     ALPHA_UC = ('A'..'Z').to_a
     OCTALS = ('0'..'7').to_a
     HEXCHARS = DIGITS + ('a'..'f').to_a + ('A'..'F').to_a
-    SIGNS = ['-', '+']
-    DOT = '.'
+    SIGNS = ['-', '+'].freeze
+    DOT = '.'.freeze
 
     IDCHARS = ['_' ] + ALPHA_LC + ALPHA_UC
     FULL_IDCHARS = IDCHARS + DIGITS
@@ -409,12 +409,12 @@ module IDL
       # :wide_character_literal,
       :fixed_pt_literal,
       :floating_pt_literal,
-      :boolean_literal]
+      :boolean_literal].freeze
 
     BOOL_LITERALS = {
         false: false,
         true: true
-      }
+      }.freeze
 
     def is_literal?(o)
       LITERALS.include?(o)

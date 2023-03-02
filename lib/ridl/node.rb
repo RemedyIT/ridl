@@ -11,8 +11,8 @@
 #--------------------------------------------------------------------
 # frozen_string_literal: true
 module IDL::AST
-  REPO_ID_XCHARS = ['.', '-', '_']
-  REPO_ID_RE = /^[#{('a'..'z').to_a.join}#{('A'..'Z').to_a.join}#{('0'..'9').to_a.join}\.\-_\/]+$/
+  REPO_ID_XCHARS = ['.', '-', '_'].freeze
+  REPO_ID_RE = /^[#{('a'..'z').to_a.join}#{('A'..'Z').to_a.join}#{('0'..'9').to_a.join}\.\-_\/]+$/.freeze
 
   class Annotation
     def initialize(id, fields = {})
@@ -387,7 +387,7 @@ module IDL::AST
       IDL::AST::Module, IDL::AST::Interface, IDL::AST::Valuebox, IDL::AST::Valuetype, IDL::AST::Const, IDL::AST::Struct,
       IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef, IDL::AST::Include,
       IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector
-    ]
+    ].freeze
     attr_reader :anchor, :next, :template, :template_params
 
     def initialize(_name, _enclosure, params)
@@ -694,7 +694,7 @@ module IDL::AST
       IDL::AST::Const, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef,
       IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector,
       IDL::AST::TemplateParam, IDL::AST::TemplateModuleReference
-    ]
+    ].freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, _params)
@@ -960,7 +960,7 @@ module IDL::AST
 
   class Interface < Derivable
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute,
-                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
+                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :bases, :idltype
 
     def initialize(_name, _enclosure, params)
@@ -1146,7 +1146,7 @@ module IDL::AST
   end # Interface
 
   class ComponentBase < Derivable
-    DEFINABLE = []
+    DEFINABLE = [].freeze
     attr_reader :base, :interfaces, :idltype
 
     def initialize(_name, _enclosure, params)
@@ -1314,7 +1314,7 @@ module IDL::AST
 
   class Home < ComponentBase
     DEFINABLE = [IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::Initializer, IDL::AST::Finder,
-                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
+                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :component, :primarykey
 
     def initialize(_name, _enclosure, params)
@@ -1387,7 +1387,7 @@ module IDL::AST
   end # Home
 
   class Connector < ComponentBase
-    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
+    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port].freeze
 
     def initialize(_name, _enclosure, params)
       @idltype = IDL::Type::Component.new(self)
@@ -1470,7 +1470,7 @@ module IDL::AST
   end # Connector
 
   class Component < ComponentBase
-    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
+    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port].freeze
 
     def initialize(_name, _enclosure, params)
       @idltype = IDL::Type::Component.new(self)
@@ -1558,7 +1558,7 @@ module IDL::AST
   end # Component
 
   class Porttype < Node
-    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port]
+    DEFINABLE = [IDL::AST::Attribute, IDL::AST::Port].freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, _params)
@@ -1580,8 +1580,8 @@ module IDL::AST
   end # Porttype
 
   class Port < Leaf
-    PORTTYPES = [:facet, :receptacle, :emitter, :publisher, :consumer, :port, :mirrorport]
-    PORT_MIRRORS = {facet: :receptacle, receptacle: :facet}
+    PORTTYPES = [:facet, :receptacle, :emitter, :publisher, :consumer, :port, :mirrorport].freeze
+    PORT_MIRRORS = {facet: :receptacle, receptacle: :facet}.freeze
     EXTPORTDEF_ANNOTATION = 'ExtendedPortDef'
     attr_reader :idltype, :porttype
 
@@ -1697,7 +1697,7 @@ module IDL::AST
 
   class Valuetype < Derivable
     DEFINABLE = [IDL::AST::Include, IDL::AST::Const, IDL::AST::Operation, IDL::AST::Attribute, IDL::AST::StateMember, IDL::AST::Initializer,
-                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator]
+                 IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :bases, :interfaces, :idltype
 
     def initialize(_name, _enclosure, params)
@@ -2232,7 +2232,7 @@ module IDL::AST
       in: IN,
       out: OUT,
       inout: INOUT
-    }
+    }.freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, params)
@@ -2286,7 +2286,7 @@ module IDL::AST
   end # Parameter
 
   class Operation < Node
-    DEFINABLE = [IDL::AST::Parameter]
+    DEFINABLE = [IDL::AST::Parameter].freeze
     attr_reader :idltype, :oneway, :raises
     attr_accessor :context
 
@@ -2497,7 +2497,7 @@ module IDL::AST
   end # Attribute
 
   class Struct < Node
-    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
+    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :idltype
 
     def initialize(_name, _enclosure, params)
@@ -2571,7 +2571,7 @@ module IDL::AST
   end # Struct
 
   class Exception < IDL::AST::Struct
-    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
+    DEFINABLE = [IDL::AST::Member, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure, params)
       @idltype = IDL::Type::Exception.new(self)
@@ -2648,7 +2648,7 @@ module IDL::AST
   end # Member
 
   class Union < Node
-    DEFINABLE = [IDL::AST::UnionMember, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator]
+    DEFINABLE = [IDL::AST::UnionMember, IDL::AST::Struct, IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator].freeze
     attr_reader :idltype
     attr_accessor :switchtype
 
