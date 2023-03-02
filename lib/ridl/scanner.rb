@@ -76,7 +76,7 @@ module IDL
         @fwd = @src.getc unless @src.nil?
         @mark << cur unless @mark.nil?
         if [nil, "\n", "\r"].include? @bwd
-          if @bwd == "\r" and cur == "\n"
+          if (@bwd == "\r") && (cur == "\n")
           else
             @pos.line += 1
             @pos.column = 1
@@ -86,7 +86,7 @@ module IDL
         end
 
         if false
-          if !@bwd.nil? or cur.nil? or @fwd.nil?
+          if !@bwd.nil? || cur.nil? || @fwd.nil?
           printf("%c(%02x), %c(%02x), %c(%02x) @(l:%d,c:%d)\n",
                 @bwd, @bwd, cur, cur, @fwd, @fwd, @pos.line, @pos.column)
           end
@@ -551,7 +551,7 @@ module IDL
       end
 
       # preprocessor check
-      if @defined.has_key?(s2) and !is_expanded?(s2)
+      if @defined.has_key?(s2) && !is_expanded?(s2)
         # enter expansion as new source
         enter_expansion(@defined[s2], s2)
         # call next_token to parse expanded source
@@ -973,7 +973,7 @@ module IDL
       while true
         ch = @in.getc
         if ch.nil?
-          if !@ifdef.empty? and !in_expansion?
+          if !@ifdef.empty? && !in_expansion?
             parse_error 'mismatched #if/#endif'
           end
           if more_source?

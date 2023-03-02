@@ -148,7 +148,7 @@ module IDL::AST
       end
       id_arr = id.split(':')
       if @repo_ver
-        if id_arr.first != 'IDL' or id_arr.last != @repo_ver
+        if (id_arr.first != 'IDL') || (id_arr.last != @repo_ver)
           raise "supplied repository ID (#{id}) does not match previously assigned repository version for #{self.scoped_name} = #{@repo_ver}"
         end
       end
@@ -156,7 +156,7 @@ module IDL::AST
       if id_arr.first == 'IDL'
         id_arr.shift
         id_str = id_arr.shift.to_s
-        raise 'ID identifiers should not start or end with \'/\'' if id_str[0, 1] == '/' or id_str[-1, 1] == '/'
+        raise 'ID identifiers should not start or end with \'/\'' if (id_str[0, 1] == '/') || (id_str[-1, 1] == '/')
         raise "ID identifiers should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(id_str[0, 1])
         raise 'Invalid ID! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed for identifiers' unless REPO_ID_RE =~ id_str
       end
@@ -181,7 +181,7 @@ module IDL::AST
 
     def prefix=(pfx)
       unless pfx.to_s.empty?
-        raise 'ID prefix should not start or end with \'/\'' if pfx[0, 1] == '/' or pfx[-1, 1] == '/'
+        raise 'ID prefix should not start or end with \'/\'' if (pfx[0, 1] == '/') || (pfx[-1, 1] == '/')
         raise "ID prefix should not start with one of '#{REPO_ID_XCHARS.join("', '")}'" if REPO_ID_XCHARS.include?(pfx[0, 1])
         raise 'Invalid ID prefix! Only a..z, A..Z, 0..9, \'.\', \'-\', \'_\' or \'\/\' allowed' unless REPO_ID_RE =~ pfx
       end
@@ -319,7 +319,7 @@ module IDL::AST
     def search_self(_name)
       key = _name.downcase.intern
       node = @introduced[key]
-      if !node.nil? and node.name != _name
+      if !node.nil? && (node.name != _name)
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
 
@@ -328,7 +328,7 @@ module IDL::AST
 
     def search_enclosure(_name)
       node = search_self(_name)
-      if node.nil? and !@enclosure.nil?
+      if node.nil? && !@enclosure.nil?
         node = @enclosure.search_enclosure(_name)
       end
       node
@@ -606,7 +606,7 @@ module IDL::AST
     def search_links(_name)
       _key = _name.downcase.intern
       node = @introduced[_key]
-      if !node.nil? and node.name != _name
+      if !node.nil? && (node.name != _name)
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
 
@@ -1037,16 +1037,16 @@ module IDL::AST
           unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if rtc.node.is_local? and !self.is_local?
+          if rtc.node.is_local? && !self.is_local?
             raise "#{typename} #{scoped_lm_name} cannot inherit from 'local' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if rtc.node.is_pseudo? and !self.is_pseudo?
+          if rtc.node.is_pseudo? && !self.is_pseudo?
             raise "#{typename} #{scoped_lm_name} cannot inherit from 'pseudo' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_abstract? and !rtc.node.is_abstract?
+          if self.is_abstract? && !rtc.node.is_abstract?
             raise "'abstract' #{typename} #{scoped_lm_name} cannot inherit from non-'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_local? and rtc.node.is_abstract?
+          if self.is_local? && rtc.node.is_abstract?
             raise "'local' #{typename} #{scoped_lm_name} cannot inherit from 'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if self.has_base?(rtc.node)
@@ -1850,17 +1850,17 @@ module IDL::AST
           unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_abstract? and !rtc.node.is_abstract?
+          if self.is_abstract? && !rtc.node.is_abstract?
             raise "'abstract' #{typename} #{scoped_lm_name} cannot inherit from non-'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if (!self.is_custom?) and rtc.node.is_custom?
+          if (!self.is_custom?) && rtc.node.is_custom?
             raise "non-'custom' #{typename} #{scoped_lm_name} cannot inherit from 'custom' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if @resolved_bases.include?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
 
-          if (!rtc.node.is_abstract?) and !@bases.empty?
+          if (!rtc.node.is_abstract?) && !@bases.empty?
             raise "concrete basevalue #{tc.node.typename} #{tc.node.scoped_lm_name} MUST " +
                   "be first and only non-abstract in inheritance list for #{typename} #{scoped_lm_name}"
           end
@@ -1879,7 +1879,7 @@ module IDL::AST
 
           rif_ = if_.resolved_type
           ### @@TODO@@ further validation
-          if (!rif_.node.is_abstract?) and !@interfaces.empty?
+          if (!rif_.node.is_abstract?) && !@interfaces.empty?
             raise "concrete interface '#{rif_.node.scoped_lm_name}' inheritance not allowed for #{typename} #{scoped_lm_name}. Valuetypes can only inherit (support) a single concrete interface."
           end
           if (!rif_.node.is_abstract?) && (!is_interface_compatible?(rif_.node))
@@ -1913,9 +1913,9 @@ module IDL::AST
     end
 
     def walk_members
-      @children.each { |c| yield(c) unless c.is_a?(IDL::AST::StateMember) or
-                                           c.is_a?(IDL::AST::Operation) or
-                                           c.is_a?(IDL::AST::Attribute) or
+      @children.each { |c| yield(c) unless c.is_a?(IDL::AST::StateMember) ||
+                                           c.is_a?(IDL::AST::Operation) ||
+                                           c.is_a?(IDL::AST::Attribute) ||
                                            c.is_a?(IDL::AST::Initializer)
       }
     end
