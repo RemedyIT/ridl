@@ -101,9 +101,7 @@ module IDL
       @options = nil
     end
 
-    def backend
-      @backend
-    end
+    attr_reader :backend
 
     def options
       @options || @initopts

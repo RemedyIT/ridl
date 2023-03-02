@@ -314,9 +314,7 @@ module IDL::AST
     end
 
   protected
-    def children
-      @children
-    end
+    attr_reader :children
 
     def search_self(_name)
       key = _name.downcase.intern
@@ -1144,9 +1142,7 @@ module IDL::AST
       end
     end
 
-    def resolved_bases
-      @resolved_bases
-    end
+    attr_reader :resolved_bases
   end # Interface
 
   class ComponentBase < Derivable
@@ -1790,9 +1786,7 @@ module IDL::AST
       @defined
     end
 
-    def defined=(f)
-      @defined = f
-    end
+    attr_writer :defined
 
     def is_forward?
       @forward
@@ -1802,9 +1796,7 @@ module IDL::AST
       @recursive
     end
 
-    def recursive=(f)
-      @recursive = f
-    end
+    attr_writer :recursive
 
     def is_local?(recurstk = [])
       # not local if forward decl or recursion detected
@@ -1995,9 +1987,7 @@ module IDL::AST
       @children.each { |c| yield(c) }
     end
 
-    def resolved_bases
-      @resolved_bases
-    end
+    attr_reader :resolved_bases
 
     def concrete_bases(instantiation_context)
       # collect all bases and resolve any template param types
@@ -2522,9 +2512,7 @@ module IDL::AST
       @defined
     end
 
-    def defined=(f)
-      @defined = f
-    end
+    attr_writer :defined
 
     def is_forward?
       @forward
@@ -2534,9 +2522,7 @@ module IDL::AST
       @recursive
     end
 
-    def recursive=(f)
-      @recursive = f
-    end
+    attr_writer :recursive
 
     def walk_members
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::Member }
@@ -2683,9 +2669,7 @@ module IDL::AST
       @defined
     end
 
-    def defined=(f)
-      @defined = f
-    end
+    attr_writer :defined
 
     def is_forward?
       @forward
@@ -2695,9 +2679,7 @@ module IDL::AST
       @recursive
     end
 
-    def recursive=(f)
-      @recursive = f
-    end
+    attr_writer :recursive
 
     def walk_members
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::UnionMember }

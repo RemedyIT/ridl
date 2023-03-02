@@ -347,9 +347,7 @@ module IDL
         @recursive = false
       end
 
-      def typename
-        @typename
-      end
+      attr_reader :typename
 
       def narrow(obj)
         typeerror(obj)
@@ -404,9 +402,7 @@ module IDL
         end
       end
 
-      def typename
-        @typename
-      end
+      attr_reader :typename
 
       def narrow(obj)
         typeerror(obj)
@@ -589,9 +585,7 @@ module IDL
         @typename = "const #{t.typename}"
       end
 
-      def typename
-        @typename
-      end
+      attr_reader :typename
 
       def narrow(obj)
         @type.narrow(obj)
