@@ -635,7 +635,7 @@ class Delegator
     if _expression.is_template?
       _expression
     else
-      if not ::Integer === _expression.value
+      if !(::Integer === _expression.value)
         raise "must be integer: #{_expression.value.inspect}"
       elsif _expression.value.negative?
         raise "must be positive integer: #{_expression.value.to_s}"

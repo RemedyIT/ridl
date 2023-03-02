@@ -86,7 +86,7 @@ module IDL
         end
 
         if false
-          if not @bwd.nil? or cur.nil? or @fwd.nil?
+          if !@bwd.nil? or cur.nil? or @fwd.nil?
           printf("%c(%02x), %c(%02x), %c(%02x) @(l:%d,c:%d)\n",
                 @bwd, @bwd, cur, cur, @fwd, @fwd, @pos.line, @pos.column)
           end

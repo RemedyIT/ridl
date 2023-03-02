@@ -319,7 +319,7 @@ module IDL::AST
     def search_self(_name)
       key = _name.downcase.intern
       node = @introduced[key]
-      if not node.nil? and node.name != _name
+      if !node.nil? and node.name != _name
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
 
@@ -328,7 +328,7 @@ module IDL::AST
 
     def search_enclosure(_name)
       node = search_self(_name)
-      if node.nil? and not @enclosure.nil?
+      if node.nil? and !@enclosure.nil?
         node = @enclosure.search_enclosure(_name)
       end
       node
@@ -606,7 +606,7 @@ module IDL::AST
     def search_links(_name)
       _key = _name.downcase.intern
       node = @introduced[_key]
-      if not node.nil? and node.name != _name
+      if !node.nil? and node.name != _name
         raise "\"#{_name}\" clashed with \"#{node.name}\"."
       end
 
@@ -1020,7 +1020,7 @@ module IDL::AST
     end
 
     def is_forward?
-      not @defined
+      !@defined
     end
 
     def add_bases(inherits_)
@@ -1037,13 +1037,13 @@ module IDL::AST
           unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if rtc.node.is_local? and not self.is_local?
+          if rtc.node.is_local? and !self.is_local?
             raise "#{typename} #{scoped_lm_name} cannot inherit from 'local' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if rtc.node.is_pseudo? and not self.is_pseudo?
+          if rtc.node.is_pseudo? and !self.is_pseudo?
             raise "#{typename} #{scoped_lm_name} cannot inherit from 'pseudo' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_abstract? and not rtc.node.is_abstract?
+          if self.is_abstract? and !rtc.node.is_abstract?
             raise "'abstract' #{typename} #{scoped_lm_name} cannot inherit from non-'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if self.is_local? and rtc.node.is_abstract?
@@ -1497,7 +1497,7 @@ module IDL::AST
     end
 
     def is_forward?
-      not @defined
+      !@defined
     end
 
     def set_base(parent)
@@ -1821,7 +1821,7 @@ module IDL::AST
     end
 
     def has_concrete_base?
-      (not @resolved_bases.empty?) and (not @resolved_bases.first.is_abstract?)
+      (!@resolved_bases.empty?) and (!@resolved_bases.first.is_abstract?)
     end
 
     def supports_concrete_interface?
@@ -1852,17 +1852,17 @@ module IDL::AST
           unless rtc.node.is_defined?
             raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if self.is_abstract? and not rtc.node.is_abstract?
+          if self.is_abstract? and !rtc.node.is_abstract?
             raise "'abstract' #{typename} #{scoped_lm_name} cannot inherit from non-'abstract' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
-          if (not self.is_custom?) and rtc.node.is_custom?
+          if (!self.is_custom?) and rtc.node.is_custom?
             raise "non-'custom' #{typename} #{scoped_lm_name} cannot inherit from 'custom' #{tc.node.typename} #{tc.node.scoped_lm_name}"
           end
           if @resolved_bases.include?(rtc.node)
             raise "#{typename} #{scoped_lm_name} cannot inherit from #{tc.node.typename} #{tc.node.scoped_lm_name} multiple times"
           end
 
-          if (not rtc.node.is_abstract?) and !@bases.empty?
+          if (!rtc.node.is_abstract?) and !@bases.empty?
             raise "concrete basevalue #{tc.node.typename} #{tc.node.scoped_lm_name} MUST " +
                   "be first and only non-abstract in inheritance list for #{typename} #{scoped_lm_name}"
           end
@@ -1881,10 +1881,10 @@ module IDL::AST
 
           rif_ = if_.resolved_type
           ### @@TODO@@ further validation
-          if (not rif_.node.is_abstract?) and !@interfaces.empty?
+          if (!rif_.node.is_abstract?) and !@interfaces.empty?
             raise "concrete interface '#{rif_.node.scoped_lm_name}' inheritance not allowed for #{typename} #{scoped_lm_name}. Valuetypes can only inherit (support) a single concrete interface."
           end
-          if (not rif_.node.is_abstract?) && (not is_interface_compatible?(rif_.node))
+          if (!rif_.node.is_abstract?) && (!is_interface_compatible?(rif_.node))
             raise "#{typename} #{scoped_lm_name} cannot support concrete interface #{rif_.node.scoped_lm_name} because it does not derive from inherited concrete interfaces"
           end
 
