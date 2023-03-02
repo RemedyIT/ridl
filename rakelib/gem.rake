@@ -9,7 +9,6 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 require 'rubygems'
 begin
   require 'rubygems/builder'

@@ -9,7 +9,6 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 
 (Dir.glob(File.join(File.dirname(__FILE__), '*.rb')) - [__FILE__]).each do |f|
   require f

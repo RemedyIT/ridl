@@ -9,7 +9,6 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 require 'stringio'
 require 'ridl/optparse_ext'
 require 'ridl/genfile'
@@ -28,7 +27,8 @@ module IDL
       namespace: nil,
       search_incpath: false,
       backend: nil,
-      macros: {}
+      macros: {
+      }
   })
   CORE_OPTIONS = OPTIONS.keys
 
@@ -100,7 +100,9 @@ module IDL
       @options = nil
     end
 
-    attr_reader :backend
+    def backend
+      @backend
+    end
 
     def options
       @options || @initopts

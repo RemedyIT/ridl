@@ -9,7 +9,6 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 require 'optparse'
 
 # Customize OptionParser RequiredArgument switch class to support
@@ -24,7 +23,7 @@ require 'optparse'
 class OptionParser::Switch::RequiredArgument
   def initialize(pattern = nil, conv = nil,
                  short = nil, long = nil, arg = nil,
-                 desc = ([] if short || long), block = nil, &_block)
+                 desc = ([] if short or long), block = nil, &_block)
     block ||= _block
     super(pattern, conv, short, long, arg, desc, block)
     if (@long.nil? || @long.empty?) && (@arg =~ /^(<.*>|[\{].*[\}])((=|\s).*)?/)
@@ -63,7 +62,7 @@ module IDL
             end
 
             def with(param, options = {})
-              @set.define_params({ param => options })
+              @set.define_params({param => options})
             end
 
             def without(*params)
@@ -266,7 +265,7 @@ module IDL
         end
 
         def define_param_set(id, options = {}, &block)
-          modify_group :default, { test: true } do |grpcfg|
+          modify_group :default, {test: true} do |grpcfg|
             grpcfg.define_param_set(id, options, &block)
           end
         end
@@ -274,15 +273,15 @@ module IDL
         alias :for_params :define_param_set
 
         def on_exec(options = {}, &block)
-          modify_group :default, { test: true } do |grpcfg|
-            grpcfg.modify_param_set(:default, options.merge({ all_params: true })) do |pscfg|
+          modify_group :default, {test: true} do |grpcfg|
+            grpcfg.modify_param_set(:default, options.merge({all_params: true})) do |pscfg|
               pscfg.on_exec(&block)
             end
           end
         end
 
         def define_param(id, options = {}, &block)
-          modify_group :default, { test: true } do |grpcfg|
+          modify_group :default, {test: true} do |grpcfg|
             grpcfg.define_param_set("#{id}_set", options) do |pscfg|
               pscfg.with(id)
               pscfg.on_exec(&block)

@@ -9,7 +9,6 @@
 #
 # Copyright (c) Remedy IT Expertise BV
 #--------------------------------------------------------------------
-# frozen_string_literal: true
 require 'ridl/node'
 require 'ridl/expression'
 
@@ -217,7 +216,7 @@ class Delegator
     params = { filename: s, fullpath: fullpath }
     params[:defined] = true
     params[:preprocessed] = @preprocess
-    @cur = @cur.define(IDL::AST::Include, "$INC:#{s}", params)
+    @cur = @cur.define(IDL::AST::Include, "$INC:" + s, params)
     @includes[s] = @cur
     set_last
     @cur
@@ -232,7 +231,7 @@ class Delegator
     params = { filename: s, fullpath: @includes[s].fullpath }
     params[:defined] = false
     params[:preprocessed] = @includes[s].is_preprocessed?
-    @cur.define(IDL::AST::Include, "$INC:#{s}", params)
+    @cur.define(IDL::AST::Include, "$INC:" + s, params)
   end
 
   def pragma_prefix(s)
@@ -635,7 +634,7 @@ class Delegator
     if _expression.is_template?
       _expression
     else
-      if !(::Integer === _expression.value)
+      if not ::Integer === _expression.value
         raise "must be integer: #{_expression.value.inspect}"
       elsif _expression.value.negative?
         raise "must be positive integer: #{_expression.value}"
