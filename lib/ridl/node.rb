@@ -1786,7 +1786,7 @@ module IDL::AST
       @defined
     end
 
-    attr_writer :defined
+    attr_writer :defined, :recursive
 
     def is_forward?
       @forward
@@ -1795,8 +1795,6 @@ module IDL::AST
     def is_recursive?
       @recursive
     end
-
-    attr_writer :recursive
 
     def is_local?(recurstk = [])
       # not local if forward decl or recursion detected
@@ -2512,7 +2510,7 @@ module IDL::AST
       @defined
     end
 
-    attr_writer :defined
+    attr_writer :defined, :recursive
 
     def is_forward?
       @forward
@@ -2521,8 +2519,6 @@ module IDL::AST
     def is_recursive?
       @recursive
     end
-
-    attr_writer :recursive
 
     def walk_members
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::Member }
@@ -2669,7 +2665,7 @@ module IDL::AST
       @defined
     end
 
-    attr_writer :defined
+    attr_writer :defined, :recursive
 
     def is_forward?
       @forward
@@ -2678,8 +2674,6 @@ module IDL::AST
     def is_recursive?
       @recursive
     end
-
-    attr_writer :recursive
 
     def walk_members
       @children.each { |m| yield(m) unless m.is_a? IDL::AST::UnionMember }

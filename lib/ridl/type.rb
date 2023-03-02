@@ -326,7 +326,7 @@ module IDL
     end
 
     class Sequence < Type
-      attr_reader :size, :basetype
+      attr_reader :size, :basetype, :typename
       attr_accessor :recursive
 
       def length
@@ -346,8 +346,6 @@ module IDL
                            end)
         @recursive = false
       end
-
-      attr_reader :typename
 
       def narrow(obj)
         typeerror(obj)
@@ -387,7 +385,7 @@ module IDL
     end
 
     class Array < Type
-      attr_reader :basetype, :sizes
+      attr_reader :basetype, :sizes, :typename
 
       def initialize(t, sizes)
         raise "Anonymous type definitions are not allowed!" if t.is_anonymous?
@@ -401,8 +399,6 @@ module IDL
           @typename = t.typename + sizes.collect { |s| "[#{IDL::Expression::ScopedName === s ? s.node.name : s.to_s}]" }.join
         end
       end
-
-      attr_reader :typename
 
       def narrow(obj)
         typeerror(obj)
@@ -578,14 +574,12 @@ module IDL
     end
 
     class Const < Type
-      attr_reader :type
+      attr_reader :type, :typename
 
       def initialize(t)
         @type = t
         @typename = "const #{t.typename}"
       end
-
-      attr_reader :typename
 
       def narrow(obj)
         @type.narrow(obj)
