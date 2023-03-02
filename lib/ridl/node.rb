@@ -195,7 +195,7 @@ module IDL::AST
       if @repo_id.nil?
         @repo_ver = "1.0" unless @repo_ver
         format("IDL:%s%s:%s",
-                if @prefix.empty? then "" else @prefix + "/" end,
+                if @prefix.empty? then "" else "#{@prefix}/" end,
                 self.scopes.collect { |s| s.name }.join("/"),
                 @repo_ver)
       else

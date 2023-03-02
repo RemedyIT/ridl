@@ -396,7 +396,7 @@ module IDL
         @basetype = t
         if sizes.nil?
           @sizes = []
-          @typename = t.typename + "[]"
+          @typename = "#{t.typename}[]"
         else
           @sizes = sizes
           @typename = t.typename + sizes.collect { |s| "[#{IDL::Expression::ScopedName === s ? s.node.name : s.to_s}]" }.join
