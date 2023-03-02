@@ -462,7 +462,7 @@ module IDL
           # identifier or value (in case of single value annotation) expected
           token = next_token
           if token.first == ')' # marker annotation; leave body empty
-            annotation_body = { }
+            annotation_body = {}
           else
             parse_error 'annotation member expected!' unless token.first == :identifier || is_literal?(token.first)
             s1 = token.last

@@ -1581,7 +1581,7 @@ module IDL::AST
 
   class Port < Leaf
     PORTTYPES = [:facet, :receptacle, :emitter, :publisher, :consumer, :port, :mirrorport].freeze
-    PORT_MIRRORS = {facet: :receptacle, receptacle: :facet}.freeze
+    PORT_MIRRORS = { facet: :receptacle, receptacle: :facet }.freeze
     EXTPORTDEF_ANNOTATION = 'ExtendedPortDef'
     attr_reader :idltype, :porttype
 
@@ -1623,13 +1623,13 @@ module IDL::AST
     end
 
     def expanded_copy(name_pfx, enc)
-      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, {type: @idltype, porttype: @porttype})
+      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, { type: @idltype, porttype: @porttype })
       p.annotations << Annotation.new(EXTPORTDEF_ANNOTATION, { extended_port_name: name_pfx, base_name: self.name, mirror: false })
       p # return expanded copy
     end
 
     def expanded_mirror_copy(name_pfx, enc)
-      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, {type: @idltype, porttype: PORT_MIRRORS[@porttype]})
+      p = IDL::AST::Port.new("#{name_pfx}_#{self.name}", enc, { type: @idltype, porttype: PORT_MIRRORS[@porttype] })
       p.annotations << Annotation.new(EXTPORTDEF_ANNOTATION, { extended_port_name: name_pfx, base_name: self.name, mirror: true })
       p # return expanded copy
     end
@@ -2124,7 +2124,7 @@ module IDL::AST
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @params = (params[:params] || []).collect do |(ptype, pname)|
-        IDL::AST::Parameter.new(pname, self, {attribute: :in, type: ptype})
+        IDL::AST::Parameter.new(pname, self, { attribute: :in, type: ptype })
       end
       @raises = []
       self.raises = params[:raises]
@@ -2473,7 +2473,7 @@ module IDL::AST
     end
 
     def expanded_copy(name_pfx, enc)
-      att = IDL::AST::Attribute.new("#{name_pfx}_#{self.name}", enc, {type: @idltype, readonly: @readonly})
+      att = IDL::AST::Attribute.new("#{name_pfx}_#{self.name}", enc, { type: @idltype, readonly: @readonly })
       att.get_raises = @get_raises unless @get_raises.empty?
       att.set_raises = @set_raises unless @set_raises.empty?
       att

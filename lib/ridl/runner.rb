@@ -28,8 +28,7 @@ module IDL
       namespace: nil,
       search_incpath: false,
       backend: nil,
-      macros: {
-      }
+      macros: {}
   })
   CORE_OPTIONS = OPTIONS.keys
 
