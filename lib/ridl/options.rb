@@ -67,7 +67,7 @@ module IDL
 
     def load(rcpath)
       IDL.log(3, "Loading #{RIDLRC} from #{rcpath}")
-      _cfg = JSON.parse(IO.read(rcpath))
+      _cfg = JSON.parse(File.read(rcpath))
       IDL.log(4, "Read from #{rcpath}: [#{_cfg}]")
       _rcdir = File.dirname(rcpath)
       # handle automatic env var expansion in ridl be_paths
