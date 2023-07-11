@@ -28,7 +28,8 @@ module IDL
       search_incpath: false,
       backend: nil,
       macros: {
-      }
+      },
+      idlversion: 3
   })
   CORE_OPTIONS = OPTIONS.keys
 
@@ -364,6 +365,11 @@ module IDL
               'Set parser debug mode. Do NOT do this at home!',
               'Default: off') { |_|
         self.options[:debug] = true
+      }
+      opts.on('--idl-version=VERSION', Integer,
+              'Set IDL version',
+              'Default: 3') { |v|
+        self.options[:idlversion] = v
       }
       opts.on('--search-includepath',
               'Use include paths to find main IDL source.',
