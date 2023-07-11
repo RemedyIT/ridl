@@ -281,7 +281,7 @@ module IDL
     def initialize(src, directiver, params = {})
       @includepaths = params[:includepaths] || []
       @xincludepaths = params[:xincludepaths] || []
-      @idlversion = params[:idlversion] || 3
+      @idlversion = params[:idlversion]
       @stack = []
       @expansions = []
       @prefix = nil
