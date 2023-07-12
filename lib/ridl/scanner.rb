@@ -396,7 +396,7 @@ module IDL
       exception emits enum eventtype factory FALSE finder fixed float getraises home import in inout interface local
       long manages mirrorport module multiple native Object octet oneway out port porttype primarykey private provides
       public publishes raises readonly setraises sequence short string struct supports switch TRUE truncatable typedef
-      typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring
+      typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring int8 int16 int32 int64 uint16 uint32 uint64
     ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a
  h }
 
