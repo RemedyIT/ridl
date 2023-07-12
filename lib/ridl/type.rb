@@ -388,7 +388,7 @@ module IDL
     end
 
     class Map < Type
-      attr_reader :size, :basetype
+      attr_reader :size, :keytype, :valuetype
       attr_accessor :recursive
 
       def length
