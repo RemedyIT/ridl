@@ -401,7 +401,7 @@ module IDL
         @keytype = key
         @valuetype = value
         @size = size
-        @typename = format("map<%s,%s%s>", key.typename, value.typename
+        @typename = format("map<%s,%s%s>", key.typename, value.typename,
                            if @size.nil? then
                               ""
                            else
