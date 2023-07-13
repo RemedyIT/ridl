@@ -608,8 +608,6 @@ class Delegator
         Type::Long,
         Type::LongLong,
         Type::UTinyShort,
-        Type::UShort,
-        Type::ULong,
         Type::ULongLong
       ].detect { |t| t::Range === _value }
       if _type.nil?
