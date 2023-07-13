@@ -148,13 +148,15 @@ module IDL
           IDL::Type::LongLong, IDL::Type::ULongLong,
           IDL::Type::Long, IDL::Type::ULong,
           IDL::Type::Short, IDL::Type::UShort,
+          IDL::Type::TinyShort, IDL::Type::UTinyShort,
           IDL::Type::Octet
         ]
 
         def Integer2.suite_sign(_t, _v)
           [[IDL::Type::LongLong, IDL::Type::ULongLong],
             [IDL::Type::Long,     IDL::Type::ULong],
-            [IDL::Type::Short,    IDL::Type::UShort]
+            [IDL::Type::Short,    IDL::Type::UShort],
+            [IDL::Type::TinyShort, IDL::Type::UTinyShort]
 ].each do |t|
             next unless t.include? _t
 
