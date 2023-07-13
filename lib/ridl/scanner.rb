@@ -83,13 +83,6 @@ module IDL
         else
           @pos.column += 1
         end
-
-        if false
-          if not @bwd.nil? or cur.nil? or @fwd.nil?
-          printf("%c(%02x), %c(%02x), %c(%02x) @(l:%d,c:%d)\n",
-                @bwd, @bwd, cur, cur, @fwd, @fwd, @pos.line, @pos.column)
-          end
-        end
         @bwd = cur
       end
 
@@ -221,10 +214,67 @@ module IDL
       end
     end
 
+    LFCR = [ ("\n"), ("\r") ]
+    SPACES = [ ("\ "), ("\t") ]
+    WHITESPACE = SPACES + LFCR
+
+    ANNOTATION = '@'
+    ANNOTATION_STR = '@'
+
+    BREAKCHARS = [
+      '(', ')', '[', ']', '{', '}',
+      '^', '~',
+      '*', '%', '&', '|',
+      '<', '=', '>',
+      ',', ';' ]
+
+    SHIFTCHARS = [ '<', '>' ]
+
+    DIGITS = ('0'..'9').to_a
+    ALPHA_LC = ('a'..'z').to_a
+    ALPHA_UC = ('A'..'Z').to_a
+    OCTALS = ('0'..'7').to_a
+    HEXCHARS = DIGITS + ('a'..'f').to_a + ('A'..'F').to_a
+    SIGNS = ['-', '+']
+    DOT = '.'
+
+    IDCHARS = ['_' ] + ALPHA_LC + ALPHA_UC
+    FULL_IDCHARS = IDCHARS + DIGITS
+
+    ESCTBL = CharRegistry.new({
+      n: "\n", t: "\t", v: "\v", b: "\b",
+      r: "\r", f: "\f", a: "\a"
+    })
+
+    KEYWORDS = %w(
+      abstract alias any attribute boolean case char component connector const consumes context custom default double
+      exception emits enum eventtype factory FALSE finder fixed float getraises home import in inout interface local
+      long manages mirrorport module multiple native Object octet oneway out port porttype primarykey private provides
+      public publishes raises readonly setraises sequence short string struct supports switch TRUE truncatable typedef
+      typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring
+    ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a
+ h }
+
+    LITERALS = [
+      :integer_literal,
+      :string_literal,
+      # :wide_string_literal,
+      :character_literal,
+      # :wide_character_literal,
+      :fixed_pt_literal,
+      :floating_pt_literal,
+      :boolean_literal]
+
+    BOOL_LITERALS = {
+        false: false,
+        true: true
+      }
+
     # Scanner
     def initialize(src, directiver, params = {})
       @includepaths = params[:includepaths] || []
       @xincludepaths = params[:xincludepaths] || []
+      @idlversion = params[:idlversion]
       @stack = []
       @expansions = []
       @prefix = nil
@@ -258,6 +308,13 @@ module IDL
       @in = In.new(i, nm)
       @scan_comment = false # true if parsing commented annotation
       @in_annotation = false # true if parsing annotation
+
+      # Extend the IDL keywords with IDL4 when enabled
+      if @idlversion >= 4
+        %w(bitfield bitmask bitset map int8 int16 int32 int64 uint8 uint16 uint32 uint64
+    ).inject(KEYWORDS) { |h, a| h[a.downcase.to_sym] = a
+h }
+      end
     end
 
     def find_include(fname, all = true)
@@ -396,7 +453,7 @@ module IDL
       exception emits enum eventtype factory FALSE finder fixed float getraises home import in inout interface local
       long manages mirrorport module multiple native Object octet oneway out port porttype primarykey private provides
       public publishes raises readonly setraises sequence short string struct supports switch TRUE truncatable typedef
-      typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring int8 int16 int32 int64 uint16 uint32 uint64
+      typeid typename typeprefix unsigned union uses ValueBase valuetype void wchar wstring
     ).inject(TokenRegistry.new) { |h, a| h[a.downcase.to_sym] = a
  h }
 
