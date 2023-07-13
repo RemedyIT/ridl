@@ -695,7 +695,7 @@ attr_accessor :yydebug
 def initialize(params = {})
   @d = ::IDL::Delegator.new(params)
   @params = params
-  @idlversion = 4
+  @idlversion = params[:idlversion]
 end
 
 alias on_error0 on_error
