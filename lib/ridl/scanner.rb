@@ -318,7 +318,7 @@ module IDL
 
       # Extend the IDL keywords with IDL4 when enabled
       if @idlversion >= 4
-        %w(bitfield bitmask bitset map
+        %w(bitfield bitmask bitset map int8 int16 int32 int64 uint8 uint16 uint32 uint64
     ).inject(KEYWORDS) { |h, a| h[a.downcase.to_sym] = a
 h }
       end
