@@ -367,7 +367,7 @@ module IDL
         self.options[:debug] = true
       }
       opts.on('--idl-version=VERSION', Integer,
-              'Set IDL version',
+              'Set IDL version (3|4)',
               'Default: 3') { |v|
         self.options[:idlversion] = v
       }
