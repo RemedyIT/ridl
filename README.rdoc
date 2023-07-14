@@ -21,7 +21,7 @@ RIDL provides a framework for implementing compiler/generators for OMG standard 
 * a flexible framework for pluggable (and stackable) backends
 * basic support for backend code re-generation
 * compliant with the {OMG IDL 3.5}[https://www.omg.org/spec/IDL/3.5] standard
-* support for {OMG IDL 4.2}[https://www.omg.org/spec/IDL/4.2] annotations
+* support for {OMG IDL 4.2}[https://www.omg.org/spec/IDL/4.2] annotations, map, int8/uint8, and explicitly-named integer types
 
 Remedy IT has developed multiple backends for RIDL. These include:
 * {R2CORBA}[https://www.remedy.nl/opensource/r2corba.html] generating Ruby code
