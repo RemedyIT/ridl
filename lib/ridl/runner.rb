@@ -28,7 +28,8 @@ module IDL
       search_incpath: false,
       backend: nil,
       macros: {
-      }
+      },
+      idlversion: 3
   })
   CORE_OPTIONS = OPTIONS.keys
 
@@ -91,7 +92,8 @@ module IDL
         macros: options[:macros].merge({
            __RIDL__: "#{RIDL_VERSION}",
            __RIDLBE__: @backend.name.to_s,
-           __RIDLBE_VER__: @backend.version
+           __RIDLBE_VER__: @backend.version,
+           __RIDL_IDL_VERSION__: options[:idlversion].to_s
         })
       })
       @optparser = init_optparser
@@ -364,6 +366,11 @@ module IDL
               'Set parser debug mode. Do NOT do this at home!',
               'Default: off') { |_|
         self.options[:debug] = true
+      }
+      opts.on('--idl-version=VERSION', Integer,
+              'Set IDL version (3|4)',
+              'Default: 3') { |v|
+        self.options[:idlversion] = v
       }
       opts.on('--search-includepath',
               'Use include paths to find main IDL source.',
