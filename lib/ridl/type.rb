@@ -389,6 +389,70 @@ module IDL
       end
     end
 
+    class Map < Type
+      attr_reader :size, :keytype, :valuetype
+      attr_accessor :recursive
+
+      def length
+        @size
+      end
+
+      def initialize(key, value, size)
+        raise "Anonymous type definitions are not allowed!" if key.is_anonymous? || value.is_anonymous?
+
+        @keytype = key
+        @valuetype = value
+        @size = size
+        @typename = format("map<%s,%s%s>", key.typename, value.typename,
+                           if @size.nil? then
+                              ""
+                           else
+                              ", #{IDL::Expression::ScopedName === size ? size.node.name : size.to_s}"
+                           end)
+        @recursive = false
+      end
+
+      def typename
+        @typename
+      end
+
+      def narrow(obj)
+        typeerror(obj)
+      end
+
+      def is_complete?
+        @keytype.resolved_type.is_complete? && @valuetype.resolved_type.is_complete?
+      end
+
+      def is_local?(recurstk = [])
+        @keytype.resolved_type.is_local?(recurstk) && @valuetype.resolved_type.is_local?(recurstk)
+      end
+
+      def is_recursive?
+        @recursive
+      end
+
+      def is_anonymous?
+        true
+      end
+
+      def is_template?
+        (@size && @size.is_a?(IDL::Expression::ScopedName) && @size.node.is_a?(IDL::AST::TemplateParam)) || @basetype.is_template?
+      end
+
+      def matches?(idltype)
+        super && self.size == idltype.size && self.keytype.resolved_type.matches?(idltype.keytype.resolved_type) && self.valuetype.resolved_type.matches?(idltype.valuetype.resolved_type)
+      end
+
+      def instantiate(instantiation_context)
+        if self.is_template?
+          Type::Map.new(@keytype.instantiate(instantiation_context), @valuetype.instantiate(instantiation_context), @size ? @size.instantiate(instantiation_context).value : nil)
+        else
+          self
+        end
+      end
+    end
+
     class Array < Type
       attr_reader :basetype, :sizes
 

@@ -555,6 +555,7 @@ rule
   constr_type_spec : struct_type
                    | union_type
                    | enum_type
+                   | map_type
 
   declarators : declarator { [val[0]] }
               | declarators "," declarator { val[0] << val[2] }
@@ -701,6 +702,11 @@ rule
                     { ::IDL::Type::Sequence.new(val[2], val[4]) }
                 | "sequence" "<" simple_type_spec ">"
                     { ::IDL::Type::Sequence.new(val[2], nil) }
+
+  map_type : "map" "<" simple_type_spec "," simple_type_spec "," positive_int_const ">"
+                { if @idlversion < 4 then raise "int8 is only supported with IDL4 or newer" else ::IDL::Type::Map.new(val[2], val[4], val[6]) end }
+           | "map" "<" simple_type_spec "," simple_type_spec ">"
+                { if @idlversion < 4 then raise "int8 is only supported with IDL4 or newer" else ::IDL::Type::Map.new(val[2], val[4], nil) end }
 
   string_type   : "string" "<" positive_int_const ">"
                     { ::IDL::Type::String.new(val[2]) }
