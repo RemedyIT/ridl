@@ -83,13 +83,6 @@ module IDL
         else
           @pos.column += 1
         end
-
-        if false
-          if not @bwd.nil? or cur.nil? or @fwd.nil?
-          printf("%c(%02x), %c(%02x), %c(%02x) @(l:%d,c:%d)\n",
-                @bwd, @bwd, cur, cur, @fwd, @fwd, @pos.line, @pos.column)
-          end
-        end
         @bwd = cur
       end
 
@@ -318,7 +311,7 @@ module IDL
 
       # Extend the IDL keywords with IDL4 when enabled
       if @idlversion >= 4
-        %w(bitfield bitmask bitset map
+        %w(bitfield bitmask bitset map int8 int16 int32 int64 uint8 uint16 uint32 uint64
     ).inject(KEYWORDS) { |h, a| h[a.downcase.to_sym] = a
 h }
       end

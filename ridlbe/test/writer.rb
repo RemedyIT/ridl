@@ -18,20 +18,20 @@ module IDL
       @nest = 0
     end
 
-    def print(str) 
-      @output << str 
+    def print(str)
+      @output << str
     end
 
-    def println(str = "")  
-      @output << str << "\n" 
+    def println(str = "")
+      @output << str << "\n"
     end
 
-    def printi(str = "")   
-      @output << indent << str 
+    def printi(str = "")
+      @output << indent << str
     end
 
-    def printiln(str = "") 
-      @output << indent << str << "\n" 
+    def printiln(str = "")
+      @output << indent << str << "\n"
     end
 
     def indent

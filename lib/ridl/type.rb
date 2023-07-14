@@ -184,9 +184,11 @@ module IDL
       end
     end
     Octet     = Integer.newclass(0..0xFF, 8)
+    UTinyShort = Integer.newclass(0..0xFF, 8)
     UShort    = Integer.newclass(0..0xFFFF, 16)
     ULong     = Integer.newclass(0..0xFFFFFFFF, 32)
     ULongLong = Integer.newclass(0..0xFFFFFFFFFFFFFFFF, 64)
+    TinyShort = Integer.newclass(-0x80...0x800, 8)
     Short     = Integer.newclass(-0x8000...0x8000, 16)
     Long      = Integer.newclass(-0x80000000...0x80000000, 32)
     LongLong  = Integer.newclass(-0x8000000000000000...0x8000000000000000, 64)

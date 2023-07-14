@@ -579,23 +579,34 @@ rule
   signed_int : signed_short_int
              | signed_long_int
              | signed_longlong_int
+             | tiny_short_int
+
+  tiny_short_int : "int8" { if @idlversion < 4 then raise "int8 is only supported with IDL4 or newer" else ::IDL::Type::TinyShort.new end }
 
   signed_short_int : "short" { ::IDL::Type::Short.new }
+                   | "int16" { if @idlversion < 4 then raise "int16 is only supported with IDL4 or newer" else ::IDL::Type::Short.new end }
 
-  signed_long_int : "long"   { ::IDL::Type::Long.new }
+  signed_long_int : "long" { ::IDL::Type::Long.new }
+                  | "int32" { if @idlversion < 4 then raise "int32 is only supported with IDL4 or newer" else ::IDL::Type::Long.new end }
 
   signed_longlong_int : "long" "long" { ::IDL::Type::LongLong.new }
+                      | "int64" { if @idlversion < 4 then raise "int64 is only supported with IDL4 or newer" else ::IDL::Type::LongLong.new end }
 
   unsigned_int : unsigned_short_int
                | unsigned_long_int
                | unsigned_longlong_int
+               | unsigned_tiny_short_int
+
+  unsigned_tiny_short_int : "uint8" { if @idlversion < 4 then raise "uint8 is only supported with IDL4 or newer" else ::IDL::Type::UTinyShort.new end }
 
   unsigned_short_int : "unsigned" "short" { ::IDL::Type::UShort.new }
+                     | "uint16" { if @idlversion < 4 then raise "uint16 is only supported with IDL4 or newer" else ::IDL::Type::UShort.new end }
 
   unsigned_long_int : "unsigned" "long" { ::IDL::Type::ULong.new }
+                    | "uint32" { if @idlversion < 4 then raise "uint32 is only supported with IDL4 or newer" else ::IDL::Type::ULong.new end }
 
-  unsigned_longlong_int : "unsigned" "long" "long"
-                             { ::IDL::Type::ULongLong.new }
+  unsigned_longlong_int : "unsigned" "long" "long" { ::IDL::Type::ULongLong.new }
+                        | "uint64" { if @idlversion < 4 then raise "uint64 is only supported with IDL4 or newer" else ::IDL::Type::ULongLong.new end }
 
   char_type : "char" { ::IDL::Type::Char.new }
 
@@ -855,6 +866,7 @@ attr_accessor :yydebug
 def initialize(params = {})
   @d = ::IDL::Delegator.new(params)
   @params = params
+  @idlversion = params[:idlversion]
 end
 
 alias on_error0 on_error

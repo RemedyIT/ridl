@@ -603,9 +603,11 @@ class Delegator
     when :integer
       _type = [
         Type::Octet,
+        Type::TinyShort,
         Type::Short,
         Type::Long,
         Type::LongLong,
+        Type::UTinyShort,
         Type::ULongLong
       ].detect { |t| t::Range === _value }
       if _type.nil?
