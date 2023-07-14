@@ -4123,13 +4123,13 @@ module_eval(<<'.,.,', 'parser.ry', 703)
 
 module_eval(<<'.,.,', 'parser.ry', 706)
   def _reduce_381(val, _values)
-     ::IDL::Type::Map.new(val[2], val[4], val[6])
+     if @idlversion < 4 then raise "int8 is only supported with IDL4 or newer" else ::IDL::Type::Map.new(val[2], val[4], val[6]) end
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 708)
   def _reduce_382(val, _values)
-     ::IDL::Type::Map.new(val[2], val[4], nil)
+     if @idlversion < 4 then raise "int8 is only supported with IDL4 or newer" else ::IDL::Type::Map.new(val[2], val[4], nil) end
   end
 .,.,
 
