@@ -2034,8 +2034,8 @@ racc_reduce_table = [
   1, 276, :_reduce_none,
   1, 276, :_reduce_none,
   1, 276, :_reduce_none,
-  1, 276, :_reduce_365,
-  1, 276, :_reduce_366,
+  1, 276, :_reduce_none,
+  1, 276, :_reduce_none,
   1, 273, :_reduce_none,
   2, 273, :_reduce_none,
   3, 277, :_reduce_369,
@@ -4042,17 +4042,9 @@ module_eval(<<'.,.,', 'parser.ry', 658)
 
 # reduce 364 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 665)
-  def _reduce_365(val, _values)
-     if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" else ::IDL::Type::Octet.new end
-  end
-.,.,
+# reduce 365 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 666)
-  def _reduce_366(val, _values)
-     if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" else ::IDL::Type::WChar.new end
-  end
-.,.,
+# reduce 366 omitted
 
 # reduce 367 omitted
 
