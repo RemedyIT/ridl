@@ -382,12 +382,14 @@ module IDL::AST
   class UnionMember < Member; end
   class Enum < Leaf; end
   class Enumerator < Leaf; end
+  class BitMask < Leaf; end
+  class BitValue < Leaf; end
 
   class Module < Node
     DEFINABLE = [
       IDL::AST::Module, IDL::AST::Interface, IDL::AST::Valuebox, IDL::AST::Valuetype, IDL::AST::Const, IDL::AST::Struct,
       IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef, IDL::AST::Include,
-      IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector
+      IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector, IDL::AST::BitMask, IDL::AST::BitValue
     ]
     attr_reader :anchor, :next, :template, :template_params
 
@@ -742,6 +744,7 @@ module IDL::AST
                  IDL::Type::Union, # 'union'
                  IDL::Type::Exception, # 'exception'
                  IDL::Type::Enum # 'enum'
+                 IDL::Type::BitMask# 'bitmask'
                # no further checks
             when IDL::Type::Sequence # 'sequence' or 'sequence<...>'
               _tptype = _tp.idltype
@@ -2889,6 +2892,69 @@ module IDL::AST
       super(instantiation_context, _enclosure, { enum: _enum, value: @value })
     end
   end # Enumerator
+
+  class BitMask < Leaf
+    attr_reader :idltype
+
+    def initialize(_name, _enclosure, _params)
+      super(_name, _enclosure)
+      @bitvalues = []
+      @idltype = IDL::Type::BitMask.new(self)
+    end
+
+    def marshal_dump
+      super() << @idltype << @bitvalues
+    end
+
+    def marshal_load(vars)
+      @enums = vars.pop
+      @idltype = vars.pop
+      super(vars)
+    end
+
+    def bitvalues
+      @bitvalues
+    end
+
+    def add_bitvalue(n)
+      @bitvalues << n
+    end
+
+    def instantiate(instantiation_context, _enclosure)
+      super(instantiation_context, _enclosure, {})
+    end
+  end # BitMask
+
+  class BitValue < Leaf
+    attr_reader :idltype, :bitmask, :value
+
+    def initialize(_name, _enclosure, params)
+      super(_name, _enclosure)
+      @idltype = IDL::Type::ULong.new
+      @bitmask = params[:bitmask]
+      @value = params[:value]
+      @bitmask.add_bitvalue(self)
+    end
+
+    def marshal_dump
+      super() << @idltype << @bitmask << @value
+    end
+
+    def marshal_load(vars)
+      @value = vars.pop
+      @bitmask = vars.pop
+      @idltype = vars.pop
+      super(vars)
+    end
+
+    def instantiate(instantiation_context, _enclosure)
+      # find already instantiated BitMask parent
+      _bitmask = _enclosure.resolve(@bitmask.name)
+      raise "Unable to resolve instantiated BitMask scope for bitvalue #{@bitmask.name}::#{name} instantiation" unless _bitmask
+
+      super(instantiation_context, _enclosure, { bitmask: _bitmask, value: @value })
+    end
+  end # BitValue
 
   class Typedef < Leaf
     attr_reader :idltype
