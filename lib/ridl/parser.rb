@@ -4044,13 +4044,13 @@ module_eval(<<'.,.,', 'parser.ry', 658)
 
 module_eval(<<'.,.,', 'parser.ry', 665)
   def _reduce_365(val, _values)
-     if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" end
+     if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" else ::IDL::Type::Octet.new end
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 666)
   def _reduce_366(val, _values)
-     if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" end
+     if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" else ::IDL::Type::WChar.new end
   end
 .,.,
 
