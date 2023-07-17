@@ -663,8 +663,6 @@ rule
                    | boolean_type
                    | enum_type
                    | scoped_name
-                   | octet_type { if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" else ::IDL::Type::Octet.new end }
-                   | wide_char_type { if @idlversion < 4 then raise "union with octect discriminator type is only supported with IDL4 or newer" else ::IDL::Type::WChar.new end }
 
   union_body : union_case
              | union_body union_case
