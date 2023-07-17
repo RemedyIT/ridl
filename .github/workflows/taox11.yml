@@ -176,11 +176,11 @@ jobs:
         repository: DOCGroup/MPC
         path: ${{ env.MPC_ROOT }}
         ref: ${{ env.ACETAOMPC_BRANCH }}
-    - name: checkout ridl
+    - name: checkout taox11
       uses: actions/checkout@v3
       with:
-        repository: RemedyIT/ridl
-        path: ${{ env.RIDL_ROOT }}
+        repository: RemedyIT/taox11
+        path: ${{ env.TAOX11_ROOT }}
         ref: ${{ env.X11_BRANCH }}
     - name: checkout axcioma
       uses: actions/checkout@v3
