@@ -2722,6 +2722,7 @@ module IDL::AST
 
     def default_label
       swtype = @switchtype.resolved_type
+      return nil if IDL::Type::WChar === swtype # No default label detection for wchar
       lbls = members.collect { |m| m.labels.include?(:default) ? [] : m.labels.collect { |l| l.value } }.flatten
       lbls = lbls.sort unless IDL::Type::Boolean === swtype ## work around bug in Ruby 1.9.2
       def_lbl = swtype.min
