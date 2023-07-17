@@ -2723,7 +2723,7 @@ module IDL::AST
     def default_label
       swtype = @switchtype.resolved_type
       lbls = members.collect { |m| m.labels.include?(:default) ? [] : m.labels.collect { |l| l.value } }.flatten
-      lbls = lbls.sort unless IDL::Type::Boolean === swtype ## work around bug in Ruby 1.9.2
+      lbls = lbls.sort
       def_lbl = swtype.min
       while swtype.in_range?(def_lbl)
         return IDL::Expression::Value.new(@switchtype, def_lbl) unless lbls.include?(def_lbl)
