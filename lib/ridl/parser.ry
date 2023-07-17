@@ -522,6 +522,7 @@ rule
            | enum_type
            | "native" native_declarator
            | bitmask_type
+           | bitset_type
 
   type_declarator : type_spec declarators
                     {
@@ -558,6 +559,7 @@ rule
                    | enum_type
                    | map_type
                    | bitmask_type
+                   | bitset_type
 
   declarators : declarator { [val[0]] }
               | declarators "," declarator { val[0] << val[2] }
@@ -699,8 +701,26 @@ rule
 
   bit_value : identifier { @d.declare_bitvalue (val[0]) }
 
-  enum_type : _enum_header _enum_body
-                  { @d.end_enum(val[0]) }
+  bitset_type : bitset_header bitset_body { @d.end_bitset(val[0]) }
+
+  bitset_header : "bitset" identifier ":" bitset_inheritance_spec { @d.define_bitset(val[1], val[3]) }
+                | "bitset" identifier { @d.define_bitset(val[1]) }
+
+  bitset_inheritance_spec : scoped_name
+
+  bitset_body : "{" bitfield_list "}"
+
+  bitfield_list : bitset_field ";"
+                | bitfield_list bitset_field
+
+  bitset_field : "bitfield" "<" positive_int_const ">"
+               | "bitfield" "<" positive_int_const "," bitfield_destination_type ">"
+
+  bitfield_destination_type : boolean_type
+                            | octet_type
+                            | integer_type
+
+  enum_type : _enum_header _enum_body { @d.end_enum(val[0]) }
 
   _enum_header : "enum" identifier { @d.define_enum(val[1]) }
   _enum_body   : "{" _enumerator_list "}"

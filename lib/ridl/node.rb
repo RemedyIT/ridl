@@ -384,12 +384,15 @@ module IDL::AST
   class Enumerator < Leaf; end
   class BitMask < Node; end
   class BitValue < Leaf; end
+  class BitSet < Node; end
+  class BitField < Leaf; end
 
   class Module < Node
     DEFINABLE = [
       IDL::AST::Module, IDL::AST::Interface, IDL::AST::Valuebox, IDL::AST::Valuetype, IDL::AST::Const, IDL::AST::Struct,
       IDL::AST::Union, IDL::AST::Enum, IDL::AST::Enumerator, IDL::AST::Typedef, IDL::AST::Include,
-      IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector, IDL::AST::BitMask, IDL::AST::BitValue
+      IDL::AST::Home, IDL::AST::Porttype, IDL::AST::Component, IDL::AST::Connector, IDL::AST::BitMask, IDL::AST::BitValue,
+      IDL::AST::BitSet, IDL::AST::BitField
     ]
     attr_reader :anchor, :next, :template, :template_params
 
@@ -745,6 +748,7 @@ module IDL::AST
                  IDL::Type::Exception, # 'exception'
                  IDL::Type::Enum # 'enum'
                  IDL::Type::BitMask# 'bitmask'
+                 IDL::Type::BitSet# 'bitset'
                # no further checks
             when IDL::Type::Sequence # 'sequence' or 'sequence<...>'
               _tptype = _tp.idltype
@@ -2908,7 +2912,7 @@ module IDL::AST
     end
 
     def marshal_load(vars)
-      @enums = vars.pop
+      @bitvalues = vars.pop
       @idltype = vars.pop
       super(vars)
     end
@@ -2956,6 +2960,69 @@ module IDL::AST
       super(instantiation_context, _enclosure, { bitmask: _bitmask, value: @value })
     end
   end # BitValue
+
+  class BitSet < Node
+    attr_reader :idltype
+
+    def initialize(_name, _enclosure, _params)
+      super(_name, _enclosure)
+      @bitfields = []
+      @idltype = IDL::Type::BitSet.new(self)
+    end
+
+    def marshal_dump
+      super() << @idltype << @bitfields
+    end
+
+    def marshal_load(vars)
+      @bitfields = vars.pop
+      @idltype = vars.pop
+      super(vars)
+    end
+
+    def bitfields
+      @bitfields
+    end
+
+    def add_bitfield(n)
+      @bitfields << n
+    end
+
+    def instantiate(instantiation_context, _enclosure)
+      super(instantiation_context, _enclosure, {})
+    end
+  end # BitSet
+
+  class BitField < Leaf
+    attr_reader :idltype, :bitset, :value
+
+    def initialize(_name, _enclosure, params)
+      super(_name, _enclosure)
+      @idltype = IDL::Type::ULong.new
+      @bitset = params[:bitset]
+      @value = params[:value]
+      @bitset.add_bitfield(self)
+    end
+
+    def marshal_dump
+      super() << @idltype << @bitset << @value
+    end
+
+    def marshal_load(vars)
+      @value = vars.pop
+      @bitset = vars.pop
+      @idltype = vars.pop
+      super(vars)
+    end
+
+    def instantiate(instantiation_context, _enclosure)
+      # find already instantiated BitSet parent
+      _bitmask = _enclosure.resolve(@bitset.name)
+      raise "Unable to resolve instantiated BitSet scope for bitfield #{@bitset.name}::#{name} instantiation" unless _bitset
+
+      super(instantiation_context, _enclosure, { bitset: _bitset, value: @value })
+    end
+  end # BitField
 
   class Typedef < Leaf
     attr_reader :idltype
