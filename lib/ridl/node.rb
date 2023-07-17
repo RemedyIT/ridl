@@ -382,7 +382,7 @@ module IDL::AST
   class UnionMember < Member; end
   class Enum < Leaf; end
   class Enumerator < Leaf; end
-  class BitMask < Leaf; end
+  class BitMask < Node; end
   class BitValue < Leaf; end
 
   class Module < Node
@@ -2893,7 +2893,7 @@ module IDL::AST
     end
   end # Enumerator
 
-  class BitMask < Leaf
+  class BitMask < Node
     attr_reader :idltype
 
     def initialize(_name, _enclosure, _params)
