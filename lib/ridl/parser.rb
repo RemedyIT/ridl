@@ -672,7 +672,7 @@ module IDL
 
 class Parser < Racc::Parser
 
-module_eval(<<'...end parser.ry/module_eval...', 'parser.ry', 882)
+module_eval(<<'...end parser.ry/module_eval...', 'parser.ry', 884)
 
 def parse_type_declarator(type_spec, declarators)
   ret = Array.new
@@ -1461,86 +1461,86 @@ racc_action_pointer = [
    nil,   nil,   292,   nil,   nil,  1000,   nil,   nil ]
 
 racc_action_default = [
-   -18,  -472,    -1,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,   -76,   -77,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,   -93,  -472,  -472,  -472,  -472,  -132,  -133,  -472,
-  -472,  -472,  -472,  -176,  -177,  -472,  -472,  -472,  -187,  -188,
-  -189,  -472,  -472,  -472,  -472,  -472,  -472,  -278,  -279,  -280,
-  -281,  -282,  -472,  -284,  -285,  -472,  -472,  -354,  -472,  -472,
-  -472,  -362,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,    -2,    -3,    -4,    -5,    -6,    -7,    -8,    -9,   -10,
+   -18,  -474,    -1,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,   -76,   -77,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,   -93,  -474,  -474,  -474,  -474,  -132,  -133,  -474,
+  -474,  -474,  -474,  -176,  -177,  -474,  -474,  -474,  -187,  -188,
+  -189,  -474,  -474,  -474,  -474,  -474,  -474,  -278,  -279,  -280,
+  -281,  -282,  -474,  -284,  -285,  -474,  -474,  -354,  -474,  -474,
+  -474,  -362,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,    -2,    -3,    -4,    -5,    -6,    -7,    -8,    -9,   -10,
    -11,   -12,   -13,   -14,   -15,   -16,   -17,   -18,  -173,   -24,
-  -472,  -472,   -78,   -79,   -80,  -103,  -472,   -89,   -90,  -472,
-  -472,   -91,   -92,  -103,  -472,  -472,  -126,  -134,  -151,  -161,
-  -154,  -179,  -103,  -472,  -472,  -191,  -103,  -172,  -173,  -472,
-  -472,  -472,  -231,  -232,  -233,  -234,  -235,  -236,  -237,  -238,
+  -474,  -474,   -78,   -79,   -80,  -103,  -474,   -89,   -90,  -474,
+  -474,   -91,   -92,  -103,  -474,  -474,  -126,  -134,  -151,  -161,
+  -154,  -179,  -103,  -474,  -474,  -191,  -103,  -172,  -173,  -474,
+  -474,  -474,  -231,  -232,  -233,  -234,  -235,  -236,  -237,  -238,
   -239,  -240,  -318,  -319,  -330,  -321,  -322,  -323,  -324,  -325,
   -326,  -327,  -328,  -329,  -331,  -333,  -334,  -335,  -336,  -337,
-  -338,  -472,  -340,  -342,  -344,  -345,  -346,  -347,  -348,  -408,
-  -410,  -470,  -277,  -472,  -287,  -288,  -289,  -290,  -291,  -292,
+  -338,  -474,  -340,  -342,  -344,  -345,  -346,  -347,  -348,  -410,
+  -412,  -472,  -277,  -474,  -287,  -288,  -289,  -290,  -291,  -292,
   -293,  -294,  -295,  -296,  -297,  -298,  -299,  -300,  -301,  -302,
   -303,  -304,  -305,  -306,  -307,  -308,  -309,  -310,  -349,  -350,
-  -472,  -472,  -472,  -472,  -472,  -471,  -283,  -315,  -351,  -472,
-  -358,  -472,  -360,  -472,  -379,  -472,  -380,  -385,  -472,  -387,
-  -397,  -472,  -398,  -433,  -436,  -434,   798,  -472,   -21,  -472,
-  -174,  -472,   -25,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,  -472,  -301,  -472,   -71,   -73,   -74,  -241,  -242,
-  -244,  -246,  -248,  -251,  -254,  -472,  -259,  -260,  -261,  -262,
-  -263,  -264,  -472,  -266,  -267,  -268,  -269,  -270,  -271,  -272,
-  -273,  -274,  -275,   -83,  -472,   -85,   -87,  -472,   -94,  -472,
-  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -446,  -447,  -448,  -465,  -466,  -467,  -468,   -82,  -178,
-  -190,  -472,  -120,  -122,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,  -127,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -142,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,  -472,  -472,  -472,  -155,  -472,  -472,  -472,  -472,
-  -472,  -185,  -203,  -204,  -472,  -472,  -472,  -200,  -211,  -472,
-  -472,  -472,  -472,  -184,  -197,  -192,  -198,  -472,  -228,  -229,
-  -472,  -320,  -332,  -339,  -341,  -472,  -472,  -286,  -311,  -313,
-  -314,  -316,  -317,  -353,  -361,  -472,  -472,  -472,  -472,  -355,
-  -472,  -472,  -371,  -472,  -374,  -472,  -472,  -472,  -472,  -382,
-  -384,  -472,  -472,  -472,  -472,  -472,  -400,  -402,  -472,   -19,
-   -22,  -175,  -472,  -472,   -27,   -28,   -29,   -30,   -31,   -32,
-   -33,   -34,   -35,  -472,   -37,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -258,  -263,  -472,
+  -474,  -474,  -474,  -474,  -474,  -473,  -283,  -315,  -351,  -474,
+  -358,  -474,  -360,  -474,  -379,  -474,  -380,  -385,  -474,  -387,
+  -399,  -474,  -400,  -435,  -438,  -436,   798,  -474,   -21,  -474,
+  -174,  -474,   -25,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,  -474,  -301,  -474,   -71,   -73,   -74,  -241,  -242,
+  -244,  -246,  -248,  -251,  -254,  -474,  -259,  -260,  -261,  -262,
+  -263,  -264,  -474,  -266,  -267,  -268,  -269,  -270,  -271,  -272,
+  -273,  -274,  -275,   -83,  -474,   -85,   -87,  -474,   -94,  -474,
+  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -448,  -449,  -450,  -467,  -468,  -469,  -470,   -82,  -178,
+  -190,  -474,  -120,  -122,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,  -127,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -142,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,  -474,  -474,  -474,  -155,  -474,  -474,  -474,  -474,
+  -474,  -185,  -203,  -204,  -474,  -474,  -474,  -200,  -211,  -474,
+  -474,  -474,  -474,  -184,  -197,  -192,  -198,  -474,  -228,  -229,
+  -474,  -320,  -332,  -339,  -341,  -474,  -474,  -286,  -311,  -313,
+  -314,  -316,  -317,  -353,  -361,  -474,  -474,  -474,  -474,  -355,
+  -474,  -474,  -371,  -474,  -374,  -474,  -474,  -474,  -474,  -382,
+  -384,  -474,  -474,  -474,  -474,  -474,  -402,  -404,  -474,   -19,
+   -22,  -175,  -474,  -474,   -27,   -28,   -29,   -30,   -31,   -32,
+   -33,   -34,   -35,  -474,   -37,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -258,  -263,  -474,
   -104,  -105,  -107,   -81,   -95,   -96,   -97,   -98,   -99,  -100,
-  -101,  -102,  -472,  -472,  -445,  -441,  -472,  -472,  -440,  -181,
-  -194,  -108,  -121,  -123,  -124,  -472,  -472,  -472,  -117,  -118,
-  -472,  -116,  -125,  -128,  -129,  -130,  -131,  -472,  -170,  -171,
-  -472,  -472,  -137,  -140,  -141,  -138,  -135,  -143,  -144,  -145,
-  -146,  -147,  -148,  -149,  -150,  -472,  -472,  -472,  -472,  -472,
-  -152,  -156,  -157,  -158,  -159,  -160,  -153,  -202,  -472,  -206,
-  -208,  -210,  -207,  -180,  -201,  -212,  -213,  -472,  -472,  -183,
-  -196,  -193,  -472,  -343,  -276,  -472,  -472,  -472,  -411,  -412,
-  -472,  -472,  -472,  -472,  -352,  -356,  -472,  -359,  -372,  -472,
-  -375,  -472,  -472,  -377,  -330,  -472,  -364,  -365,  -366,  -367,
-  -368,  -369,  -370,  -381,  -472,  -389,  -472,  -390,  -472,  -386,
-  -388,  -399,  -472,  -435,  -437,  -472,   -26,  -472,   -36,   -70,
+  -101,  -102,  -474,  -474,  -447,  -443,  -474,  -474,  -442,  -181,
+  -194,  -108,  -121,  -123,  -124,  -474,  -474,  -474,  -117,  -118,
+  -474,  -116,  -125,  -128,  -129,  -130,  -131,  -474,  -170,  -171,
+  -474,  -474,  -137,  -140,  -141,  -138,  -135,  -143,  -144,  -145,
+  -146,  -147,  -148,  -149,  -150,  -474,  -474,  -474,  -474,  -474,
+  -152,  -156,  -157,  -158,  -159,  -160,  -153,  -202,  -474,  -206,
+  -208,  -210,  -207,  -180,  -201,  -212,  -213,  -474,  -474,  -183,
+  -196,  -193,  -474,  -343,  -276,  -474,  -474,  -474,  -413,  -414,
+  -474,  -474,  -474,  -474,  -352,  -356,  -474,  -359,  -372,  -474,
+  -375,  -474,  -474,  -377,  -330,  -474,  -364,  -365,  -366,  -367,
+  -368,  -369,  -370,  -381,  -474,  -389,  -474,  -390,  -474,  -386,
+  -388,  -401,  -474,  -437,  -439,  -474,   -26,  -474,   -36,   -70,
    -72,  -243,  -245,  -247,  -249,  -250,  -252,  -253,  -255,  -256,
-  -257,  -265,  -472,  -472,  -316,  -427,  -417,  -438,  -443,  -444,
-  -472,  -472,  -449,  -472,  -451,  -472,  -454,  -455,  -456,  -439,
-  -472,  -472,  -472,  -472,  -472,  -472,  -162,  -472,  -164,  -472,
-  -165,  -166,  -167,  -168,  -169,  -205,  -472,  -214,  -215,  -230,
-  -407,  -409,  -312,  -413,  -472,  -472,  -404,  -472,  -472,  -357,
-  -373,  -378,  -376,  -363,  -383,  -391,  -472,  -401,  -472,  -472,
-   -38,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -106,  -415,  -431,
-  -430,  -416,  -418,  -419,  -420,  -421,  -422,  -425,  -426,  -472,
-  -472,  -472,  -442,  -472,  -472,  -450,  -472,  -472,  -216,  -472,
-  -224,  -472,  -227,  -220,  -472,  -472,  -114,  -113,  -115,  -119,
-  -163,  -136,  -209,  -414,  -472,  -472,  -472,  -472,  -472,   -20,
+  -257,  -265,  -474,  -474,  -316,  -429,  -419,  -440,  -445,  -446,
+  -474,  -474,  -451,  -474,  -453,  -474,  -456,  -457,  -458,  -441,
+  -474,  -474,  -474,  -474,  -474,  -474,  -162,  -474,  -164,  -474,
+  -165,  -166,  -167,  -168,  -169,  -205,  -474,  -214,  -215,  -230,
+  -409,  -411,  -312,  -415,  -474,  -474,  -406,  -474,  -474,  -357,
+  -373,  -378,  -376,  -363,  -383,  -391,  -474,  -403,  -474,  -474,
+   -38,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -106,  -417,  -433,
+  -432,  -418,  -420,  -421,  -422,  -423,  -424,  -427,  -428,  -474,
+  -474,  -474,  -444,  -474,  -474,  -452,  -474,  -474,  -216,  -474,
+  -224,  -474,  -227,  -220,  -474,  -474,  -114,  -113,  -115,  -119,
+  -163,  -136,  -209,  -416,  -474,  -474,  -474,  -394,  -474,   -20,
    -23,   -39,   -40,   -41,   -42,   -43,   -44,   -45,   -46,   -47,
-   -48,   -49,   -50,   -51,   -52,   -53,  -472,  -472,  -429,  -472,
-  -423,  -424,  -428,  -431,  -472,  -472,  -472,  -460,  -472,  -463,
-  -452,  -453,  -218,  -217,  -472,  -472,  -222,  -221,  -472,  -472,
-  -472,  -403,  -472,  -406,  -469,  -392,  -472,  -394,  -395,  -396,
-  -472,   -55,  -472,  -472,  -472,  -472,  -472,  -472,  -472,  -472,
-  -472,  -472,  -472,  -472,  -472,  -472,  -432,  -472,  -472,  -457,
-  -472,  -462,  -472,  -219,  -225,  -226,  -223,  -110,  -111,  -112,
-  -472,  -472,   -54,   -56,   -57,   -58,   -59,   -60,   -61,   -62,
-   -63,   -64,   -65,   -66,   -67,   -68,   -69,  -472,  -458,  -459,
-  -461,  -464,  -472,  -405,  -393,  -472,  -109,   -75 ]
+   -48,   -49,   -50,   -51,   -52,   -53,  -474,  -474,  -431,  -474,
+  -425,  -426,  -430,  -433,  -474,  -474,  -474,  -462,  -474,  -465,
+  -454,  -455,  -218,  -217,  -474,  -474,  -222,  -221,  -474,  -474,
+  -474,  -405,  -474,  -408,  -471,  -392,  -474,  -396,  -397,  -398,
+  -474,   -55,  -474,  -474,  -474,  -474,  -474,  -474,  -474,  -474,
+  -474,  -474,  -474,  -474,  -474,  -474,  -434,  -474,  -474,  -459,
+  -474,  -464,  -474,  -219,  -225,  -226,  -223,  -110,  -111,  -112,
+  -474,  -395,   -54,   -56,   -57,   -58,   -59,   -60,   -61,   -62,
+   -63,   -64,   -65,   -66,   -67,   -68,   -69,  -474,  -460,  -461,
+  -463,  -466,  -474,  -407,  -393,  -474,  -109,   -75 ]
 
 racc_goto_table = [
      3,     3,     4,     4,     5,     5,    16,    16,    17,    17,
@@ -2147,86 +2147,88 @@ racc_reduce_table = [
   3, 293, :_reduce_none,
   5, 294, :_reduce_none,
   7, 294, :_reduce_none,
+  4, 294, :_reduce_none,
+  6, 294, :_reduce_none,
   1, 295, :_reduce_none,
   1, 295, :_reduce_none,
   1, 295, :_reduce_none,
-  2, 248, :_reduce_397,
-  2, 296, :_reduce_398,
+  2, 248, :_reduce_399,
+  2, 296, :_reduce_400,
   3, 297, :_reduce_none,
   1, 298, :_reduce_none,
   3, 298, :_reduce_none,
-  1, 299, :_reduce_402,
-  6, 143, :_reduce_403,
-  4, 143, :_reduce_404,
-  8, 258, :_reduce_405,
-  6, 258, :_reduce_406,
-  4, 227, :_reduce_407,
-  1, 227, :_reduce_408,
-  4, 228, :_reduce_409,
-  1, 228, :_reduce_410,
-  2, 261, :_reduce_411,
-  1, 300, :_reduce_412,
-  2, 300, :_reduce_413,
-  3, 301, :_reduce_414,
-  4, 166, :_reduce_415,
-  4, 166, :_reduce_416,
-  3, 166, :_reduce_417,
+  1, 299, :_reduce_404,
+  6, 143, :_reduce_405,
+  4, 143, :_reduce_406,
+  8, 258, :_reduce_407,
+  6, 258, :_reduce_408,
+  4, 227, :_reduce_409,
+  1, 227, :_reduce_410,
+  4, 228, :_reduce_411,
+  1, 228, :_reduce_412,
+  2, 261, :_reduce_413,
+  1, 300, :_reduce_414,
+  2, 300, :_reduce_415,
+  3, 301, :_reduce_416,
+  4, 166, :_reduce_417,
+  4, 166, :_reduce_418,
+  3, 166, :_reduce_419,
   1, 303, :_reduce_none,
   1, 303, :_reduce_none,
   1, 303, :_reduce_none,
   1, 303, :_reduce_none,
   1, 303, :_reduce_none,
-  2, 305, :_reduce_423,
-  2, 306, :_reduce_424,
-  1, 307, :_reduce_425,
-  1, 308, :_reduce_426,
-  0, 309, :_reduce_427,
-  3, 304, :_reduce_428,
-  2, 302, :_reduce_429,
-  1, 302, :_reduce_430,
-  1, 312, :_reduce_431,
-  3, 312, :_reduce_432,
-  2, 122, :_reduce_433,
-  2, 313, :_reduce_434,
+  2, 305, :_reduce_425,
+  2, 306, :_reduce_426,
+  1, 307, :_reduce_427,
+  1, 308, :_reduce_428,
+  0, 309, :_reduce_429,
+  3, 304, :_reduce_430,
+  2, 302, :_reduce_431,
+  1, 302, :_reduce_432,
+  1, 312, :_reduce_433,
+  3, 312, :_reduce_434,
+  2, 122, :_reduce_435,
+  2, 313, :_reduce_436,
   3, 314, :_reduce_none,
   0, 315, :_reduce_none,
   2, 315, :_reduce_none,
   3, 167, :_reduce_none,
-  3, 316, :_reduce_439,
-  2, 316, :_reduce_440,
+  3, 316, :_reduce_441,
+  2, 316, :_reduce_442,
   1, 317, :_reduce_none,
-  2, 318, :_reduce_442,
-  1, 318, :_reduce_443,
-  1, 318, :_reduce_444,
-  0, 318, :_reduce_445,
-  1, 319, :_reduce_446,
-  1, 320, :_reduce_447,
-  1, 320, :_reduce_448,
+  2, 318, :_reduce_444,
+  1, 318, :_reduce_445,
+  1, 318, :_reduce_446,
+  0, 318, :_reduce_447,
+  1, 319, :_reduce_448,
+  1, 320, :_reduce_449,
+  1, 320, :_reduce_450,
   2, 321, :_reduce_none,
   3, 321, :_reduce_none,
   1, 323, :_reduce_none,
   3, 323, :_reduce_none,
-  3, 324, :_reduce_453,
-  1, 325, :_reduce_454,
-  1, 325, :_reduce_455,
+  3, 324, :_reduce_455,
   1, 325, :_reduce_456,
-  4, 217, :_reduce_457,
-  4, 310, :_reduce_458,
-  4, 311, :_reduce_459,
-  1, 154, :_reduce_460,
-  3, 154, :_reduce_461,
-  4, 322, :_reduce_462,
-  1, 326, :_reduce_463,
-  3, 326, :_reduce_464,
-  1, 220, :_reduce_465,
-  1, 220, :_reduce_466,
+  1, 325, :_reduce_457,
+  1, 325, :_reduce_458,
+  4, 217, :_reduce_459,
+  4, 310, :_reduce_460,
+  4, 311, :_reduce_461,
+  1, 154, :_reduce_462,
+  3, 154, :_reduce_463,
+  4, 322, :_reduce_464,
+  1, 326, :_reduce_465,
+  3, 326, :_reduce_466,
   1, 220, :_reduce_467,
   1, 220, :_reduce_468,
-  6, 257, :_reduce_469,
-  1, 229, :_reduce_470,
-  1, 256, :_reduce_471 ]
+  1, 220, :_reduce_469,
+  1, 220, :_reduce_470,
+  6, 257, :_reduce_471,
+  1, 229, :_reduce_472,
+  1, 256, :_reduce_473 ]
 
-racc_reduce_n = 472
+racc_reduce_n = 474
 
 racc_shift_n = 798
 
@@ -4290,105 +4292,109 @@ module_eval(<<'.,.,', 'parser.ry', 706)
 
 # reduce 396 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 722)
-  def _reduce_397(val, _values)
+# reduce 397 omitted
+
+# reduce 398 omitted
+
+module_eval(<<'.,.,', 'parser.ry', 724)
+  def _reduce_399(val, _values)
      @d.end_enum(val[0])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 724)
-  def _reduce_398(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 726)
+  def _reduce_400(val, _values)
      @d.define_enum(val[1])
   end
 .,.,
 
-# reduce 399 omitted
-
-# reduce 400 omitted
-
 # reduce 401 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 732)
-  def _reduce_402(val, _values)
+# reduce 402 omitted
+
+# reduce 403 omitted
+
+module_eval(<<'.,.,', 'parser.ry', 734)
+  def _reduce_404(val, _values)
                      @d.declare_enumerator(val[0])
 
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 736)
-  def _reduce_403(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 738)
+  def _reduce_405(val, _values)
      ::IDL::Type::Sequence.new(val[2], val[4])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 738)
-  def _reduce_404(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 740)
+  def _reduce_406(val, _values)
      ::IDL::Type::Sequence.new(val[2], nil)
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 741)
-  def _reduce_405(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 743)
+  def _reduce_407(val, _values)
      if @idlversion < 4 then raise "int8 is only supported with IDL4 or newer" else ::IDL::Type::Map.new(val[2], val[4], val[6]) end
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 743)
-  def _reduce_406(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 745)
+  def _reduce_408(val, _values)
      if @idlversion < 4 then raise "int8 is only supported with IDL4 or newer" else ::IDL::Type::Map.new(val[2], val[4], nil) end
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 746)
-  def _reduce_407(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 748)
+  def _reduce_409(val, _values)
      ::IDL::Type::String.new(val[2])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 748)
-  def _reduce_408(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 750)
+  def _reduce_410(val, _values)
      ::IDL::Type::String.new()
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 751)
-  def _reduce_409(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 753)
+  def _reduce_411(val, _values)
      ::IDL::Type::WString.new(val[2])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 753)
-  def _reduce_410(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 755)
+  def _reduce_412(val, _values)
      ::IDL::Type::WString.new()
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 755)
-  def _reduce_411(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 757)
+  def _reduce_413(val, _values)
      val
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 757)
-  def _reduce_412(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 759)
+  def _reduce_414(val, _values)
      [val[0]]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 758)
-  def _reduce_413(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 760)
+  def _reduce_415(val, _values)
     val[0] << val[1]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 760)
-  def _reduce_414(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 762)
+  def _reduce_416(val, _values)
      val[1]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 763)
-  def _reduce_415(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 765)
+  def _reduce_417(val, _values)
       dcls = parse_type_declarator(val[2], val[3][0])
                         dcls.each do |d|
                           @d.declare_attribute(d[0], d[1], true).get_raises = val[3][1]
@@ -4397,8 +4403,8 @@ module_eval(<<'.,.,', 'parser.ry', 763)
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 769)
-  def _reduce_416(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 771)
+  def _reduce_418(val, _values)
       att = @d.declare_attribute(val[1], val[2])
                         att.get_raises = val[3][0] unless val[3][0].empty?
                         att.set_raises = val[3][1] unless val[3][1].empty?
@@ -4406,8 +4412,8 @@ module_eval(<<'.,.,', 'parser.ry', 769)
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 774)
-  def _reduce_417(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 776)
+  def _reduce_419(val, _values)
       dcls = parse_type_declarator(val[1], val[2])
                         dcls.each do |d|
                           att = @d.declare_attribute(d[0], d[1])
@@ -4416,241 +4422,229 @@ module_eval(<<'.,.,', 'parser.ry', 774)
   end
 .,.,
 
-# reduce 418 omitted
-
-# reduce 419 omitted
-
 # reduce 420 omitted
 
 # reduce 421 omitted
 
 # reduce 422 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 786)
-  def _reduce_423(val, _values)
+# reduce 423 omitted
+
+# reduce 424 omitted
+
+module_eval(<<'.,.,', 'parser.ry', 788)
+  def _reduce_425(val, _values)
      [val[0], val[1]]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 788)
-  def _reduce_424(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 790)
+  def _reduce_426(val, _values)
      [val[1], val[0]]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 790)
-  def _reduce_425(val, _values)
-     [val[0], []]
-  end
-.,.,
-
 module_eval(<<'.,.,', 'parser.ry', 792)
-  def _reduce_426(val, _values)
-     [[], val[0]]
+  def _reduce_427(val, _values)
+     [val[0], []]
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 794)
-  def _reduce_427(val, _values)
+  def _reduce_428(val, _values)
+     [[], val[0]]
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.ry', 796)
+  def _reduce_429(val, _values)
      [[], []]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 797)
-  def _reduce_428(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 799)
+  def _reduce_430(val, _values)
      [val[0]].concat(val[2])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 800)
-  def _reduce_429(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 802)
+  def _reduce_431(val, _values)
       [[val[0]], val[1]]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 801)
-  def _reduce_430(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 803)
+  def _reduce_432(val, _values)
      [val[0], []]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 803)
-  def _reduce_431(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 805)
+  def _reduce_433(val, _values)
      [val[0]]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 804)
-  def _reduce_432(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 806)
+  def _reduce_434(val, _values)
      val[0] << val[2]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 807)
-  def _reduce_433(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 809)
+  def _reduce_435(val, _values)
      @d.end_exception(val[0])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 809)
-  def _reduce_434(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 811)
+  def _reduce_436(val, _values)
      @d.define_exception(val[1])
   end
 .,.,
-
-# reduce 435 omitted
-
-# reduce 436 omitted
 
 # reduce 437 omitted
 
 # reduce 438 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 818)
-  def _reduce_439(val, _values)
+# reduce 439 omitted
+
+# reduce 440 omitted
+
+module_eval(<<'.,.,', 'parser.ry', 820)
+  def _reduce_441(val, _values)
      @d.declare_op_header(val[0], val[1], val[2])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 820)
-  def _reduce_440(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 822)
+  def _reduce_442(val, _values)
      @d.declare_op_header(nil, val[0], val[1])
   end
 .,.,
 
-# reduce 441 omitted
+# reduce 443 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 825)
-  def _reduce_442(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 827)
+  def _reduce_444(val, _values)
      @d.declare_op_footer(val[0], val[1])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 827)
-  def _reduce_443(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 829)
+  def _reduce_445(val, _values)
      @d.declare_op_footer(val[0], nil)
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 829)
-  def _reduce_444(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 831)
+  def _reduce_446(val, _values)
      @d.declare_op_footer(nil, val[0])
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 831)
-  def _reduce_445(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 833)
+  def _reduce_447(val, _values)
      @d.declare_op_footer(nil,nil)
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 833)
-  def _reduce_446(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 835)
+  def _reduce_448(val, _values)
      :oneway
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 835)
-  def _reduce_447(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 837)
+  def _reduce_449(val, _values)
      val[0]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 836)
-  def _reduce_448(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 838)
+  def _reduce_450(val, _values)
      ::IDL::Type::Void.new
   end
 .,.,
-
-# reduce 449 omitted
-
-# reduce 450 omitted
 
 # reduce 451 omitted
 
 # reduce 452 omitted
 
-module_eval(<<'.,.,', 'parser.ry', 845)
-  def _reduce_453(val, _values)
-     @d.declare_op_parameter(val[0], val[1], val[2])
-  end
-.,.,
+# reduce 453 omitted
+
+# reduce 454 omitted
 
 module_eval(<<'.,.,', 'parser.ry', 847)
-  def _reduce_454(val, _values)
-     :in
-  end
-.,.,
-
-module_eval(<<'.,.,', 'parser.ry', 848)
   def _reduce_455(val, _values)
-     :out
+     @d.declare_op_parameter(val[0], val[1], val[2])
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 849)
   def _reduce_456(val, _values)
-     :inout
+     :in
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.ry', 850)
+  def _reduce_457(val, _values)
+     :out
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 851)
-  def _reduce_457(val, _values)
-     val[2]
+  def _reduce_458(val, _values)
+     :inout
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 853)
-  def _reduce_458(val, _values)
-     val[2]
-  end
-.,.,
-
-module_eval(<<'.,.,', 'parser.ry', 855)
   def _reduce_459(val, _values)
      val[2]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 857)
+module_eval(<<'.,.,', 'parser.ry', 855)
   def _reduce_460(val, _values)
-     val
-  end
-.,.,
-
-module_eval(<<'.,.,', 'parser.ry', 858)
-  def _reduce_461(val, _values)
-     val[0] << val[2]
-  end
-.,.,
-
-module_eval(<<'.,.,', 'parser.ry', 860)
-  def _reduce_462(val, _values)
      val[2]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 862)
-  def _reduce_463(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 857)
+  def _reduce_461(val, _values)
+     val[2]
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.ry', 859)
+  def _reduce_462(val, _values)
      val
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 863)
-  def _reduce_464(val, _values)
+module_eval(<<'.,.,', 'parser.ry', 860)
+  def _reduce_463(val, _values)
      val[0] << val[2]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 865)
-  def _reduce_465(val, _values)
-     val[0]
+module_eval(<<'.,.,', 'parser.ry', 862)
+  def _reduce_464(val, _values)
+     val[2]
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 866)
+module_eval(<<'.,.,', 'parser.ry', 864)
+  def _reduce_465(val, _values)
+     val
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.ry', 865)
   def _reduce_466(val, _values)
-     val[0]
+     val[0] << val[2]
   end
 .,.,
 
@@ -4666,20 +4660,32 @@ module_eval(<<'.,.,', 'parser.ry', 868)
   end
 .,.,
 
-module_eval(<<'.,.,', 'parser.ry', 872)
+module_eval(<<'.,.,', 'parser.ry', 869)
   def _reduce_469(val, _values)
-     IDL::Type::Fixed.new(val[2], val[4])
+     val[0]
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.ry', 870)
+  def _reduce_470(val, _values)
+     val[0]
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 874)
-  def _reduce_470(val, _values)
-     ::IDL::Type::Fixed.new
+  def _reduce_471(val, _values)
+     IDL::Type::Fixed.new(val[2], val[4])
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.ry', 876)
-  def _reduce_471(val, _values)
+  def _reduce_472(val, _values)
+     ::IDL::Type::Fixed.new
+  end
+.,.,
+
+module_eval(<<'.,.,', 'parser.ry', 878)
+  def _reduce_473(val, _values)
      ::IDL::Type::ValueBase.new
   end
 .,.,

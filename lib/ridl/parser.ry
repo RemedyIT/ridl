@@ -715,6 +715,8 @@ rule
 
   bitset_field : "bitfield" "<" positive_int_const ">" identifier
                | "bitfield" "<" positive_int_const "," bitfield_destination_type ">" identifier
+               | "bitfield" "<" positive_int_const ">"
+               | "bitfield" "<" positive_int_const "," bitfield_destination_type ">"
 
   bitfield_destination_type : boolean_type
                             | octet_type
