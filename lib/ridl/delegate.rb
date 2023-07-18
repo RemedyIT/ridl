@@ -207,6 +207,10 @@ class Delegator
       w.visit_bitmask(m)
     when IDL::AST::BitValue
       w.visit_bitvalue(m)
+    when IDL::AST::BitSet
+      w.visit_bitset(m)
+    when IDL::AST::BitField
+      w.visit_bitfield(m)
     else
       raise "Invalid IDL member type for walkthrough: #{m.class.name}"
     end
@@ -582,7 +586,7 @@ class Delegator
          IDL::AST::Porttype, IDL::AST::Connector,
          IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef,
          IDL::AST::Exception, IDL::AST::Enum, IDL::AST::BitMask,
-         IDL::AST::Valuetype, IDL::AST::Valuebox
+         IDL::AST::Valuetype, IDL::AST::Valuebox, IDL::AST::BitSet
       Type::ScopedName.new(node)
     when IDL::AST::TemplateParam
       if node.idltype.is_a?(IDL::Type::Const)
@@ -596,6 +600,8 @@ class Delegator
       Expression::Enumerator.new(node)
     when IDL::AST::BitValue
       Expression::BitValue.new(node)
+    when IDL::AST::BitField
+      Expression::BitField.new(node)
     else
       raise "invalid reference to #{node.class.name}: #{node.scoped_name}"
     end
@@ -840,6 +846,33 @@ class Delegator
   end
 
   def end_bitmask(_node)
+    set_last(@cur)
+    ret = IDL::Type::ScopedName.new(@cur)
+    @cur = @cur.enclosure
+    ret
+  end
+
+  def define_bitset(_name, _base)
+    params = {}
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
+    set_last
+    @cur = @cur.define(IDL::AST::BitSet, _name, params)
+  end
+
+  def declare_bitfield(_name, _bits, type)
+    n = 0x01 << @cur.bitvalues.length
+    params = {
+      value: n,
+      bitset: @cur
+    }
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
+    set_last(@cur.enclosure.define(IDL::AST::BitField, _name, params))
+    @cur
+  end
+
+  def end_bitset(_node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure
