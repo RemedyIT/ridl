@@ -852,7 +852,7 @@ class Delegator
     ret
   end
 
-  def define_bitset(_name, _base)
+  def define_bitset(_name, _base = nil)
     params = {}
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
