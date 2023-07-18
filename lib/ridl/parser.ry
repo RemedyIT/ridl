@@ -626,13 +626,15 @@ rule
 
   struct_forward_dcl : struct_def identifier { @d.declare_struct(val[1]) }
 
-  struct_type : struct_header "{" member_list "}"
-                { @d.end_struct(val[0]) }
+  struct_type : struct_header "{" member_list "}" { @d.end_struct(val[0]) }
+              | struct_header "{" "}" { @d.end_struct(val[0]) }
 
-  struct_header : struct_def identifier  { @d.define_struct(val[1]) }
+  struct_header : struct_def identifier { @d.define_struct(val[1]) }
+                | struct_def identifier ":" struct_inheritance_spec { @d.define_struct(val[1]) }
 
   struct_def : "struct" { nil }
 
+  struct_inheritance_spec : scoped_name
 
   member_list : member
               | member_list member
