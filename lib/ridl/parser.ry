@@ -711,7 +711,7 @@ rule
   bitset_body : "{" bitfield_list "}"
 
   bitfield_list : bitset_field ";"
-                | bitfield_list bitset_field
+                | bitfield_list bitset_field ";"
 
   bitset_field : "bitfield" "<" positive_int_const ">" identifier
                | "bitfield" "<" positive_int_const "," bitfield_destination_type ">" identifier
