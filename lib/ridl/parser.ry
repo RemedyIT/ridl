@@ -553,11 +553,11 @@ rule
                      | string_type
                      | wide_string_type
                      | fixed_pt_type
+                     | map_type
 
   constr_type_spec : struct_type
                    | union_type
                    | enum_type
-                   | map_type
                    | bitmask_type
                    | bitset_type
 
