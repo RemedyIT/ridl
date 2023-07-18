@@ -203,6 +203,10 @@ class Delegator
       w.visit_enum(m)
     when IDL::AST::Enumerator
       w.visit_enumerator(m)
+    when IDL::AST::BitMask
+      w.visit_bitmask(m)
+    when IDL::AST::BitValue
+      w.visit_bitvalue(m)
     else
       raise "Invalid IDL member type for walkthrough: #{m.class.name}"
     end
@@ -577,7 +581,7 @@ class Delegator
          IDL::AST::Interface, IDL::AST::Home, IDL::AST::Component,
          IDL::AST::Porttype, IDL::AST::Connector,
          IDL::AST::Struct, IDL::AST::Union, IDL::AST::Typedef,
-         IDL::AST::Exception, IDL::AST::Enum,
+         IDL::AST::Exception, IDL::AST::Enum, IDL::AST::BitMask,
          IDL::AST::Valuetype, IDL::AST::Valuebox
       Type::ScopedName.new(node)
     when IDL::AST::TemplateParam
@@ -590,6 +594,8 @@ class Delegator
       Expression::ScopedName.new(node)
     when IDL::AST::Enumerator
       Expression::Enumerator.new(node)
+    when IDL::AST::BitValue
+      Expression::BitValue.new(node)
     else
       raise "invalid reference to #{node.class.name}: #{node.scoped_name}"
     end
@@ -807,6 +813,33 @@ class Delegator
   end
 
   def end_enum(_node)
+    set_last(@cur)
+    ret = IDL::Type::ScopedName.new(@cur)
+    @cur = @cur.enclosure
+    ret
+  end
+
+  def define_bitmask(_name)
+    params = {}
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
+    set_last
+    @cur = @cur.define(IDL::AST::BitMask, _name, params)
+  end
+
+  def declare_bitvalue(_name)
+    n = 0x01 << @cur.bitvalues.length
+    params = {
+      value: n,
+      bitmask: @cur
+    }
+    params[:annotations] = @annotation_stack
+    @annotation_stack = IDL::AST::Annotations.new
+    set_last(@cur.enclosure.define(IDL::AST::BitValue, _name, params))
+    @cur
+  end
+
+  def end_bitmask(_node)
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure

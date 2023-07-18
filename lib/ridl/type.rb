@@ -646,6 +646,34 @@ module IDL
       end
     end
 
+    class BitMask < NodeType
+      def narrow(obj)
+        typeerror(obj) unless ::Integer === obj
+        typeerror(obj) unless (0...@node.bitvalues.length) === obj
+        obj
+      end
+
+      def range_length
+        @node.bitvalues.length
+      end
+
+      def min
+        0
+      end
+
+      def max
+        @node.bitvalues.length - 1
+      end
+
+      def in_range?(val)
+        val >= self.min && val <= self.max
+      end
+
+      def next(val)
+        val < self.max ? val + 1 : self.min
+      end
+    end
+
     class Const < Type
       attr_reader :type
 

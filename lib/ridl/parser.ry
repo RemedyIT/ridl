@@ -521,6 +521,7 @@ rule
            | union_forward_dcl
            | enum_type
            | "native" native_declarator
+           | bitmask_type
 
   type_declarator : type_spec declarators
                     {
@@ -556,6 +557,7 @@ rule
                    | union_type
                    | enum_type
                    | map_type
+                   | bitmask_type
 
   declarators : declarator { [val[0]] }
               | declarators "," declarator { val[0] << val[2] }
@@ -686,6 +688,17 @@ rule
   element_spec : type_spec declarator
                  { val }
 
+  bitmask_type : bitmask_header bitmask_body { @d.end_bitmask(val[0]) }
+
+  bitmask_header : "bitmask" identifier { @d.define_bitmask(val[1]) }
+
+  bitmask_body : "{" bitmask_list "}"
+
+  bitmask_list : bit_value
+               | bitmask_list "," bit_value
+
+  bit_value : identifier { @d.declare_bitvalue (val[0]) }
+
   enum_type : _enum_header _enum_body
                   { @d.end_enum(val[0]) }
 
@@ -693,7 +706,7 @@ rule
   _enum_body   : "{" _enumerator_list "}"
 
   _enumerator_list : enumerator
-                   | _enumerator_list ","  enumerator
+                   | _enumerator_list "," enumerator
 
   enumerator : identifier
                {
