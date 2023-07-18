@@ -627,10 +627,10 @@ rule
   struct_forward_dcl : struct_def identifier { @d.declare_struct(val[1]) }
 
   struct_type : struct_header "{" member_list "}" { @d.end_struct(val[0]) }
-              | struct_header "{" "}" { @d.end_struct(val[0]) }
+              | struct_header "{" "}" { if @idlversion < 4 then raise "empty struct is only supported with IDL4 or newer" else @d.end_struct(val[0]) end }
 
   struct_header : struct_def identifier { @d.define_struct(val[1]) }
-                | struct_def identifier ":" struct_inheritance_spec { @d.define_struct(val[1]) }
+                | struct_def identifier ":" struct_inheritance_spec { if @idlversion < 4 then raise "struct inheritance is only supported with IDL4 or newer" else @d.define_struct(val[1]) end }
 
   struct_def : "struct" { nil }
 
