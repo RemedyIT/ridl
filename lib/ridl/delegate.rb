@@ -652,6 +652,8 @@ class Delegator
         raise "must be integer: #{_expression.value.inspect}"
       elsif _expression.value.negative?
         raise "must be positive integer: #{_expression.value}"
+      elsif _expression.value.zero?
+        raise "must be positive integer"
       end
 
       _expression.value
