@@ -717,9 +717,10 @@ class Delegator
     @cur
   end
 
-  def define_struct(name)
+  def define_struct(name, inherits = nil)
     params = { forward: false }
     params[:annotations] = @annotation_stack
+    params[:inherits] = inherits
     @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::Struct, name, params)

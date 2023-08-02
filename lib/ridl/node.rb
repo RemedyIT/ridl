@@ -2522,6 +2522,24 @@ module IDL::AST
       @forward = params[:forward] ? true : false
       super(_name, _enclosure)
       @idltype = IDL::Type::Struct.new(self)
+      @base = set_base(params[:inherits])
+    end
+
+    def set_base(inherits)
+      unless inherits.nil?
+        rtc = inherits.resolved_type
+        unless rtc.node.is_defined?
+         raise "#{typename} #{scoped_lm_name} cannot inherit from forward declared #{rtc.node.typename} #{rtc.node.scoped_lm_name}"
+        end
+        unless rtc.node.is_a?(IDL::AST::Struct)
+          raise "#{typename} #{scoped_lm_name} cannot inherit from non structure #{rtc.node.typename} #{rtc.node.scoped_lm_name}"
+        end
+        inherits.node
+      end
+    end
+
+    def base
+      @base
     end
 
     def is_defined?

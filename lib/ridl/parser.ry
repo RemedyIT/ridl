@@ -630,7 +630,7 @@ rule
               | struct_header "{" "}" { if @idlversion < 4 then raise "empty struct is only supported with IDL4 or newer" else @d.end_struct(val[0]) end }
 
   struct_header : struct_def identifier { @d.define_struct(val[1]) }
-                | struct_def identifier ":" struct_inheritance_spec { if @idlversion < 4 then raise "struct inheritance is only supported with IDL4 or newer" else @d.define_struct(val[1]) end }
+                | struct_def identifier ":" struct_inheritance_spec { if @idlversion < 4 then raise "struct inheritance is only supported with IDL4 or newer" else @d.define_struct(val[1], val[3]) end }
 
   struct_def : "struct" { nil }
 
