@@ -4126,7 +4126,7 @@ module_eval(<<'.,.,', 'parser.ry', 631)
 
 module_eval(<<'.,.,', 'parser.ry', 632)
   def _reduce_355(val, _values)
-     if @idlversion < 4 then raise "struct inheritance is only supported with IDL4 or newer" else @d.define_struct(val[1]) end
+     if @idlversion < 4 then raise "struct inheritance is only supported with IDL4 or newer" else @d.define_struct(val[1], val[3]) end
   end
 .,.,
 
