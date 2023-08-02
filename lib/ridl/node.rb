@@ -2534,7 +2534,7 @@ module IDL::AST
         unless rtc.node.is_a?(IDL::AST::Struct)
           raise "#{typename} #{scoped_lm_name} cannot inherit from non structure #{rtc.node.typename} #{rtc.node.scoped_lm_name}"
         end
-        base = inherits.node
+        inherits.node
       end
     end
 
