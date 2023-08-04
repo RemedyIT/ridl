@@ -269,7 +269,7 @@ module IDL::AST
 
     def define(_type, _name, params = {})
       unless is_definable?(_type)
-        raise "#{_type.to_s} is not definable in #{self.typename}."
+        raise "#{_type} is not definable in #{self.typename}."
       end
 
       node = search_self(_name)
@@ -2993,7 +2993,7 @@ module IDL::AST
     # Override from Node base to handle anonymous bitfields
     def define(_type, _name, params = {})
       unless is_definable?(_type)
-        raise "#{_type.to_s} is not definable in #{self.typename}."
+        raise "#{_type} is not definable in #{self.typename}."
       end
 
       # All IDL definables have a name except a bitfield, that has an optional name and can
