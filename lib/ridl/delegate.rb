@@ -844,7 +844,7 @@ class Delegator
     }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
-    set_last(@cur.enclosure.define(IDL::AST::BitValue, _name, params))
+    set_last(@cur.define(IDL::AST::BitValue, _name, params))
     @cur
   end
 
@@ -871,7 +871,7 @@ class Delegator
     }
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
-    set_last(@cur.enclosure.define(IDL::AST::BitField, name_, params))
+    set_last(@cur.define(IDL::AST::BitField, name_, params))
     @cur
   end
 
