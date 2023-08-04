@@ -2990,6 +2990,7 @@ module IDL::AST
       @idltype = IDL::Type::BitSet.new(self)
     end
 
+    # Override from Node base to handle anonymous bitfields
     def define(_type, _name, params = {})
       unless is_definable?(_type)
         raise "#{_type.to_s} is not definable in #{self.typename}."
