@@ -2152,10 +2152,10 @@ racc_reduce_table = [
   3, 292, :_reduce_none,
   2, 294, :_reduce_none,
   3, 294, :_reduce_none,
-  5, 295, :_reduce_none,
-  7, 295, :_reduce_none,
-  4, 295, :_reduce_none,
-  6, 295, :_reduce_none,
+  5, 295, :_reduce_395,
+  7, 295, :_reduce_396,
+  4, 295, :_reduce_397,
+  6, 295, :_reduce_398,
   1, 296, :_reduce_none,
   1, 296, :_reduce_none,
   1, 296, :_reduce_none,
@@ -4304,13 +4304,29 @@ module_eval(<<'.,.,', 'parser.ry', 708)
 
 # reduce 394 omitted
 
-# reduce 395 omitted
+module_eval(<<'.,.,', 'parser.ry', 717)
+  def _reduce_395(val, _values)
+     @d.declare_bitfield(val[4], val[2], nil)
+  end
+.,.,
 
-# reduce 396 omitted
+module_eval(<<'.,.,', 'parser.ry', 718)
+  def _reduce_396(val, _values)
+     @d.declare_bitfield(val[6], val[2], val[4])
+  end
+.,.,
 
-# reduce 397 omitted
+module_eval(<<'.,.,', 'parser.ry', 719)
+  def _reduce_397(val, _values)
+     @d.declare_bitfield(nil, val[2], nil)
+  end
+.,.,
 
-# reduce 398 omitted
+module_eval(<<'.,.,', 'parser.ry', 720)
+  def _reduce_398(val, _values)
+     @d.declare_bitfield(nil, val[2], val[4])
+  end
+.,.,
 
 # reduce 399 omitted
 

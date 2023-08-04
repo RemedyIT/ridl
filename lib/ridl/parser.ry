@@ -715,10 +715,10 @@ rule
   bitfield_list : bitset_field ";"
                 | bitfield_list bitset_field ";"
 
-  bitset_field : "bitfield" "<" positive_int_const ">" identifier
-               | "bitfield" "<" positive_int_const "," bitfield_destination_type ">" identifier
-               | "bitfield" "<" positive_int_const ">"
-               | "bitfield" "<" positive_int_const "," bitfield_destination_type ">"
+  bitset_field : "bitfield" "<" positive_int_const ">" identifier { @d.declare_bitfield(val[4], val[2], nil) }
+               | "bitfield" "<" positive_int_const "," bitfield_destination_type ">" identifier { @d.declare_bitfield(val[6], val[2], val[4]) }
+               | "bitfield" "<" positive_int_const ">" { @d.declare_bitfield(nil, val[2], nil) }
+               | "bitfield" "<" positive_int_const "," bitfield_destination_type ">" { @d.declare_bitfield(nil, val[2], val[4]) }
 
   bitfield_destination_type : boolean_type
                             | octet_type
