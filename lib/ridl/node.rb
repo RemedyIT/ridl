@@ -269,7 +269,7 @@ module IDL::AST
 
     def define(_type, _name, params = {})
       unless is_definable?(_type)
-        raise "#{_type.to_s} is not definable in #{self.typename}."
+        raise "#{_type} is not definable in #{self.typename}."
       end
 
       node = search_self(_name)
@@ -2917,6 +2917,7 @@ module IDL::AST
   end # Enumerator
 
   class BitMask < Node
+    DEFINABLE = [IDL::AST::BitValue]
     attr_reader :idltype
 
     def initialize(_name, _enclosure, _params)
@@ -2980,12 +2981,38 @@ module IDL::AST
   end # BitValue
 
   class BitSet < Node
+    DEFINABLE = [IDL::AST::BitField]
     attr_reader :idltype
 
     def initialize(_name, _enclosure, _params)
       super(_name, _enclosure)
       @bitfields = []
       @idltype = IDL::Type::BitSet.new(self)
+    end
+
+    # Override from Node base to handle anonymous bitfields
+    def define(_type, _name, params = {})
+      unless is_definable?(_type)
+        raise "#{_type} is not definable in #{self.typename}."
+      end
+
+      # All IDL definables have a name except a bitfield, that has an optional name and can
+      # be anonymous
+      node = search_self(_name) unless _name.nil?
+      if node.nil?
+        node = _type.new(_name, self, params)
+        node.annotations.concat(params[:annotations])
+        node.prefix = @prefix
+        introduce(node) unless _name.nil? # If there is no name don't introduce it in our scope
+        @children << node
+      else
+        if _type != node.class
+          raise "#{_name} is already defined as a type of #{node.typename}"
+        end
+
+        node = redefine(node, params)
+      end
+      node
     end
 
     def marshal_dump
@@ -3012,13 +3039,25 @@ module IDL::AST
   end # BitSet
 
   class BitField < Leaf
-    attr_reader :idltype, :bitset, :value
+    attr_reader :idltype, :bitset, :bits
 
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
-      @idltype = IDL::Type::ULong.new
+      @idltype = params[:idltype]
       @bitset = params[:bitset]
-      @value = params[:value]
+      @bits = params[:bits]
+
+      raise "Amount of bits for bitfield #{_name} must <= 64, not #{bits}" if bits > 64
+
+      # When no IDL type has been specified for the bitfield in IDL we need to determine
+      # the underlying type based on the number of bits
+      if @idltype.nil?
+        @idltype = IDL::Type::Boolean.new if bits == 1
+        @idltype = IDL::Type::TinyShort.new if bits.between?(2,8)
+        @idltype = IDL::Type::Short.new if bits.between?(9,16)
+        @idltype = IDL::Type::Long.new if bits.between?(17,32)
+        @idltype = IDL::Type::LongLong.new if bits.between?(33,64)
+      end
       @bitset.add_bitfield(self)
     end
 
@@ -3027,7 +3066,7 @@ module IDL::AST
     end
 
     def marshal_load(vars)
-      @value = vars.pop
+      @bits = vars.pop
       @bitset = vars.pop
       @idltype = vars.pop
       super(vars)
@@ -3038,7 +3077,7 @@ module IDL::AST
       _bitmask = _enclosure.resolve(@bitset.name)
       raise "Unable to resolve instantiated BitSet scope for bitfield #{@bitset.name}::#{name} instantiation" unless _bitset
 
-      super(instantiation_context, _enclosure, { bitset: _bitset, value: @value })
+      super(instantiation_context, _enclosure, { bitset: _bitset, bits: @bits })
     end
   end # BitField
 
