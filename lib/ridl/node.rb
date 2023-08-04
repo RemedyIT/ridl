@@ -2918,10 +2918,10 @@ module IDL::AST
 
   class BitMask < Node
     DEFINABLE = [IDL::AST::BitValue]
-    attr_reader :idltype
+    attr_reader :idltype, :bitbound
 
-    def initialize(_name, _enclosure, _params)
-      super(_name, _enclosure)
+    def initialize(name, _enclosure, _params)
+      super(name, _enclosure)
       @bitvalues = []
       @idltype = IDL::Type::BitMask.new(self)
     end
@@ -2942,6 +2942,22 @@ module IDL::AST
 
     def add_bitvalue(n)
       @bitvalues << n
+    end
+
+    def determine_bitbound
+      bitbound = @annotations[:bit_bound].first
+      bits = @bitvalues.size
+      unless bitbound.nil?
+        bits = bitbound.fields[:value]
+        raise "Missing number of bits for bit_bound annotation for #{name}" if bits.nil?
+        raise "Illegal negative bit_bound #{bits} value for #{name}" if bits.negative?
+        raise "Illegal zero bit_bound value for #{name}, not #{bits}" if bits.zero?
+        raise "Bitbound for #{name} must be <= 64" if bits > 64
+      end
+      @bitbound = IDL::Type::UTinyShort.new if bits.between?(1,8)
+      @bitbound = IDL::Type::UShort.new if bits.between?(9,16)
+      @bitbound = IDL::Type::ULong.new if bits.between?(17,32)
+      @bitbound = IDL::Type::ULongLong.new if bits.between?(33,64)
     end
 
     def instantiate(instantiation_context, _enclosure)

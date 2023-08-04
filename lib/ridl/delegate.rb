@@ -848,7 +848,8 @@ class Delegator
     @cur
   end
 
-  def end_bitmask(_node)
+  def end_bitmask(node)
+    node.determine_bitbound
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure
