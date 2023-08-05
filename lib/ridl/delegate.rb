@@ -821,7 +821,8 @@ class Delegator
     @cur
   end
 
-  def end_enum(_node)
+  def end_enum(node)
+    node.determine_bitbound
     set_last(@cur)
     ret = IDL::Type::ScopedName.new(@cur)
     @cur = @cur.enclosure
