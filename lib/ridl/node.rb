@@ -2854,7 +2854,7 @@ module IDL::AST
   end # UnionMember
 
   class Enum < Leaf
-    attr_reader :idltype
+    attr_reader :idltype, :bitbound, :bitbound_bits
 
     def initialize(_name, _enclosure, _params)
       super(_name, _enclosure)
@@ -2863,11 +2863,13 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @enums
+      super() << @idltype << @bitbound << @bitbound_bits << @enums
     end
 
     def marshal_load(vars)
       @enums = vars.pop
+      @bitbound = vars.pop
+      @bitbound_bits = vars.pop
       @idltype = vars.pop
       super(vars)
     end
@@ -2878,6 +2880,21 @@ module IDL::AST
 
     def add_enumerator(n)
       @enums << n
+    end
+
+    def determine_bitbound
+      bitbound = @annotations[:bit_bound].first
+      @bitbound_bits = @enums.size
+      unless bitbound.nil?
+        @bitbound_bits = bitbound.fields[:value]
+        raise "Missing number of bits for bit_bound annotation for #{name}" if @bitbound_bits.nil?
+        raise "Illegal negative bit_bound #{bits} value for #{name}" if @bitbound_bits.negative?
+        raise "Illegal zero bit_bound value for #{name}, not #{bits}" if @bitbound_bits.zero?
+        raise "Bitbound for #{name} must be <= 32" unless @bitbound_bits <= 32
+      end
+      @bitbound = IDL::Type::UTinyShort.new if @bitbound_bits.between?(1,8)
+      @bitbound = IDL::Type::UShort.new if @bitbound_bits.between?(9,16)
+      @bitbound = IDL::Type::ULong.new if @bitbound_bits.between?(17,32)
     end
 
     def instantiate(instantiation_context, _enclosure)
@@ -2918,7 +2935,7 @@ module IDL::AST
 
   class BitMask < Node
     DEFINABLE = [IDL::AST::BitValue]
-    attr_reader :idltype, :bitbound
+    attr_reader :idltype, :bitbound, :bitbound_bits
 
     def initialize(name, _enclosure, _params)
       super(name, _enclosure)
@@ -2927,11 +2944,13 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitvalues
+      super() << @idltype << @bitbound << @bitbound_bits << @bitvalues
     end
 
     def marshal_load(vars)
       @bitvalues = vars.pop
+      @bitbound = vars.pop
+      @bitbound_bits = vars.pop
       @idltype = vars.pop
       super(vars)
     end
@@ -2946,18 +2965,18 @@ module IDL::AST
 
     def determine_bitbound
       bitbound = @annotations[:bit_bound].first
-      bits = @bitvalues.size
+      @bitbound_bits = @bitvalues.size
       unless bitbound.nil?
-        bits = bitbound.fields[:value]
-        raise "Missing number of bits for bit_bound annotation for #{name}" if bits.nil?
-        raise "Illegal negative bit_bound #{bits} value for #{name}" if bits.negative?
-        raise "Illegal zero bit_bound value for #{name}, not #{bits}" if bits.zero?
-        raise "Bitbound for #{name} must be <= 64" if bits > 64
+        @bitbound_bits = bitbound.fields[:value]
+        raise "Missing number of bits for bit_bound annotation for #{name}" if @bitbound_bits.nil?
+        raise "Illegal negative bit_bound #{bits} value for #{name}" if @bitbound_bits.negative?
+        raise "Illegal zero bit_bound value for #{name}, not #{bits}" if @bitbound_bits.zero?
+        raise "Bitbound for #{name} must be <= 64" unless @bitbound_bits <= 64
       end
-      @bitbound = IDL::Type::UTinyShort.new if bits.between?(1,8)
-      @bitbound = IDL::Type::UShort.new if bits.between?(9,16)
-      @bitbound = IDL::Type::ULong.new if bits.between?(17,32)
-      @bitbound = IDL::Type::ULongLong.new if bits.between?(33,64)
+      @bitbound = IDL::Type::UTinyShort.new if @bitbound_bits.between?(1,8)
+      @bitbound = IDL::Type::UShort.new if @bitbound_bits.between?(9,16)
+      @bitbound = IDL::Type::ULong.new if @bitbound_bits.between?(17,32)
+      @bitbound = IDL::Type::ULongLong.new if @bitbound_bits.between?(33,64)
     end
 
     def instantiate(instantiation_context, _enclosure)
