@@ -2884,7 +2884,7 @@ module IDL::AST
 
     def determine_bitbound
       bitbound = @annotations[:bit_bound].first
-      @bitbound_bits = @enums.size
+      @bitbound_bits = 32
       unless bitbound.nil?
         @bitbound_bits = bitbound.fields[:value]
         raise "Missing number of bits for bit_bound annotation for #{name}" if @bitbound_bits.nil?
