@@ -2860,6 +2860,7 @@ module IDL::AST
       super(_name, _enclosure)
       @enums = []
       @idltype = IDL::Type::Enum.new(self)
+      @bitbound = IDL::Type::ULong.new
     end
 
     def marshal_dump
@@ -2894,7 +2895,6 @@ module IDL::AST
       end
       @bitbound = IDL::Type::UTinyShort.new if @bitbound_bits.between?(1,8)
       @bitbound = IDL::Type::UShort.new if @bitbound_bits.between?(9,16)
-      @bitbound = IDL::Type::ULong.new if @bitbound_bits.between?(17,32)
     end
 
     def instantiate(instantiation_context, _enclosure)
