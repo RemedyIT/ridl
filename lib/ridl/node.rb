@@ -2861,6 +2861,7 @@ module IDL::AST
       @enums = []
       @idltype = IDL::Type::Enum.new(self)
       @bitbound = IDL::Type::ULong.new
+      @bitbound_bits = 32
     end
 
     def marshal_dump
@@ -2885,7 +2886,6 @@ module IDL::AST
 
     def determine_bitbound
       bitbound = @annotations[:bit_bound].first
-      @bitbound_bits = 32
       unless bitbound.nil?
         @bitbound_bits = bitbound.fields[:value]
         raise "Missing number of bits for bit_bound annotation for #{name}" if @bitbound_bits.nil?
