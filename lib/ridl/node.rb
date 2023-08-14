@@ -2581,10 +2581,11 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @defined << @recursive << @forward
+      super() << @idltype << @defined << @recursive << @forward << @base
     end
 
     def marshal_load(vars)
+      @base = vars.pop
       @forward = vars.pop
       @recursive = vars.pop
       @defined = vars.pop
@@ -2949,8 +2950,8 @@ module IDL::AST
 
     def marshal_load(vars)
       @bitvalues = vars.pop
-      @bitbound = vars.pop
       @bitbound_bits = vars.pop
+      @bitbound = vars.pop
       @idltype = vars.pop
       super(vars)
     end
@@ -3070,9 +3071,9 @@ module IDL::AST
     end
 
     def marshal_load(vars)
+      @bitset = vars.pop
       @bitfields = vars.pop
       @idltype = vars.pop
-      @bitset = vars.pop
       super(vars)
     end
 
@@ -3113,12 +3114,13 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitset << @value
+      super() << @idltype << @bits << @bitset << @value
     end
 
     def marshal_load(vars)
-      @bits = vars.pop
+      @value = vars.pop
       @bitset = vars.pop
+      @bits = vars.pop
       @idltype = vars.pop
       super(vars)
     end
