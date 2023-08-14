@@ -857,9 +857,10 @@ class Delegator
     ret
   end
 
-  def define_bitset(_name, _base = nil)
+  def define_bitset(_name, inherits = nil)
     params = {}
     params[:annotations] = @annotation_stack
+    params[:inherits] = inherits
     @annotation_stack = IDL::AST::Annotations.new
     set_last
     @cur = @cur.define(IDL::AST::BitSet, _name, params)
