@@ -2581,7 +2581,7 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @defined << @recursive << @forward << @base
+      super() << @idltype << @defined << @recursive << @forward
     end
 
     def marshal_load(vars)
@@ -2589,7 +2589,6 @@ module IDL::AST
       @recursive = vars.pop
       @defined = vars.pop
       @idltype = vars.pop
-      @base = vars.pop
       super(vars)
     end
 
