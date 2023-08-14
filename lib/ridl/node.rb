@@ -2581,10 +2581,11 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @defined << @recursive << @forward
+      super() << @idltype << @defined << @recursive << @forward << @base
     end
 
     def marshal_load(vars)
+      @base = vars.pop
       @forward = vars.pop
       @recursive = vars.pop
       @defined = vars.pop
@@ -2949,8 +2950,8 @@ module IDL::AST
 
     def marshal_load(vars)
       @bitvalues = vars.pop
-      @bitbound = vars.pop
       @bitbound_bits = vars.pop
+      @bitbound = vars.pop
       @idltype = vars.pop
       super(vars)
     end
@@ -3019,10 +3020,25 @@ module IDL::AST
     DEFINABLE = [IDL::AST::BitField]
     attr_reader :idltype
 
-    def initialize(_name, _enclosure, _params)
+    def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @bitfields = []
       @idltype = IDL::Type::BitSet.new(self)
+      @base = set_base(params[:inherits])
+    end
+
+    def set_base(inherits)
+      unless inherits.nil?
+        rtc = inherits.resolved_type
+        unless rtc.node.is_a?(IDL::AST::BitSet)
+          raise "#{typename} #{scoped_lm_name} cannot inherit from non bitset #{rtc.node.typename} #{rtc.node.scoped_lm_name}"
+        end
+        inherits.node
+      end
+    end
+
+    def base
+      @base
     end
 
     # Override from Node base to handle anonymous bitfields
@@ -3051,10 +3067,11 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitfields
+      super() << @idltype << @bitfields << @bitset
     end
 
     def marshal_load(vars)
+      @bitset = vars.pop
       @bitfields = vars.pop
       @idltype = vars.pop
       super(vars)
@@ -3097,12 +3114,13 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitset << @value
+      super() << @idltype << @bits << @bitset << @value
     end
 
     def marshal_load(vars)
-      @bits = vars.pop
+      @value = vars.pop
       @bitset = vars.pop
+      @bits = vars.pop
       @idltype = vars.pop
       super(vars)
     end
