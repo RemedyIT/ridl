@@ -29,7 +29,7 @@ module IDL
       backend: nil,
       macros: {
       },
-      idlversion: 4
+      idlversion: 3
   })
   CORE_OPTIONS = OPTIONS.keys
 
