@@ -2938,10 +2938,11 @@ module IDL::AST
     DEFINABLE = [IDL::AST::BitValue]
     attr_reader :idltype, :bitbound, :bitbound_bits
 
-    def initialize(name, _enclosure, _params)
-      super(name, _enclosure)
+    def initialize(name, enclosure, params)
+      super(name, enclosure)
       @bitvalues = []
       @idltype = IDL::Type::BitMask.new(self)
+      annotations.concat(params[:annotations])
     end
 
     def marshal_dump
@@ -2965,7 +2966,7 @@ module IDL::AST
     end
 
     def determine_bitbound
-      bitbound = @annotations[:bit_bound].first
+      bitbound = annotations[:bit_bound].first
       @bitbound_bits = @bitvalues.size
       unless bitbound.nil?
         @bitbound_bits = bitbound.fields[:value]
@@ -2986,22 +2987,29 @@ module IDL::AST
   end # BitMask
 
   class BitValue < Leaf
-    attr_reader :idltype, :bitmask, :value
+    attr_reader :idltype, :bitmask, :position, :value
 
-    def initialize(_name, _enclosure, params)
-      super(_name, _enclosure)
+    def initialize(name, enclosure, params)
+      super(name, enclosure)
       @idltype = IDL::Type::ULong.new
       @bitmask = params[:bitmask]
       @value = params[:value]
+      @position = params[:position]
+      annotations.concat(params[:annotations])
+      position_annotation = annotations[:position].first
+      unless position_annotation.nil?
+        @position = position_annotation.fields[:value]
+      end
       @bitmask.add_bitvalue(self)
     end
 
     def marshal_dump
-      super() << @idltype << @bitmask << @value
+      super() << @idltype << @bitmask << @position << @value
     end
 
     def marshal_load(vars)
       @value = vars.pop
+      @position = vars.pop
       @bitmask = vars.pop
       @idltype = vars.pop
       super(vars)
@@ -3020,8 +3028,8 @@ module IDL::AST
     DEFINABLE = [IDL::AST::BitField]
     attr_reader :idltype
 
-    def initialize(_name, _enclosure, params)
-      super(_name, _enclosure)
+    def initialize(_name, enclosure, params)
+      super(_name, enclosure)
       @bitfields = []
       @idltype = IDL::Type::BitSet.new(self)
       @base = set_base(params[:inherits])
@@ -3137,8 +3145,8 @@ module IDL::AST
   class Typedef < Leaf
     attr_reader :idltype
 
-    def initialize(_name, _enclosure, params)
-      super(_name, _enclosure)
+    def initialize(_name, enclosure, params)
+      super(_name, enclosure)
       @idltype = params[:type]
     end
 

@@ -829,23 +829,28 @@ class Delegator
     ret
   end
 
-  def define_bitmask(_name)
+  def define_bitmask(name)
     params = {}
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
     set_last
-    @cur = @cur.define(IDL::AST::BitMask, _name, params)
+    @cur = @cur.define(IDL::AST::BitMask, name, params)
   end
 
-  def declare_bitvalue(_name)
-    n = 0x01 << @cur.bitvalues.length
+  def declare_bitvalue(name)
+    p = @cur.bitvalues.length
+    unless @cur.bitvalues.empty?
+      p = @cur.bitvalues.last.position.next
+    end
+    n = 0x01 << p
     params = {
       value: n,
-      bitmask: @cur
+      position: p,
+      bitmask: @cur,
+      annotations: @annotation_stack
     }
-    params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
-    set_last(@cur.define(IDL::AST::BitValue, _name, params))
+    set_last(@cur.define(IDL::AST::BitValue, name, params))
     @cur
   end
 
