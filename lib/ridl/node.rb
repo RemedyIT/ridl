@@ -2857,12 +2857,13 @@ module IDL::AST
   class Enum < Leaf
     attr_reader :idltype, :bitbound, :bitbound_bits
 
-    def initialize(_name, _enclosure, _params)
-      super(_name, _enclosure)
+    def initialize(_name, enclosure, params)
+      super(_name, enclosure)
       @enums = []
       @idltype = IDL::Type::Enum.new(self)
       @bitbound = IDL::Type::ULong.new
       @bitbound_bits = 32
+      annotations.concat(params[:annotations])
     end
 
     def marshal_dump
@@ -2886,7 +2887,7 @@ module IDL::AST
     end
 
     def determine_bitbound
-      bitbound = @annotations[:bit_bound].first
+      bitbound = annotations[:bit_bound].first
       unless bitbound.nil?
         @bitbound_bits = bitbound.fields[:value]
         raise "Missing number of bits for bit_bound annotation for #{name}" if @bitbound_bits.nil?
