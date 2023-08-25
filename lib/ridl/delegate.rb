@@ -842,9 +842,7 @@ class Delegator
     unless @cur.bitvalues.empty?
       p = @cur.bitvalues.last.position.next
     end
-    n = 0x01 << p
     params = {
-      value: n,
       position: p,
       bitmask: @cur,
       annotations: @annotation_stack

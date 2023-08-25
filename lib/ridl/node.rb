@@ -2857,12 +2857,13 @@ module IDL::AST
   class Enum < Leaf
     attr_reader :idltype, :bitbound, :bitbound_bits
 
-    def initialize(_name, _enclosure, _params)
-      super(_name, _enclosure)
+    def initialize(_name, enclosure, params)
+      super(_name, enclosure)
       @enums = []
       @idltype = IDL::Type::Enum.new(self)
       @bitbound = IDL::Type::ULong.new
       @bitbound_bits = 32
+      annotations.concat(params[:annotations])
     end
 
     def marshal_dump
@@ -2886,7 +2887,7 @@ module IDL::AST
     end
 
     def determine_bitbound
-      bitbound = @annotations[:bit_bound].first
+      bitbound = annotations[:bit_bound].first
       unless bitbound.nil?
         @bitbound_bits = bitbound.fields[:value]
         raise "Missing number of bits for bit_bound annotation for #{name}" if @bitbound_bits.nil?
@@ -2987,13 +2988,12 @@ module IDL::AST
   end # BitMask
 
   class BitValue < Leaf
-    attr_reader :idltype, :bitmask, :position, :value
+    attr_reader :idltype, :bitmask, :position
 
     def initialize(name, enclosure, params)
       super(name, enclosure)
       @idltype = IDL::Type::ULong.new
       @bitmask = params[:bitmask]
-      @value = params[:value]
       @position = params[:position]
       annotations.concat(params[:annotations])
       position_annotation = annotations[:position].first
@@ -3004,11 +3004,10 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitmask << @position << @value
+      super() << @idltype << @bitmask << @position
     end
 
     def marshal_load(vars)
-      @value = vars.pop
       @position = vars.pop
       @bitmask = vars.pop
       @idltype = vars.pop
@@ -3020,7 +3019,7 @@ module IDL::AST
       _bitmask = _enclosure.resolve(@bitmask.name)
       raise "Unable to resolve instantiated BitMask scope for bitvalue #{@bitmask.name}::#{name} instantiation" unless _bitmask
 
-      super(instantiation_context, _enclosure, { bitmask: _bitmask, value: @value })
+      super(instantiation_context, _enclosure, { bitmask: _bitmask, position: @position })
     end
   end # BitValue
 
