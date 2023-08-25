@@ -838,7 +838,7 @@ class Delegator
   end
 
   def declare_bitvalue(name)
-    p = @cur.bitvalues.length
+    p = 0
     unless @cur.bitvalues.empty?
       p = @cur.bitvalues.last.position.next
     end
