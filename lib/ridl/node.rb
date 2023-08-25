@@ -2987,13 +2987,12 @@ module IDL::AST
   end # BitMask
 
   class BitValue < Leaf
-    attr_reader :idltype, :bitmask, :position, :value
+    attr_reader :idltype, :bitmask, :position
 
     def initialize(name, enclosure, params)
       super(name, enclosure)
       @idltype = IDL::Type::ULong.new
       @bitmask = params[:bitmask]
-      @value = params[:value]
       @position = params[:position]
       annotations.concat(params[:annotations])
       position_annotation = annotations[:position].first
@@ -3004,11 +3003,10 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitmask << @position << @value
+      super() << @idltype << @bitmask << @position
     end
 
     def marshal_load(vars)
-      @value = vars.pop
       @position = vars.pop
       @bitmask = vars.pop
       @idltype = vars.pop
@@ -3020,7 +3018,7 @@ module IDL::AST
       _bitmask = _enclosure.resolve(@bitmask.name)
       raise "Unable to resolve instantiated BitMask scope for bitvalue #{@bitmask.name}::#{name} instantiation" unless _bitmask
 
-      super(instantiation_context, _enclosure, { bitmask: _bitmask, value: @value })
+      super(instantiation_context, _enclosure, { bitmask: _bitmask, position: @position })
     end
   end # BitValue
 
