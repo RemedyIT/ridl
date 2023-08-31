@@ -79,7 +79,7 @@ module IDL::AST
   end
 
   class Leaf
-    attr_reader :name, :intern, :scopes, :prefix, :annotations
+    attr_reader :name, :intern, :scopes, :prefix, :annotations, :default
     attr_accessor :enclosure
 
     def typename
@@ -98,10 +98,15 @@ module IDL::AST
       @repo_id = nil
       @repo_ver = nil
       @annotations = Annotations.new
+      @default = nil
     end
 
     def lm_name
       @lm_name ||= @name.checked_name.dup
+    end
+
+    def default
+      @default
     end
 
     def lm_scopes
@@ -2623,6 +2628,12 @@ module IDL::AST
     def initialize(_name, _enclosure, params)
       super(_name, _enclosure)
       @idltype = params[:type]
+      annotations.concat(params[:annotations])
+      default_annotation = annotations[:default].first
+      unless default_annotation.nil?
+        @default = default_annotation.fields[:value]
+        #raise "#{@default}"
+      end
       unless @idltype.is_a?(IDL::Type::ScopedName) && @idltype.is_node?(IDL::AST::TemplateParam)
         raise "Anonymous type definitions are not allowed!" if @idltype.is_anonymous?
         raise "Exception #{@idltype.typename} is not allowed as member!" if @idltype.is_node?(IDL::AST::Exception)
@@ -2676,6 +2687,10 @@ module IDL::AST
     def marshal_load(vars)
       @idltype = vars.pop
       super(vars)
+    end
+
+    def default
+      @default
     end
 
     def instantiate(instantiation_context, _enclosure, _params = {})
@@ -3147,6 +3162,16 @@ module IDL::AST
     def initialize(_name, enclosure, params)
       super(_name, enclosure)
       @idltype = params[:type]
+      annotations.concat(params[:annotations])
+      default_annotation = annotations[:default].first
+      unless default_annotation.nil?
+        @default = default_annotation.fields[:value]
+        #raise "#{@default}"
+      end
+    end
+
+    def default
+      @default
     end
 
     def is_local?(recurstk = [])
