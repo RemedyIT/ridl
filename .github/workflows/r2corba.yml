@@ -65,21 +65,21 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
     - name: checkout ridl
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: checkout ACE_TAO
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: DOCGroup/ACE_TAO
         path: ${{ env.DOC_ROOT }}
         ref: Latest_ACE7TAO3_Micro
     - name: checkout MPC
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: DOCGroup/MPC
         path: ${{ env.MPC_ROOT }}
         ref: Latest_ACE7TAO3_Micro
     - name: checkout r2corba
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: RemedyIT/r2corba
         path: ${{ env.R2CORBA_ROOT }}
@@ -138,9 +138,9 @@ jobs:
         architecture: 'x64'
         distribution: 'zulu'
     - name: checkout ridl
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: checkout r2corba
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: RemedyIT/r2corba
         path: ${{ env.R2CORBA_ROOT }}
