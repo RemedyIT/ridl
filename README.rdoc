@@ -53,4 +53,4 @@ A new RIDL ruby gem release can be made by incrementing the RIDL version in link
 
 == Regenerating `lib/ridl/parser.rb`
 
-The file `lib/ridl/parser.rb` can be regenerated using `racc -o parser.rb -E parser.ry`. The option `-E` embeds the racc parser within RIDL which is required for RIDL because jruby doesn't contain `RACC` as cruby does.
+The file `lib/ridl/parser.rb` can be regenerated using `racc -o parser.rb -F -E parser.ry`. The option `-E` embeds the racc parser within RIDL which is required for RIDL because jruby doesn't contain `RACC` as cruby does.
