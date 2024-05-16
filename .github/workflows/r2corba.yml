@@ -76,13 +76,13 @@ jobs:
       with:
         repository: DOCGroup/ACE_TAO
         path: ${{ env.DOC_ROOT }}
-        ref: Latest_ACE7TAO3_Micro
+        ref: Latest_ACE8TAO4_Micro
     - name: checkout MPC
       uses: actions/checkout@v4
       with:
         repository: DOCGroup/MPC
         path: ${{ env.MPC_ROOT }}
-        ref: Latest_ACE7TAO3_Micro
+        ref: Latest_ACE8TAO4_Micro
     - name: checkout r2corba
       uses: actions/checkout@v4
       with:
