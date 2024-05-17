@@ -27,27 +27,27 @@ jobs:
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '2.5'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '2.6'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '2.7'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '3.1'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '3.2'
           - CC: gcc-12
             CXX: g++-12
