@@ -27,27 +27,27 @@ jobs:
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '2.5'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '2.6'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '2.7'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '3.1'
           - CC: gcc-11
             CXX: g++-11
             PackageDeps: g++-11
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             ruby: '3.2'
           - CC: gcc-12
             CXX: g++-12
@@ -76,13 +76,13 @@ jobs:
       with:
         repository: DOCGroup/ACE_TAO
         path: ${{ env.DOC_ROOT }}
-        ref: Latest_ACE7TAO3_Micro
+        ref: Latest_ACE8TAO4_Micro
     - name: checkout MPC
       uses: actions/checkout@v4
       with:
         repository: DOCGroup/MPC
         path: ${{ env.MPC_ROOT }}
-        ref: Latest_ACE7TAO3_Micro
+        ref: Latest_ACE8TAO4_Micro
     - name: checkout r2corba
       uses: actions/checkout@v4
       with:

@@ -31,7 +31,7 @@ env:
   RIDL_ROOT: ${{ github.workspace }}
   TAOX11_ROOT: ${{ github.workspace }}/taox11
   X11_BRANCH: master
-  ACETAOMPC_BRANCH: Latest_ACE7TAO3_Micro
+  ACETAOMPC_BRANCH: Latest_ACE8TAO4_Micro
 
 jobs:
   linux:
@@ -40,11 +40,6 @@ jobs:
       matrix:
         include:
           - os: ubuntu-20.04
-            CC: gcc-7
-            CXX: g++-7
-            ruby: '2.5'
-            PackageDeps: g++-7
-          - os: ubuntu-20.04
             CC: gcc-8
             CXX: g++-8
             ruby: '2.6'
@@ -52,12 +47,12 @@ jobs:
           - os: ubuntu-20.04
             CC: gcc-9
             CXX: g++-9
-            ruby: '2.7'
+            ruby: '2.6'
             PackageDeps: g++-9
           - os: ubuntu-20.04
             CC: gcc-10
             CXX: g++-10
-            ruby: '3.0'
+            ruby: '2.7'
             PackageDeps: g++-10
           - os: ubuntu-20.04
             CC: gcc-11
