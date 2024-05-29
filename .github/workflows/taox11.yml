@@ -122,7 +122,7 @@ jobs:
     - name: Add packages
       run: |
         sudo apt-get --yes update
-        sudo apt-get --yes install libxerces-c-dev libssl-dev ${{ matrix.PackageDeps }}
+        sudo apt-get --yes install --no-upgrade libxerces-c-dev libssl-dev ${{ matrix.PackageDeps }}
     - name: Run brix11 configure
       run: |
         $X11_BASE_ROOT/bin/brix11 -D RIDL_ROOT=$RIDL_ROOT/lib configure -W aceroot=$ACE_ROOT -W taoroot=$TAO_ROOT -W mpcroot=$MPC_ROOT
