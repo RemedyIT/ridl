@@ -3075,11 +3075,11 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitset_bits << @bitfields << @bitset
+      super() << @idltype << @bitset_bits << @bitfields << @base
     end
 
     def marshal_load(vars)
-      @bitset = vars.pop
+      @base = vars.pop
       @bitfields = vars.pop
       @bitset_bits = vars.pop
       @idltype = vars.pop
@@ -3107,6 +3107,7 @@ module IDL::AST
     def add_bitfield(n)
       @bitfields << n
       @bitset_bits += n.bits
+      raise "Bitset size #{bitset_bits} must be between 1 and 64" unless bitset_bits.between?(1, 64)
     end
 
     def instantiate(instantiation_context, _enclosure)
