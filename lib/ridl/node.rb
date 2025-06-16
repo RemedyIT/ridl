@@ -3030,6 +3030,7 @@ module IDL::AST
     def initialize(_name, enclosure, params)
       super(_name, enclosure)
       @bitfields = []
+      @bitset_bits = 0
       @idltype = IDL::Type::BitSet.new(self)
       @base = set_base(params[:inherits])
     end
@@ -3074,14 +3075,27 @@ module IDL::AST
     end
 
     def marshal_dump
-      super() << @idltype << @bitfields << @bitset
+      super() << @idltype << @bitset_bits << @bitfields << @bitset
     end
 
     def marshal_load(vars)
       @bitset = vars.pop
       @bitfields = vars.pop
+      @bitset_bits = vars.pop
       @idltype = vars.pop
       super(vars)
+    end
+
+    # Total number of bits in this bitset including the optional base
+    def bitset_bits
+      base.nil? ? @bitset_bits : @bitset_bits + base.bitset_bits
+    end
+
+    def underlying_type
+      return IDL::Type::UTinyShort.new if bitset_bits.between?(1,8)
+      return IDL::Type::UShort.new if bitset_bits.between?(9,16)
+      return IDL::Type::ULong.new if bitset_bits.between?(17,32)
+      return IDL::Type::ULongLong.new if bitset_bits.between?(33,64)
     end
 
     def bitfields
@@ -3090,6 +3104,7 @@ module IDL::AST
 
     def add_bitfield(n)
       @bitfields << n
+      @bitset_bits += n.bits
     end
 
     def instantiate(instantiation_context, _enclosure)
