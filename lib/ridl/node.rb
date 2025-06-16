@@ -3091,6 +3091,8 @@ module IDL::AST
       base.nil? ? @bitset_bits : @bitset_bits + base.bitset_bits
     end
 
+    # Underlying type which is large enough to contain the full bitset
+    # including its base
     def underlying_type
       return IDL::Type::UTinyShort.new if bitset_bits.between?(1,8)
       return IDL::Type::UShort.new if bitset_bits.between?(9,16)
