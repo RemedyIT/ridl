@@ -188,6 +188,7 @@ jobs:
     - uses: shogo82148/actions-setup-perl@v1
       with:
         distribution: strawberry
+    - uses: ammaraskar/msvc-problem-matcher@0.3.0
     - name: Run brix11 configure
       run: |
         %X11_BASE_ROOT%\bin\brix11 -t ${{ matrix.project_type }} configure -W aceroot=%ACE_ROOT% -W taoroot=%TAO_ROOT% -W mpcroot=%MPC_ROOT%
