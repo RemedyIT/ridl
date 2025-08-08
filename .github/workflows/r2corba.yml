@@ -102,6 +102,7 @@ jobs:
       with:
         languages: cpp, ruby
       if: matrix.feature == 'CodeQL'
+    - uses: ammaraskar/gcc-problem-matcher@0.3.0
     - name: Run rake configure
       run: |
         cd $Env:R2CORBA_ROOT && rake configure
@@ -121,7 +122,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             ruby: 'jruby'
             jacorb_version: '3.9'
             java-version: '8'

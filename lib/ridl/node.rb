@@ -2570,6 +2570,10 @@ module IDL::AST
       @children.find_all { |c| c.is_a? IDL::AST::Member }
     end
 
+    def types
+      @children.reject { |c| c.is_a? IDL::AST::Member }
+    end
+
     def is_local?(recurstk = [])
       # not local if forward decl or recursion detected
       return false if is_forward? || recurstk.include?(self)
@@ -2730,6 +2734,10 @@ module IDL::AST
 
     def members
       @children.find_all { |c| c.is_a? IDL::AST::UnionMember }
+    end
+
+    def types
+      @children.reject { |c| c.is_a? IDL::AST::UnionMember }
     end
 
     def is_local?(recurstk = [])

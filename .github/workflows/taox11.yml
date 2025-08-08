@@ -39,17 +39,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-20.04
-            CC: gcc-8
-            CXX: g++-8
-            ruby: '2.6'
-            PackageDeps: g++-8
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             CC: gcc-9
             CXX: g++-9
             ruby: '2.6'
             PackageDeps: g++-9
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             CC: gcc-10
             CXX: g++-10
             ruby: '2.7'
@@ -123,6 +118,7 @@ jobs:
       run: |
         sudo apt-get --yes update
         sudo apt-get --yes install libxerces-c-dev libssl-dev ${{ matrix.PackageDeps }}
+    - uses: ammaraskar/gcc-problem-matcher@0.3.0
     - name: Run brix11 configure
       run: |
         $X11_BASE_ROOT/bin/brix11 -D RIDL_ROOT=$RIDL_ROOT/lib configure -W aceroot=$ACE_ROOT -W taoroot=$TAO_ROOT -W mpcroot=$MPC_ROOT
@@ -143,14 +139,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: windows-2019
-            ruby: '2.6'
-            project_type: vs2019
-          - os: windows-2019
+          - os: windows-2025
             ruby: '3.0'
-            project_type: vs2019
+            project_type: vs2022
+            make_flags: '--debug'
+          - os: windows-2025
+            ruby: '3.0'
+            project_type: vs2022
+            make_flags: '--release'
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} ruby-${{ matrix.ruby }} ${{ matrix.project_type }}
+    name: ${{ matrix.os }} ruby-${{ matrix.ruby }} ${{ matrix.project_type }} ${{ matrix.make_flags }}
     steps:
     - if: contains(fromJson('["pull_request", "pull_request_target"]'), github.event_name) && github.repository_owner == 'RemedyIT'
       run: |
@@ -190,6 +188,7 @@ jobs:
     - uses: shogo82148/actions-setup-perl@v1
       with:
         distribution: strawberry
+    - uses: ammaraskar/msvc-problem-matcher@0.3.0
     - name: Run brix11 configure
       run: |
         %X11_BASE_ROOT%\bin\brix11 -t ${{ matrix.project_type }} configure -W aceroot=%ACE_ROOT% -W taoroot=%TAO_ROOT% -W mpcroot=%MPC_ROOT%
@@ -204,5 +203,5 @@ jobs:
       shell: cmd
     - name: Run brix11 make
       run: |
-        %X11_BASE_ROOT%/bin/brix11 make -N -d %X11_BASE_ROOT% -- make -N -d %TAOX11_ROOT%/examples -- make -N -d %TAOX11_ROOT%/orbsvcs/tests -- make -N -d %TAOX11_ROOT%/tests
+        %X11_BASE_ROOT%/bin/brix11 make ${{ matrix.make_flags }} -N -d %X11_BASE_ROOT% -- make -N -d %TAOX11_ROOT%/examples -- make -N -d %TAOX11_ROOT%/orbsvcs/tests -- make -N -d %TAOX11_ROOT%/tests
       shell: cmd
