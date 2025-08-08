@@ -102,6 +102,7 @@ jobs:
       with:
         languages: cpp, ruby
       if: matrix.feature == 'CodeQL'
+    - uses: ammaraskar/gcc-problem-matcher@0.3.0
     - name: Run rake configure
       run: |
         cd $Env:R2CORBA_ROOT && rake configure
