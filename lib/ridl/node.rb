@@ -2571,7 +2571,7 @@ module IDL::AST
     end
 
     def types
-      @children.find_all { |c| !c.is_a? IDL::AST::Member }
+      @children.reject { |c| c.is_a? IDL::AST::Member }
     end
 
     def is_local?(recurstk = [])
@@ -2737,7 +2737,7 @@ module IDL::AST
     end
 
     def types
-      @children.find_all { |c| !c.is_a? IDL::AST::UnionMember }
+      @children.reject { |c| c.is_a? IDL::AST::UnionMember }
     end
 
     def is_local?(recurstk = [])
