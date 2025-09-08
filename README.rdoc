@@ -1,7 +1,6 @@
 {rdoc-image:https://badge.fury.io/rb/ridl.svg}[https://badge.fury.io/rb/ridl]
 {rdoc-image:https://github.com/RemedyIT/ridl/actions/workflows/r2corba.yml/badge.svg}[https://github.com/RemedyIT/ridl/actions?query=workflow%3Ar2corba]
 {rdoc-image:https://github.com/RemedyIT/ridl/actions/workflows/taox11.yml/badge.svg}[https://github.com/RemedyIT/ridl/actions?query=workflow%3Ataox11]
-{rdoc-image:https://github.com/RemedyIT/ridl/actions/workflows/ciaox11.yml/badge.svg}[https://github.com/RemedyIT/ridl/actions?query=workflow%3Aciaox11]
 {rdoc-image:https://www.codefactor.io/repository/github/remedyit/ridl/badge}[https://www.codefactor.io/repository/github/remedyit/ridl]
 
 = RIDL Compiler
