@@ -295,10 +295,10 @@ module IDL
 
         decimal_position = integer.length + exponent
         integral_digits = [decimal_position - first_significant, 0].max
-        excess_fraction = decimal_position + @scale
-        excess_digits = excess_fraction <= 0 ? digits : (digits[excess_fraction..-1] || '')
-
-        if integral_digits + @scale > @digits || excess_digits.match?(/[1-9]/)
+        # CORBA permits truncating excess fractional digits when assigning a
+        # fixed-point constant. Only the integral part can make the value too
+        # large for the declared fixed type.
+        if integral_digits + @scale > @digits
           raise "#{obj.inspect} cannot be represented by fixed<#{@digits},#{@scale}>"
         end
         obj
