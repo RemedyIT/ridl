@@ -3,7 +3,7 @@ require 'ridl/require'
 
 class FixedConstantTest < Minitest::Test
   def parse_idl(idl)
-    IDL::Parser.new(idlversion: 3).parse(idl)
+    IDL::Parser.new(idlversion: 3, ignore_pidl: true).parse(idl)
   end
 
   def test_accepts_representable_fixed_constants
