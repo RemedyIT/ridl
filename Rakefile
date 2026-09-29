@@ -11,3 +11,10 @@
 #--------------------------------------------------------------------
 
 task default: 'help'
+
+require 'rake/testtask'
+
+Rake::TestTask.new(:test) do |task|
+  task.libs << 'lib'
+  task.pattern = 'tests/**/*_test.rb'
+end

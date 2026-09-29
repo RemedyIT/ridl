@@ -279,7 +279,28 @@ module IDL
       end
 
       def narrow(obj)
-        # typeerror(obj)
+        return obj if @digits.nil? || @scale.nil?
+
+        match = /\A[+-]?(\d+(?:\.\d*)?|\.\d+)(?:[eE]([+-]?\d+))?[dD]?\z/.match(obj.to_s)
+        return typeerror(obj) unless match
+
+        number = match[1]
+        exponent = match[2] ? match[2].to_i : 0
+        integer, fraction = number.split('.', 2)
+        integer ||= ''
+        fraction ||= ''
+        digits = integer + fraction
+        first_significant = digits.index(/[1-9]/)
+        return obj unless first_significant
+
+        decimal_position = integer.length + exponent
+        integral_digits = [decimal_position - first_significant, 0].max
+        excess_fraction = decimal_position + @scale
+        excess_digits = excess_fraction <= 0 ? digits : (digits[excess_fraction..-1] || '')
+
+        if integral_digits + @scale > @digits || excess_digits.match?(/[1-9]/)
+          raise "#{obj.inspect} cannot be represented by fixed<#{@digits},#{@scale}>"
+        end
         obj
       end
 
