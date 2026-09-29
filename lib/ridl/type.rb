@@ -271,11 +271,11 @@ module IDL
       attr_reader :digits, :scale
 
       def initialize(digits = nil, scale = nil)
-        raise "anonymous fixed definitions are not allowed!" if digits.nil? || scale.nil?
+        raise "fixed digits and scale must both be specified" if digits.nil? != scale.nil?
         raise "significant digits for Fixed should be in the range 0-31" unless digits.nil? || (0..31) === digits.to_i
 
-        @digits = digits.to_i
-        @scale = scale.to_i
+        @digits = digits&.to_i
+        @scale = scale&.to_i
       end
 
       def narrow(obj)
