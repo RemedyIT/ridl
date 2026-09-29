@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'ridl/runner'
 require 'ridl/require'
 
 class FixedConstantTest < Minitest::Test
