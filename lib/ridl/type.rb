@@ -271,15 +271,36 @@ module IDL
       attr_reader :digits, :scale
 
       def initialize(digits = nil, scale = nil)
-        raise "anonymous fixed definitions are not allowed!" if digits.nil? || scale.nil?
+        raise "fixed digits and scale must both be specified" if digits.nil? != scale.nil?
         raise "significant digits for Fixed should be in the range 0-31" unless digits.nil? || (0..31) === digits.to_i
 
-        @digits = digits.to_i
-        @scale = scale.to_i
+        @digits = digits&.to_i
+        @scale = scale&.to_i
       end
 
       def narrow(obj)
-        # typeerror(obj)
+        return obj if @digits.nil? || @scale.nil?
+
+        match = /\A[+-]?(\d+(?:\.\d*)?|\.\d+)(?:[eE]([+-]?\d+))?[dD]?\z/.match(obj.to_s)
+        return typeerror(obj) unless match
+
+        number = match[1]
+        exponent = match[2] ? match[2].to_i : 0
+        integer, fraction = number.split('.', 2)
+        integer ||= ''
+        fraction ||= ''
+        digits = integer + fraction
+        first_significant = digits.index(/[1-9]/)
+        return obj unless first_significant
+
+        decimal_position = integer.length + exponent
+        integral_digits = [decimal_position - first_significant, 0].max
+        # CORBA permits truncating excess fractional digits when assigning a
+        # fixed-point constant. Only the integral part can make the value too
+        # large for the declared fixed type.
+        if integral_digits + @scale > @digits
+          raise "#{obj.inspect} cannot be represented by fixed<#{@digits},#{@scale}>"
+        end
         obj
       end
 
