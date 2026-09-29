@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require 'ridl/runner'
 require 'ridl/require'
+require_relative '../ridlbe/test/config'
 
 class FixedConstantTest < Minitest::Test
   def parse_idl(idl)
