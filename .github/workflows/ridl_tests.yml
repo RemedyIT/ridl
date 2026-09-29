@@ -1,0 +1,31 @@
+name: RIDL tests
+
+on:
+  push:
+    branches:
+      - master
+      - v*
+  pull_request:
+    branches:
+      - master
+      - v*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['2.7', '3.2']
+    name: Ruby ${{ matrix.ruby }}
+    steps:
+    - uses: actions/checkout@v7
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: Run RIDL tests
+      run: rake test
