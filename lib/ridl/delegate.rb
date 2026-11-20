@@ -397,7 +397,7 @@ class Delegator
     params = {}
     params[:base] = base
     params[:component] = component
-    params[:key] = key
+    params[:primarykey] = key
     params[:supports] = supports || []
     params[:annotations] = @annotation_stack
     @annotation_stack = IDL::AST::Annotations.new
