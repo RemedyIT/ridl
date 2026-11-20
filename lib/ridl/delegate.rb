@@ -688,12 +688,9 @@ class Delegator
     @cur
   end
 
-  def declare_op_footer(_raises, instantiation_context)
+  def declare_op_footer(_raises, context)
     @cur.raises = _raises || []
-    @cur.context = instantiation_context
-    unless @cur.context.nil?
-      raise "context phrase's not supported"
-    end
+    @cur.context = context
 
     set_last(@cur)
     @cur = @cur.enclosure
