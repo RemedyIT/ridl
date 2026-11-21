@@ -17,10 +17,12 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-24.04
+    # ruby-head is an early warning for upcoming Ruby releases only
+    continue-on-error: ${{ matrix.ruby == 'head' }}
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['2.7', '3.2']
+        ruby: ['2.7', '3.2', '3.3', '3.4', '4.0', 'head']
     name: Ruby ${{ matrix.ruby }}
     steps:
     - uses: actions/checkout@v7
