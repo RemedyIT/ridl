@@ -21,9 +21,6 @@ require 'optparse'
 # ' ARG' giving something like '-X<text>=ARG' or '-X<text> ARG' where
 # 'ARG' is an arbitrary non-blank text
 class OptionParser::Switch::RequiredArgument
-  # Forward all arguments unchanged: the signature of
-  # OptionParser::Switch#initialize differs between optparse versions
-  # (newer versions add a trailing `values` argument).
   def initialize(*args, &block)
     super
     if (@long.nil? || @long.empty?) && (@arg =~ /^(<.*>|[\{].*[\}])((=|\s).*)?/)
