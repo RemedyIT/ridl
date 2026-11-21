@@ -65,6 +65,8 @@ task :gem do
       "source_code_uri"   => "https://github.com/RemedyIT/ridl"
     }
     gem.required_ruby_version = '>= 2.5'
+    # ostruct is no longer a default gem since Ruby 4.0
+    gem.add_dependency 'ostruct'
   end
   RIDL.build_gem(gemspec)
 end
